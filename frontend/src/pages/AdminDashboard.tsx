@@ -88,7 +88,7 @@ export function AdminDashboard() {
         {/* Nav */}
         <nav className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-50">
           <div className="flex items-center gap-8">
-            <h1 className="font-black text-xl tracking-tighter">
+            <h1 className="font-bold text-lg tracking-tighter uppercase">
               <span className="text-indigo-600">BUILD</span>MASTER
             </h1>
             <div className="flex items-center gap-1">
@@ -142,8 +142,8 @@ export function AdminDashboard() {
           {view === 'overview' && (
             <div className="max-w-7xl mx-auto p-6 space-y-8">
               <div>
-                <h2 className="text-3xl font-black text-gray-900">Admin Dashboard</h2>
-                <p className="text-gray-500 mt-1">System overview and management</p>
+                <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Admin Dashboard</h2>
+                <p className="text-sm text-gray-500 mt-1">System overview and management</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -151,8 +151,8 @@ export function AdminDashboard() {
                   <AnimatedCard key={stat.label} delay={i * 0.1} className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
-                        <p className="text-3xl font-black text-gray-900 mt-1">{stat.value}</p>
+                        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">{stat.label}</p>
+                        <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
                       </div>
                       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${stat.color}`}>
                         <stat.icon size={22} />

@@ -50,10 +50,10 @@ export function GuestPage() {
             </button>
 
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-bold">
                 <Sparkles size={16} className="text-white" />
               </div>
-              <span className="font-black text-lg tracking-tight">BUILD<span className="text-indigo-600">MASTER</span></span>
+              <span className="font-bold text-base tracking-tight italic uppercase">BUILD<span className="text-indigo-600">MASTER</span></span>
             </div>
 
             <div className="text-xs font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
@@ -64,8 +64,8 @@ export function GuestPage() {
 
         <main className="py-8">
           <div className="max-w-7xl mx-auto px-6 mb-8">
-            <h1 className="text-3xl font-black text-gray-900">Project Intake Form</h1>
-            <p className="text-gray-500 mt-1">Tell us about your business and we'll start building your presence.</p>
+            <h1 className="text-xl font-bold text-gray-900 tracking-tight">Project Intake Form</h1>
+            <p className="text-sm text-gray-500 mt-1">Tell us about your business and we'll start building your presence.</p>
           </div>
 
           <GuestForm

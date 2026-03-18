@@ -324,8 +324,8 @@ export function DeveloperDashboard() {
                       <Briefcase className="text-amber-600" size={20} />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-slate-900">Project Pool</h2>
-                      <p className="text-xs text-slate-400 font-medium">New submissions waiting for a developer</p>
+                      <h2 className="text-lg font-bold text-slate-900">Project Pool</h2>
+                      <p className="text-[11px] text-slate-400 font-medium">New submissions waiting for a developer</p>
                     </div>
                   </div>
 
@@ -387,10 +387,10 @@ export function DeveloperDashboard() {
                 >
                   <div className="bg-slate-50 px-10 py-8 flex items-center justify-between border-b border-slate-100">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center border border-slate-100 shadow-sm">
-                        <Eye className="text-indigo-600" size={24} />
+                      <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-slate-100 shadow-sm">
+                        <Eye className="text-indigo-600" size={20} />
                       </div>
-                      <h3 className="text-2xl font-bold text-slate-900">{viewOnlyProject.businessName}</h3>
+                      <h3 className="text-xl font-bold text-slate-900">{viewOnlyProject.businessName}</h3>
                     </div>
                     <button onClick={() => setViewOnlyProject(null)} className="p-3 hover:bg-white rounded-full transition-colors text-slate-400 hover:text-slate-900">
                       <X size={24} />

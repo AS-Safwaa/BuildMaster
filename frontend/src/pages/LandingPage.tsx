@@ -94,8 +94,8 @@ export function LandingPage() {
                 {onboardingStep === 'type' ? (
                   <div className="space-y-8 text-center">
                     <div className="space-y-2">
-                      <h3 className="text-3xl font-black text-gray-900 tracking-tight">How did you find us?</h3>
-                      <p className="text-gray-500 font-medium italic">Help us personalize your setup journey</p>
+                      <h3 className="text-xl font-black text-gray-900 tracking-tight">How did you find us?</h3>
+                      <p className="text-sm text-gray-500 font-medium italic">Help us personalize your setup journey</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -135,8 +135,8 @@ export function LandingPage() {
                 ) : (
                   <div className="space-y-8">
                     <div className="space-y-2 text-center">
-                      <h3 className="text-3xl font-black text-gray-900 tracking-tight">Referral Details</h3>
-                      <p className="text-gray-500 font-medium">Who should we thank for this referral?</p>
+                      <h3 className="text-xl font-black text-gray-900 tracking-tight">Referral Details</h3>
+                      <p className="text-sm text-gray-500 font-medium">Who should we thank for this referral?</p>
                     </div>
 
                     <div className="space-y-6">
@@ -217,7 +217,7 @@ export function LandingPage() {
               AI-Powered Project Management
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tight leading-[1.1]">
+            <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-[1.1]">
               Build Projects{' '}
               <motion.span
                 className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 bg-clip-text text-transparent"
@@ -230,7 +230,7 @@ export function LandingPage() {
               </motion.span>
             </h1>
 
-            <p className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
               The complete SaaS platform for agencies. Configure, build, and deploy client projects
               with role-based workflows and AI-powered automation.
             </p>
@@ -277,8 +277,8 @@ export function LandingPage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900">Choose Your Role</h2>
-            <p className="text-gray-500 mt-3 text-lg">Each role unlocks a tailored dashboard experience</p>
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900">Choose Your Role</h2>
+            <p className="text-gray-500 mt-3 text-base">Each role unlocks a tailored dashboard experience</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
