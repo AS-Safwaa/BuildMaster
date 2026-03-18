@@ -12,6 +12,7 @@ import { LoginPage } from './pages/LoginPage';
 import { GuestPage } from './pages/GuestPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { DeveloperDashboard } from './pages/DeveloperDashboard';
+import { MerchantDashboard } from './pages/MerchantDashboard';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/guest" element={<GuestPage />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/developer" element={<DeveloperDashboard />} />
+            <Route path="/merchant" element={<MerchantDashboard />} />
           </Routes>
         </AnimatePresence>
 
