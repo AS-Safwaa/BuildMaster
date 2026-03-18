@@ -46,11 +46,19 @@ api.interceptors.response.use(
           return api(originalRequest);
         }
       } catch {
-        // Refresh failed — clear tokens and redirect to login
+        // Prototype Protection: If we are using a mock token, don't clear session or redirect.
+        // This allows the prototype to remain functional even if the backend is offline/401ing.
+        const token = localStorage.getItem('accessToken');
+        if (token === 'mock-token') {
+          console.warn('API connection failed in prototype mode. Staying logged in.');
+          return Promise.reject(error);
+        }
+
+        // Standard Session Cleanup
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
-        window.location.href = '/';
+        window.location.href = '/login'; // More appropriate to send back to login than home
       }
     }
 

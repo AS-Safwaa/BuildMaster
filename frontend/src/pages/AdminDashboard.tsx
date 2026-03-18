@@ -41,23 +41,17 @@ export function AdminDashboard() {
         setIsLoading(true);
         const { data: res } = await projectsApi.getAll();
         if (res.success && res.data.length > 0) {
-          // In a real app, we'd map the DB data to the FE type, 
-          // but for this demo, we'll keep the mock data for UI completeness
-          // and just demonstrate the API call capability.
-          console.log('Successfully fetched projects from backend:', res.data);
-          // setProjects(res.data); // Uncomment this to use real DB projects
+          setProjects(res.data);
         }
       } catch (error) {
-        console.error('API Error:', error);
-        toast.error('Failed to connect to backend API');
+        console.warn('Backend API not available. Using prototype data.');
       } finally {
-        // Just show a small deliberate loading delay for UX feel
-        setTimeout(() => setIsLoading(false), 800);
+        setTimeout(() => setIsLoading(false), 600);
       }
     };
 
     fetchProjects();
-  }, [view]); // Refetch when view changes to show dynamic data
+  }, []; // Only fetch on mount
 
   const handleViewChange = (newView: AdminView) => {
     setIsLoading(true);
