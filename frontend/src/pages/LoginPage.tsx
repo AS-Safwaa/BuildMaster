@@ -46,10 +46,17 @@ export function LoginPage() {
 
     try {
       await login(email, password);
-      toast.success('Access Granted');
-      const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-      const userRole = storedUser.role || 'developer';
-      navigate(userRole === 'admin' ? '/admin' : '/developer', { replace: true });
+      toast.success('Identity Verified');
+
+      // Definitively check role for redirection
+      const userStr = localStorage.getItem('user');
+      const role = userStr ? JSON.parse(userStr).role : 'developer';
+
+      if (role === 'admin') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/developer', { replace: true });
+      }
     } catch (error: any) {
       toast.error('Invalid credentials');
     } finally {
@@ -84,9 +91,13 @@ export function LoginPage() {
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <h1 className="text-2xl font-black text-slate-900 tracking-tight">Welcome back</h1>
-                <p className="text-slate-400 text-[11px] font-medium">Verify your developer identity to continue.</p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <h1 className="text-2xl font-black text-slate-900 tracking-tight leading-none">Welcome back</h1>
+                  {email.includes('admin') && <span className="px-2 py-0.5 bg-blue-100 text-blue-600 text-[9px] font-black uppercase rounded-lg tracking-widest border border-blue-200">Admin</span>}
+                  {email.includes('developer') && <span className="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[9px] font-black uppercase rounded-lg tracking-widest border border-emerald-200">Engineer</span>}
+                </div>
+                <p className="text-slate-400 text-[11px] font-medium">Verify your identity to access the build matrix.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4 max-w-sm">

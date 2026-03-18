@@ -4,7 +4,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Store, User, ArrowRight, Sparkles, Zap, Globe, X, Users } from 'lucide-react';
+import { ShieldCheck, Store, User, ArrowRight, Sparkles, Zap, Globe, X, Users, LogOut, LogIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PageTransition } from '../components/ui/PageTransition';
 import { AnimatedButton } from '../components/ui/AnimatedButton';
@@ -48,7 +48,7 @@ const features = [
 
 export function LandingPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [onboardingStep, setOnboardingStep] = useState<'type' | 'referral'>('type');
@@ -187,9 +187,21 @@ export function LandingPage() {
               animate={{ opacity: 1, x: 0 }}
               className="flex items-center gap-3"
             >
-              <AnimatedButton size="sm" className="bg-blue-600 text-white" onClick={() => setShowOnboarding(true)}>
-                Get Started <ArrowRight size={14} />
-              </AnimatedButton>
+              {isAuthenticated ? (
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-slate-400 font-medium">Welcome, <span className="text-slate-900 font-bold">{user?.name}</span></span>
+                  <AnimatedButton size="sm" className="bg-blue-600 text-white" onClick={() => navigate(user?.role === 'admin' ? '/admin' : '/developer')}>
+                    Dashboard <ArrowRight size={14} />
+                  </AnimatedButton>
+                  <button onClick={() => { logout(); navigate('/'); }} className="p-2 text-slate-300 hover:text-red-500 transition-colors">
+                    <LogOut size={16} />
+                  </button>
+                </div>
+              ) : (
+                <AnimatedButton size="sm" className="bg-blue-600 text-white" onClick={() => navigate('/login')}>
+                  Login <LogIn size={14} />
+                </AnimatedButton>
+              )}
             </motion.div>
           </div>
         </nav>
@@ -260,7 +272,7 @@ export function LandingPage() {
             <p className="text-slate-500 mt-4 text-sm font-medium">Precision-built dashboards for every stage of your build cycle</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {roleCards.map((card, i) => (
               <motion.div
                 key={card.role}

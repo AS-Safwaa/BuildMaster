@@ -75,7 +75,7 @@ export function AdminDashboard() {
   };
 
   const stats = [
-    { label: 'Total Projects', value: projects.length, icon: Briefcase, color: 'bg-indigo-50 text-indigo-600' },
+    { label: 'Total Projects', value: projects.length, icon: Briefcase, color: 'bg-blue-50 text-blue-600' },
     { label: 'Active', value: projects.filter((p: Project) => p.status === 'Submitted' || p.status === 'In Development').length, icon: LayoutGrid, color: 'bg-blue-50 text-blue-600' },
     { label: 'Completed', value: projects.filter((p: Project) => p.status === 'Completed').length, icon: Settings, color: 'bg-emerald-50 text-emerald-600' },
   ];
@@ -89,36 +89,36 @@ export function AdminDashboard() {
         <nav className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-50">
           <div className="flex items-center gap-8">
             <h1 className="font-bold text-lg tracking-tighter uppercase">
-              <span className="text-indigo-600">BUILD</span>MASTER
+              <span className="text-blue-600">BUILD</span>MASTER
             </h1>
             <div className="flex items-center gap-1">
               <button
                 onClick={() => handleViewChange('overview')}
-                className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'overview' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-500 hover:bg-gray-50'}`}
+                className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'overview' ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50'}`}
               >
                 <LayoutGrid size={18} /> Overview
               </button>
               <button
                 onClick={() => handleViewChange('config')}
-                className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'config' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-500 hover:bg-gray-50'}`}
+                className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'config' ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50'}`}
               >
                 <Settings size={18} /> Master Config
               </button>
               <button
                 onClick={() => handleViewChange('users')}
-                className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'users' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-500 hover:bg-gray-50'}`}
+                className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'users' ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50'}`}
               >
                 <Users size={18} /> Users
               </button>
               <button
                 onClick={() => handleViewChange('admin-panel')}
-                className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'admin-panel' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-500 hover:bg-gray-50'}`}
+                className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'admin-panel' ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50'}`}
               >
                 <ShieldCheck size={18} /> Admin Panel
               </button>
               <button
                 onClick={() => handleViewChange('pool')}
-                className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'pool' ? 'bg-indigo-50 text-indigo-600' : 'text-gray-500 hover:bg-gray-50'}`}
+                className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'pool' ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50'}`}
               >
                 <Users size={18} /> All Projects
               </button>
@@ -129,7 +129,7 @@ export function AdminDashboard() {
               <p className="text-sm font-bold text-gray-900">{user?.name || 'Admin'}</p>
               <p className="text-xs text-gray-500">Administrator</p>
             </div>
-            <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold">
+            <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
               {(user?.name || 'A')[0]}
             </div>
             <button onClick={handleLogout} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all" title="Logout">
