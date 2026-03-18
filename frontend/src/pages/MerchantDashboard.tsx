@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Store, Plus, BarChart3, FolderOpen, LogOut, ArrowRight, TrendingUp } from 'lucide-react';
 import { PageTransition } from '../components/ui/PageTransition';
 import { AnimatedCard } from '../components/ui/AnimatedCard';

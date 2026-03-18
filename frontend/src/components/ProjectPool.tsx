@@ -1,7 +1,7 @@
 import React from 'react';
 import { Project } from '../types';
 import { Briefcase, MapPin, Calendar, ArrowRight } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 
 interface ProjectPoolProps {
   projects: Project[];
@@ -24,7 +24,7 @@ export const ProjectPool: React.FC<ProjectPoolProps> = ({ projects, onClaim, onV
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
-            <motion.div 
+            <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -39,7 +39,7 @@ export const ProjectPool: React.FC<ProjectPoolProps> = ({ projects, onClaim, onV
                     {project.status}
                   </span>
                 </div>
-                
+
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
                     {project.businessName}
@@ -59,13 +59,13 @@ export const ProjectPool: React.FC<ProjectPoolProps> = ({ projects, onClaim, onV
                 </div>
 
                 <div className="pt-4 flex gap-2">
-                  <button 
+                  <button
                     onClick={() => onClaim(project.id)}
                     className="flex-1 bg-indigo-600 text-white py-3 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100"
                   >
                     Claim Project
                   </button>
-                  <button 
+                  <button
                     onClick={() => onView(project.id)}
                     className="p-3 bg-gray-50 text-gray-600 rounded-xl hover:bg-gray-100 transition-all"
                   >

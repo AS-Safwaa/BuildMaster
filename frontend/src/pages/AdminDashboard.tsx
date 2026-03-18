@@ -16,7 +16,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { projectsApi } from '../services/projects.service';
 import { MasterConfig, Project } from '../types';
-import { INITIAL_MASTER_CONFIG, DEVELOPERS } from '../constants';
+import { INITIAL_MASTER_CONFIG, MOCK_PROJECTS, DEVELOPERS } from '../constants';
 
 type AdminView = 'overview' | 'config' | 'pool' | 'detail' | 'users';
 

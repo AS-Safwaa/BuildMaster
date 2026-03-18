@@ -15,12 +15,12 @@ import {
   UserCheck,
   UserX
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { AnimatedButton } from './ui/AnimatedButton';
 import { AnimatedCard } from './ui/AnimatedCard';
 import { Modal } from './ui/Modal';
 import { usersApi } from '../services/users.service';
-import { User } from '../shared/types';
+import { User } from '../types';
 import toast from 'react-hot-toast';
 
 export const UserManagement: React.FC = () => {

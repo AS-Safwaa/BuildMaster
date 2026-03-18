@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Project } from '../types';
 import { Copy, Check, Terminal, ExternalLink, FileText, Image as ImageIcon, Box } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 
 interface BuildGuideProps {
   project: Project;
@@ -71,7 +71,7 @@ The logo should be clean, modern, and suitable for a website header.`,
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {templates.map((t) => (
-          <motion.div 
+          <motion.div
             key={t.id}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -84,7 +84,7 @@ The logo should be clean, modern, and suitable for a website header.`,
                 </div>
                 {t.title}
               </div>
-              <button 
+              <button
                 onClick={() => copyToClipboard(fillTemplate(t.template), t.id)}
                 className={`p-2 rounded-lg transition-all ${copied === t.id ? 'bg-emerald-100 text-emerald-600' : 'hover:bg-gray-200 text-gray-400'}`}
               >

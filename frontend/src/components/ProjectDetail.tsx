@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Project, BuildChecklist } from '../types';
-import { 
-  ArrowLeft, 
-  CheckCircle2, 
-  Clock, 
-  ExternalLink, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Globe, 
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Clock,
+  ExternalLink,
+  Mail,
+  Phone,
+  MapPin,
+  Globe,
   Send,
   Lock,
   Unlock,
@@ -16,7 +16,7 @@ import {
   Save,
   X
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { BuildGuide } from './BuildGuide';
 
 interface ProjectDetailProps {
@@ -53,8 +53,8 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
   };
 
   const handleSaveDraft = () => {
-    onUpdate({ 
-      draftLink, 
+    onUpdate({
+      draftLink,
       developerNotes: notes,
       status: 'In Review'
     });
@@ -70,7 +70,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
     <div className="max-w-7xl mx-auto p-6 space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <button 
+        <button
           onClick={onBack}
           className="flex items-center gap-2 text-gray-500 font-bold hover:text-gray-900 transition-colors"
         >
@@ -82,11 +82,10 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
               <Lock size={16} /> Project Locked
             </div>
           )}
-          <span className={`px-4 py-2 rounded-xl text-sm font-black uppercase tracking-widest border ${
-            project.status === 'Completed' ? 'bg-gray-100 text-gray-500 border-gray-200' :
-            project.status === 'Approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
-            'bg-indigo-50 text-indigo-600 border-indigo-100'
-          }`}>
+          <span className={`px-4 py-2 rounded-xl text-sm font-black uppercase tracking-widest border ${project.status === 'Completed' ? 'bg-gray-100 text-gray-500 border-gray-200' :
+              project.status === 'Approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                'bg-indigo-50 text-indigo-600 border-indigo-100'
+            }`}>
             {project.status}
           </span>
         </div>
@@ -102,9 +101,9 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
                 <p className="text-gray-500 font-medium">Project ID: {project.id}</p>
               </div>
               {project.liveUrl && (
-                <a 
-                  href={project.liveUrl} 
-                  target="_blank" 
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl text-sm font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-100"
                 >
@@ -166,11 +165,11 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
           {!isLocked && (
             <div className="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm space-y-6">
               <h3 className="text-xl font-bold text-gray-900">Development Progress</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-gray-700">Draft Link (Preview)</label>
-                  <input 
+                  <input
                     className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500"
                     placeholder="https://netlify-site-123.netlify.app"
                     value={draftLink}
@@ -179,7 +178,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-gray-700">Live URL (Final)</label>
-                  <input 
+                  <input
                     className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500"
                     placeholder="https://www.businessname.com"
                     value={liveUrl}
@@ -190,7 +189,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-700">Developer Notes</label>
-                <textarea 
+                <textarea
                   className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 min-h-[100px]"
                   placeholder="Any specific instructions or notes for the reviewer..."
                   value={notes}
@@ -199,18 +198,17 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
               </div>
 
               <div className="flex flex-wrap gap-4 pt-4">
-                <button 
+                <button
                   disabled={!allChecked}
                   onClick={handleSaveDraft}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
-                    allChecked 
-                      ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-100' 
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${allChecked
+                      ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-100'
                       : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  }`}
+                    }`}
                 >
                   <Send size={18} /> Submit for Review
                 </button>
-                <button 
+                <button
                   onClick={handleSaveLive}
                   className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition-all"
                 >
@@ -239,22 +237,20 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
                 {Object.values(project.checklist).filter(Boolean).length}/8
               </span>
             </div>
-            
+
             <div className="space-y-3">
               {(Object.keys(project.checklist) as Array<keyof BuildChecklist>).map((item) => (
-                <button 
+                <button
                   key={item}
                   disabled={isLocked}
                   onClick={() => toggleChecklist(item)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
-                    project.checklist[item] 
-                      ? 'bg-emerald-50 border-emerald-100 text-emerald-700' 
+                  className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${project.checklist[item]
+                      ? 'bg-emerald-50 border-emerald-100 text-emerald-700'
                       : 'bg-white border-gray-100 text-gray-600 hover:border-indigo-200'
-                  }`}
+                    }`}
                 >
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                    project.checklist[item] ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-gray-200'
-                  }`}>
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${project.checklist[item] ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-gray-200'
+                    }`}>
                     {project.checklist[item] && <CheckCircle2 size={12} />}
                   </div>
                   <span className="text-sm font-medium capitalize">
@@ -269,7 +265,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
               <div className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold text-gray-500 uppercase">Website Builder</label>
-                  <select 
+                  <select
                     disabled={isLocked}
                     className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none"
                     value={project.builderUsed || ''}
@@ -285,7 +281,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold text-gray-500 uppercase">Logo Tool</label>
-                  <select 
+                  <select
                     disabled={isLocked}
                     className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none"
                     value={project.logoToolUsed || ''}
@@ -306,7 +302,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
                 <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest">Admin Actions</h4>
                 <div className="grid grid-cols-1 gap-2">
                   {project.status === 'In Review' && (
-                    <button 
+                    <button
                       onClick={() => setShowClientEmail(true)}
                       className="w-full py-2 bg-purple-600 text-white rounded-lg text-xs font-bold hover:bg-purple-700 transition-all active:scale-95"
                     >
@@ -314,7 +310,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
                     </button>
                   )}
                   {project.status === 'Under Client Review' && (
-                    <button 
+                    <button
                       onClick={() => handleStatusChange('Approved')}
                       className="w-full py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition-all"
                     >
@@ -322,14 +318,14 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
                     </button>
                   )}
                   {project.status === 'Approved' && (
-                    <button 
+                    <button
                       onClick={() => handleStatusChange('Completed')}
                       className="w-full py-2 bg-gray-900 text-white rounded-lg text-xs font-bold hover:bg-black transition-all"
                     >
                       Mark Completed & Lock
                     </button>
                   )}
-                  <button 
+                  <button
                     onClick={() => handleStatusChange('In Development')}
                     className="w-full py-2 border border-gray-200 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-50 transition-all"
                   >
@@ -344,7 +340,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
       {/* Client Email Preview Modal */}
       {showClientEmail && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col"
@@ -368,12 +364,12 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
                     </a>
                   </div>
                   <p>Please take a look and let us know if you have any feedback. We're excited to hear what you think!</p>
-                  <p className="pt-4 border-t border-gray-100 text-sm text-gray-500 italic">Best regards,<br/>The Development Team</p>
+                  <p className="pt-4 border-t border-gray-100 text-sm text-gray-500 italic">Best regards,<br />The Development Team</p>
                 </div>
               </div>
             </div>
             <div className="p-6 bg-gray-50 border-t border-gray-100 flex gap-3">
-              <button 
+              <button
                 onClick={() => {
                   handleStatusChange('Under Client Review');
                   setShowClientEmail(false);
@@ -383,7 +379,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, role, onU
               >
                 Send Email & Update Status
               </button>
-              <button 
+              <button
                 onClick={() => setShowClientEmail(false)}
                 className="px-8 py-4 bg-white border border-gray-200 text-gray-600 font-bold rounded-2xl hover:bg-gray-50 transition-all"
               >
