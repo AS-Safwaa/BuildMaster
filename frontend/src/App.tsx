@@ -13,6 +13,7 @@ import { GuestPage } from './pages/GuestPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { DeveloperDashboard } from './pages/DeveloperDashboard';
 import { MerchantDashboard } from './pages/MerchantDashboard';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 export default function App() {
   return (
@@ -23,9 +24,23 @@ export default function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/guest" element={<GuestPage />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/developer" element={<DeveloperDashboard />} />
-            <Route path="/merchant" element={<MerchantDashboard />} />
+
+            {/* Protected Role-Based Routes */}
+            <Route path="/admin" element={
+              <ProtectedRoute role="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/developer" element={
+              <ProtectedRoute role="developer">
+                <DeveloperDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/merchant" element={
+              <ProtectedRoute role="admin">
+                <MerchantDashboard />
+              </ProtectedRoute>
+            } />
           </Routes>
         </AnimatePresence>
 

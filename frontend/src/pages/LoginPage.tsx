@@ -35,11 +35,15 @@ export function LoginPage() {
       if (isRegister) {
         await register(name, email, password, role);
         toast.success('Account created successfully!');
+        navigate(role === 'admin' ? '/admin' : '/developer', { replace: true });
       } else {
         await login(email, password);
         toast.success('Welcome back!');
+        // Look up the role after login to decide where to go
+        const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+        const userRole = storedUser.role || 'developer';
+        navigate(userRole === 'admin' ? '/admin' : '/developer', { replace: true });
       }
-      navigate(from, { replace: true });
     } catch (error: any) {
       const message = error?.response?.data?.error || error.message || 'Authentication failed';
       toast.error(message);

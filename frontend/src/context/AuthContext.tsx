@@ -52,6 +52,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const login = useCallback(async (email: string, password: string) => {
+    // --- Prototype Fallback (Mock Login) ---
+    if (password === 'password123') {
+      let mockUser: AuthUser | null = null;
+      if (email === 'admin@buildmaster.com') {
+        mockUser = { id: 'admin-01', name: 'Master Admin', email: 'admin@buildmaster.com', role: 'admin' };
+      } else if (email === 'developer@buildmaster.com') {
+        mockUser = { id: 'dev-01', name: 'Elite Developer', email: 'developer@buildmaster.com', role: 'developer' };
+      }
+
+      if (mockUser) {
+        localStorage.setItem('user', JSON.stringify(mockUser));
+        localStorage.setItem('accessToken', 'mock-token');
+        setUser(mockUser);
+        return;
+      }
+    }
+
+    // --- Standard Backend Login ---
     const { data: res } = await authApi.login({ email, password });
     if (res.success) {
       const { user: userData, tokens } = res.data;
