@@ -132,24 +132,24 @@ export function AdminDashboard() {
           </div>
         </nav>
 
-        <main className="pb-16">
+        <main className="pb-12">
           {view === 'overview' && (
-            <div className="max-w-7xl mx-auto p-6 space-y-8">
+            <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Admin Dashboard</h2>
-                <p className="text-sm text-gray-500 mt-1">System overview and management</p>
+                <h2 className="text-xl font-bold text-slate-900 tracking-tight">Admin Intelligence</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Global system telemetry and project management</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {stats.map((stat, i) => (
-                  <AnimatedCard key={stat.label} delay={i * 0.1} className="p-6">
+                  <AnimatedCard key={stat.label} delay={i * 0.1} className="p-5">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">{stat.label}</p>
-                        <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{stat.label}</p>
+                        <p className="text-xl font-bold text-slate-900 mt-1">{stat.value}</p>
                       </div>
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${stat.color}`}>
-                        <stat.icon size={22} />
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${stat.color}`}>
+                        <stat.icon size={18} />
                       </div>
                     </div>
                   </AnimatedCard>
@@ -157,22 +157,22 @@ export function AdminDashboard() {
               </div>
 
               {/* Recent Projects */}
-              <AnimatedCard delay={0.3} className="p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Projects</h3>
-                <div className="space-y-3">
+              <AnimatedCard delay={0.3} className="p-5">
+                <h3 className="text-base font-bold text-slate-900 mb-3">Recent Activity</h3>
+                <div className="space-y-2">
                   {projects.slice(0, 5).map((project: Project) => (
                     <div
                       key={project.id}
-                      className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all cursor-pointer"
+                      className="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl hover:bg-slate-100 transition-all cursor-pointer"
                       onClick={() => { setActiveProjectId(project.id); handleViewChange('detail'); }}
                     >
                       <div>
-                        <p className="font-bold text-gray-900">{project.businessName}</p>
-                        <p className="text-sm text-gray-500">{project.id}</p>
+                        <p className="text-sm font-bold text-slate-900">{project.businessName}</p>
+                        <p className="text-[10px] text-slate-400 font-bold">{project.id}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${project.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' :
-                        project.status === 'In Development' ? 'bg-blue-100 text-blue-700' :
-                          'bg-amber-100 text-amber-700'
+                      <span className={`px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider ${project.status === 'Completed' ? 'bg-emerald-50 text-emerald-600' :
+                        project.status === 'In Development' ? 'bg-blue-50 text-blue-600' :
+                          'bg-slate-200 text-slate-600'
                         }`}>
                         {project.status}
                       </span>

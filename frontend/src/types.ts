@@ -51,6 +51,9 @@ export interface MasterConfig {
   websiteGoals: string[];
   maxGoalSelection: number;
   ctaOptions: string[];
+  brandPersonalities: string[];
+  testimonialOptions: { id: string; label: string; icon: string }[];
+  socialPlatforms: string[];
 }
 
 export type ProjectStatus = 'Submitted' | 'In Development' | 'In Review' | 'Under Client Review' | 'Approved' | 'Completed';

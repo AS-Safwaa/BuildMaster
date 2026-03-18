@@ -229,6 +229,13 @@ export const INITIAL_MASTER_CONFIG: MasterConfig = {
   ],
   maxGoalSelection: 3,
   ctaOptions: ["Call Now", "Book Appointment", "Get Quote", "WhatsApp Us", "Order Now", "Visit Our Store", "Explore Services", "Contact Us", "Schedule Consultation"],
+  brandPersonalities: ["Professional", "Friendly", "Modern", "Luxury", "Minimalist", "Bold", "Playful", "Reliable"],
+  testimonialOptions: [
+    { id: 'not-required', label: 'Not Required', icon: '✕' },
+    { id: 'existing', label: 'I Have Some', icon: '✓' },
+    { id: 'generate', label: 'Generate Sample', icon: '🛠️' }
+  ],
+  socialPlatforms: ["Facebook", "Instagram", "LinkedIn", "YouTube", "Twitter", "TikTok", "Pinterest"],
 };
 
 export const DEFAULT_CHECKLIST = {

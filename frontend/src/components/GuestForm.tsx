@@ -17,8 +17,10 @@ import {
   Layout,
   MessageSquare,
   Share2,
+  Share2,
   Settings,
-  ShieldCheck
+  ShieldCheck,
+  LayoutGrid
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MasterConfig, Project, TeamMember, Testimonial } from '../types';
@@ -144,52 +146,52 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
     switch (currentStep) {
       case 0: // Step 1: Personal & Business Details
         return (
-          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Contact Person Name *</label>
+                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Contact Person Name *</label>
                 <input
-                  className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  className="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-1 focus:ring-blue-600 outline-none transition-all text-xs"
                   value={project.contactPersonName}
                   onChange={(e) => updateProject({ contactPersonName: e.target.value })}
-                  placeholder="Full name of primary contact"
+                  placeholder="Full name"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Contact Phone *</label>
+                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Contact Phone *</label>
                 <input
-                  className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  className="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-1 focus:ring-blue-600 outline-none transition-all text-xs"
                   value={project.contactPersonPhone}
                   onChange={(e) => updateProject({ contactPersonPhone: e.target.value })}
                   placeholder="Primary phone number"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Business Name *</label>
+                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Business Name *</label>
                 <input
-                  className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  className="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-1 focus:ring-blue-600 outline-none transition-all text-xs"
                   value={project.businessName}
                   onChange={(e) => updateProject({ businessName: e.target.value })}
-                  placeholder="Name as it should appear on site"
+                  placeholder="Brand name"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Business Email *</label>
+                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Business Email *</label>
                 <input
-                  className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  className="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-1 focus:ring-blue-600 outline-none transition-all text-xs"
                   value={project.email}
                   onChange={(e) => updateProject({ email: e.target.value })}
-                  placeholder="Official business email"
+                  placeholder="e.g. info@business.com"
                 />
               </div>
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Physical Address</label>
+              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Physical Address</label>
               <textarea
-                className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                className="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-1 focus:ring-blue-600 outline-none transition-all text-xs"
                 value={project.address}
                 onChange={(e) => updateProject({ address: e.target.value })}
-                rows={3}
+                rows={2}
                 placeholder="Complete address for local SEO..."
               />
             </div>
@@ -202,12 +204,12 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
         const currentSpec = currentSub?.specialisations.find(sp => sp.id === project.specialisationId);
 
         return (
-          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Sector</label>
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Sector</label>
                 <select
-                  className="w-full p-4 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-indigo-500"
+                  className="w-full p-4 bg-white border border-slate-200 rounded-xl focus:ring-1 focus:ring-blue-600 text-xs"
                   value={project.mainCategoryId}
                   onChange={(e) => updateProject({ mainCategoryId: e.target.value, subCategoryId: '', specialisationId: '' })}
                 >
@@ -215,10 +217,10 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
                   {masterConfig.mainCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Business Type</label>
+              <div className="space-y-1.5">
+                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Business Type</label>
                 <select
-                  className="w-full p-4 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-indigo-500"
+                  className="w-full p-4 bg-white border border-slate-200 rounded-xl focus:ring-1 focus:ring-blue-600 text-xs"
                   value={project.subCategoryId}
                   onChange={(e) => updateProject({ subCategoryId: e.target.value, specialisationId: '' })}
                   disabled={!project.mainCategoryId}
@@ -227,10 +229,10 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
                   {currentCat?.subCategories.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Exact Niche</label>
+              <div className="space-y-1.5">
+                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Exact Niche</label>
                 <select
-                  className="w-full p-4 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                  className="w-full p-4 bg-white border border-slate-200 rounded-xl focus:ring-1 focus:ring-blue-600 text-xs shadow-sm"
                   value={project.specialisationId}
                   onChange={(e) => updateProject({ specialisationId: e.target.value })}
                   disabled={!project.subCategoryId}
@@ -241,8 +243,8 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
               </div>
             </div>
             {currentSpec && (
-              <div className="p-8 bg-indigo-50 rounded-[2rem] space-y-4">
-                <h4 className="font-bold text-indigo-900">Recommended Services</h4>
+              <div className="p-6 bg-blue-50 rounded-2xl space-y-3">
+                <h4 className="text-xs font-bold text-blue-900">Recommended Services</h4>
                 <div className="flex flex-wrap gap-2">
                   {currentSpec.services.map(s => (
                     <button
@@ -251,7 +253,7 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
                         const exists = project.services.includes(s);
                         updateProject({ services: exists ? project.services.filter(i => i !== s) : [...project.services, s] });
                       }}
-                      className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${project.services.includes(s) ? 'bg-indigo-600 text-white' : 'bg-white text-indigo-600 border border-indigo-200'}`}
+                      className={`px-3 py-1 rounded-full text-[10px] font-bold transition-all ${project.services.includes(s) ? 'bg-blue-600 text-white' : 'bg-white text-blue-600 border border-blue-200'}`}
                     >
                       {s}
                     </button>
@@ -305,18 +307,17 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
         );
 
       case 3: // Step 4: Branding
-        const personalities = ['Professional', 'Friendly', 'Modern', 'Luxury', 'Minimalist'];
         return (
-          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4">
-            <div className="p-8 bg-gray-50 rounded-[2.5rem] border border-gray-100 space-y-6">
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
+            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-black text-gray-900">Logo Direction</h3>
-                <div className="flex bg-white p-1 rounded-2xl border border-gray-100 shadow-sm">
+                <h3 className="text-lg font-bold text-slate-900">Logo Direction</h3>
+                <div className="flex bg-white p-1 rounded-xl border border-slate-100 shadow-sm">
                   {['have', 'need', 'improve'].map(opt => (
                     <button
                       key={opt}
                       onClick={() => updateProject({ hasLogo: opt === 'have' })}
-                      className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${(project.hasLogo && opt === 'have') || (!project.hasLogo && opt === 'need') ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-400'}`}
+                      className={`px-4 py-2 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all ${(project.hasLogo && opt === 'have') || (!project.hasLogo && opt === 'need') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400'}`}
                     >
                       {opt}
                     </button>
@@ -325,19 +326,19 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
               </div>
               {project.hasLogo ? (
                 <input
-                  className="w-full p-4 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full p-4 bg-white border border-slate-200 rounded-xl focus:ring-1 focus:ring-blue-600 outline-none text-xs"
                   placeholder="Paste Google Drive/Dropbox/Cloud link..."
                   value={project.logoDriveLink}
                   onChange={(e) => updateProject({ logoDriveLink: e.target.value })}
                 />
               ) : (
-                <p className="text-sm text-gray-500 italic">No worries! We'll design a high-quality logo as part of your build.</p>
+                <p className="text-xs text-slate-500 italic">No worries! We'll design a high-quality logo as part of your build.</p>
               )}
             </div>
-            <div className="space-y-6">
-              <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Brand Vibe (Choose 3)</label>
-              <div className="flex flex-wrap gap-3">
-                {personalities.map(p => (
+            <div className="space-y-4">
+              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Brand Vibe (Select Choices)</label>
+              <div className="flex flex-wrap gap-2">
+                {masterConfig.brandPersonalities.map(p => (
                   <button
                     key={p}
                     onClick={() => {
@@ -345,7 +346,7 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
                       if (exists) updateProject({ logoPreferences: { ...project.logoPreferences, brandPersonality: project.logoPreferences.brandPersonality.filter(i => i !== p) } });
                       else if (project.logoPreferences.brandPersonality.length < 3) updateProject({ logoPreferences: { ...project.logoPreferences, brandPersonality: [...project.logoPreferences.brandPersonality, p] } });
                     }}
-                    className={`px-6 py-3 rounded-2xl text-sm font-black border-2 transition-all ${project.logoPreferences.brandPersonality.includes(p) ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-gray-100 text-gray-500'}`}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all ${project.logoPreferences.brandPersonality.includes(p) ? 'bg-blue-600 border-blue-600 text-white' : 'bg-white border-slate-100 text-slate-500'}`}
                   >
                     {p}
                   </button>
@@ -353,9 +354,9 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
               </div>
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Business Tagline</label>
+              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Business Tagline</label>
               <input
-                className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+                className="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-1 focus:ring-blue-600 transition-all text-xs font-medium"
                 placeholder="e.g. For a healthier tomorrow"
                 value={project.tagline || ''}
                 onChange={(e) => updateProject({ tagline: e.target.value })}
@@ -446,20 +447,19 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
         );
 
       case 6: // Step 7: Navigation
-        const defaultNav = ['Home', 'About Us', 'Services', 'Pricing', 'Gallery', 'Testimonials', 'Contact Us'];
         return (
-          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4">
-            <div className="space-y-6">
-              <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Website Menu / Navigation</label>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {defaultNav.map(nav => (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
+            <div className="space-y-4">
+              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Website Menu / Navigation</label>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {masterConfig.navigationOptions.map(nav => (
                   <button
                     key={nav}
                     onClick={() => {
                       const exists = project.selectedNavigation.includes(nav);
                       updateProject({ selectedNavigation: exists ? project.selectedNavigation.filter(n => n !== nav) : [...project.selectedNavigation, nav] });
                     }}
-                    className={`p-5 rounded-2xl border-2 text-sm font-black transition-all ${project.selectedNavigation.includes(nav) ? 'bg-indigo-600 border-indigo-600 text-white shadow-xl' : 'bg-white border-gray-100 text-gray-500 hover:border-indigo-300'}`}
+                    className={`p-4 rounded-xl border-2 text-xs font-bold transition-all ${project.selectedNavigation.includes(nav) ? 'bg-blue-600 border-blue-600 text-white shadow-md' : 'bg-white border-slate-100 text-slate-500 hover:border-blue-300'}`}
                   >
                     {nav}
                   </button>
@@ -471,27 +471,23 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
 
       case 7: // Step 8: Testimonials
         return (
-          <div className="space-y-12 animate-in fade-in zoom-in-95 py-10">
-            <div className="text-center space-y-4">
-              <div className="w-24 h-24 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <MessageSquare size={40} />
+          <div className="space-y-8 animate-in fade-in zoom-in-95 py-6">
+            <div className="text-center space-y-3">
+              <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <MessageSquare size={28} />
               </div>
-              <h3 className="text-3xl font-black text-gray-900 tracking-tight">Client Testimonials</h3>
-              <p className="text-gray-500 max-w-sm mx-auto font-medium leading-relaxed">Select how you want to handle reviews on your site.</p>
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight">Client Testimonials</h3>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto font-medium leading-normal">Select how you want to handle reviews on your site.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                { id: 'not-required', label: 'Not Required', icon: '✕' },
-                { id: 'existing', label: 'I Have Some', icon: '✓' },
-                { id: 'generate', label: 'Generate Sample', icon: '🛠️' }
-              ].map(opt => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {masterConfig.testimonialOptions.map(opt => (
                 <button
                   key={opt.id}
                   onClick={() => updateProject({ testimonialOption: opt.id as any })}
-                  className={`p-10 rounded-[3rem] border-2 flex flex-col items-center gap-4 transition-all ${project.testimonialOption === opt.id ? 'bg-indigo-600 border-indigo-600 text-white shadow-2xl' : 'bg-white border-gray-100 hover:border-indigo-300'}`}
+                  className={`p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all ${project.testimonialOption === opt.id ? 'bg-blue-600 border-blue-600 text-white shadow-lg' : 'bg-white border-slate-100 hover:border-blue-300'}`}
                 >
-                  <span className="text-4xl">{opt.icon}</span>
-                  <span className="font-black text-xs uppercase tracking-widest">{opt.label}</span>
+                  <span className="text-2xl">{opt.icon}</span>
+                  <span className="font-bold text-[10px] uppercase tracking-wider">{opt.label}</span>
                 </button>
               ))}
             </div>
@@ -499,34 +495,33 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
         );
 
       case 8: // Step 9: Social Media
-        const socials = ['Facebook', 'Instagram', 'LinkedIn', 'YouTube', 'Twitter'];
         return (
-          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4">
-            <div className="p-10 bg-gray-50 rounded-[3rem] border border-gray-100 text-center space-y-6">
-              <Share2 size={48} className="mx-auto text-gray-400" />
-              <h3 className="text-2xl font-black text-gray-900">Connect Social Media?</h3>
-              <div className="flex justify-center gap-6 pt-4">
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
+            <div className="p-8 bg-slate-50 rounded-2xl border border-slate-100 text-center space-y-4">
+              <Share2 size={32} className="mx-auto text-slate-400" />
+              <h3 className="text-lg font-bold text-slate-900">Connect Social Media?</h3>
+              <div className="flex justify-center gap-4 pt-2">
                 <button
                   onClick={() => updateProject({ showSocial: true })}
-                  className={`px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all ${project.showSocial ? 'bg-indigo-600 text-white shadow-2xl' : 'bg-white border border-gray-200'}`}
+                  className={`px-8 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all ${project.showSocial ? 'bg-blue-600 text-white shadow-lg' : 'bg-white border border-slate-200'}`}
                 >
                   Yes, Add Links
                 </button>
                 <button
                   onClick={() => updateProject({ showSocial: false })}
-                  className={`px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all ${!project.showSocial ? 'bg-indigo-600 text-white shadow-2xl' : 'bg-white border border-gray-200'}`}
+                  className={`px-8 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all ${!project.showSocial ? 'bg-blue-600 text-white shadow-lg' : 'bg-white border border-slate-200'}`}
                 >
                   Skip
                 </button>
               </div>
             </div>
             {project.showSocial && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {socials.map(plat => (
-                  <div key={plat} className="p-5 bg-white border border-gray-100 rounded-[2rem] shadow-sm flex items-center gap-4">
-                    <span className="font-black text-[10px] uppercase tracking-widest text-gray-400 w-24">{plat}</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {masterConfig.socialPlatforms.map(plat => (
+                  <div key={plat} className="p-4 bg-white border border-slate-100 rounded-xl shadow-sm flex items-center gap-3">
+                    <span className="font-bold text-[9px] uppercase tracking-wider text-slate-400 w-20">{plat}</span>
                     <input
-                      className="flex-1 p-3 bg-gray-50 rounded-xl outline-none text-sm"
+                      className="flex-1 p-2 bg-slate-50 rounded-lg outline-none text-xs"
                       placeholder={`https://${plat.toLowerCase()}.com/...`}
                       value={(project.socialLinks as any)[plat.toLowerCase()] || ''}
                       onChange={(e) => updateProject({ socialLinks: { ...project.socialLinks, [plat.toLowerCase()]: e.target.value } })}
@@ -598,64 +593,64 @@ export const GuestForm: React.FC<GuestFormProps> = ({ masterConfig, project, set
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans selection:bg-indigo-100 selection:text-indigo-900">
-      <div className="flex-1 max-w-6xl mx-auto w-full p-6 md:p-12 space-y-12">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900">
+      <div className="flex-1 max-w-5xl mx-auto w-full p-4 md:p-8 space-y-8">
         {/* Progress Header */}
-        <div className="bg-white p-10 rounded-[3rem] shadow-2xl shadow-gray-200/50 flex flex-col md:flex-row items-center gap-12 border border-white">
-          <div className="flex-1 w-full space-y-4">
+        <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-slate-100 flex flex-col md:flex-row items-center gap-8">
+          <div className="flex-1 w-full space-y-3">
             <div className="flex justify-between items-end">
-              <h3 className="text-3xl font-black text-gray-900 tracking-tighter italic uppercase">{STEPS[currentStep]}</h3>
-              <span className="text-5xl font-black text-indigo-600/20">{completeness}%</span>
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight uppercase italic">{STEPS[currentStep]}</h3>
+              <span className="text-3xl font-bold text-blue-600/20">{completeness}%</span>
             </div>
-            <div className="h-4 bg-gray-100 rounded-full overflow-hidden border border-gray-100 shadow-inner">
+            <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-50">
               <motion.div
-                className="h-full bg-gradient-to-r from-indigo-600 to-indigo-400"
+                className="h-full bg-gradient-to-r from-blue-600 to-blue-400"
                 initial={{ width: 0 }}
                 animate={{ width: `${completeness}%` }}
               />
             </div>
           </div>
 
-          <div className="flex gap-3 overflow-x-auto pb-4 w-full md:w-auto scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto scrollbar-hide">
             {STEPS.map((step, idx) => (
               <div
                 key={step}
-                className={`flex-shrink-0 w-12 h-12 rounded-[1.2rem] flex items-center justify-center text-sm font-black transition-all border-4 ${idx === currentStep ? 'bg-indigo-600 text-white border-indigo-100 scale-125 shadow-xl shadow-indigo-200 z-10' :
-                  idx < currentStep ? 'bg-emerald-500 text-white border-emerald-50 shadow-lg shadow-emerald-50' :
-                    'bg-gray-100 text-gray-400 border-gray-50'
+                className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all border-2 ${idx === currentStep ? 'bg-blue-600 text-white border-blue-100 scale-110 shadow-md z-10' :
+                  idx < currentStep ? 'bg-emerald-500 text-white border-emerald-50' :
+                    'bg-slate-100 text-slate-400 border-slate-50'
                   }`}
               >
-                {idx < currentStep ? <CheckCircle2 size={24} /> : idx + 1}
+                {idx < currentStep ? <CheckCircle2 size={16} /> : idx + 1}
               </div>
             ))}
           </div>
         </div>
 
         {/* Dynamic Content Surface */}
-        <div className="bg-white rounded-[4rem] shadow-3xl shadow-gray-200/50 border border-white min-h-[600px] flex flex-col overflow-hidden relative group">
-          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-            <Settings size={120} />
+        <div className="bg-white rounded-3xl shadow-xl border border-slate-100 min-h-[500px] flex flex-col overflow-hidden relative group">
+          <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+            <Settings size={80} />
           </div>
 
-          <div className="flex-1 p-12 md:p-20 relative z-10">
+          <div className="flex-1 p-8 md:p-12 relative z-10">
             {renderStepContent()}
           </div>
 
-          <div className="p-10 bg-gray-50 border-t border-gray-100 flex justify-between items-center rounded-b-[4rem]">
+          <div className="p-6 bg-slate-50 border-t border-slate-100 flex justify-between items-center rounded-b-3xl">
             <button
               onClick={prevStep}
               disabled={currentStep === 0 || currentStep === STEPS.length - 1}
-              className="flex items-center gap-2 px-10 py-5 text-gray-500 font-black uppercase text-xs tracking-widest hover:bg-gray-200 rounded-[2rem] transition-all disabled:opacity-0"
+              className="flex items-center gap-2 px-6 py-3 text-slate-400 font-bold uppercase text-[10px] tracking-widest hover:bg-slate-200 rounded-xl transition-all disabled:opacity-0"
             >
-              <ChevronLeft size={20} /> Previous
+              <ChevronLeft size={16} /> Previous
             </button>
 
             {currentStep < STEPS.length - 1 && (
               <button
                 onClick={nextStep}
-                className="flex items-center gap-3 px-12 py-5 bg-indigo-600 text-white font-black uppercase text-sm tracking-widest rounded-[2rem] hover:bg-indigo-700 transition-all shadow-2xl shadow-indigo-100 ring-4 ring-indigo-50"
+                className="flex items-center gap-2 px-8 py-3 bg-blue-600 text-white font-bold uppercase text-[11px] tracking-widest rounded-xl hover:bg-blue-700 transition-all shadow-lg ring-4 ring-blue-50"
               >
-                Continue <ChevronRight size={22} />
+                Continue <ChevronRight size={18} />
               </button>
             )}
           </div>
