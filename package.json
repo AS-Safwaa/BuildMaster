@@ -1,0 +1,24 @@
+{
+  "name": "as-buildmaster-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "db:push": "npm run db:push --workspace=backend",
+    "db:seed": "npm run db:seed --workspace=backend",
+    "deploy:vercel": "vercel --prod --cwd frontend",
+    "deploy:railway": "railway up --service backend"
+  },
+  "devDependencies": {
+    "vercel": "^39.3.0"
+  }
+}

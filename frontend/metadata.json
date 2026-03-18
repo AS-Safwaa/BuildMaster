@@ -1,0 +1,5 @@
+{
+  "name": "Admin Master Configurator",
+  "description": "A powerful in-memory master data editor for administrative configuration of guest forms and website styles.",
+  "requestFramePermissions": []
+}
