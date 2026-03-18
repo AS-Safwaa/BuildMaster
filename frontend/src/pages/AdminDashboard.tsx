@@ -4,10 +4,8 @@
 // ─────────────────────────────────────────────────────────
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
-import { ShieldCheck, Settings, Users, LayoutGrid, LogOut, Briefcase } from 'lucide-react';
+import { Settings, Users, LayoutGrid, LogOut } from 'lucide-react';
 import { PageTransition } from '../components/ui/PageTransition';
-import { AnimatedCard } from '../components/ui/AnimatedCard';
 import { SkeletonDashboard } from '../components/ui/Skeleton';
 import { AdminConfig } from '../components/AdminConfig';
 import { AdminPanel } from '../components/AdminPanel';
@@ -17,9 +15,8 @@ import { UserManagement } from '../components/UserManagement';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { projectsApi } from '../services/projects.service';
-import { MasterConfig, Project, Developer } from '../types';
-import { INITIAL_MASTER_CONFIG, MOCK_PROJECTS, DEVELOPERS } from '../constants';
-import toast from 'react-hot-toast';
+import { MasterConfig, Project } from '../types';
+import { INITIAL_MASTER_CONFIG, DEVELOPERS } from '../constants';
 
 type AdminView = 'overview' | 'config' | 'pool' | 'detail' | 'users';
 
@@ -51,7 +48,7 @@ export function AdminDashboard() {
     };
 
     fetchProjects();
-  }, []; // Only fetch on mount
+  }, []); // Only fetch on mount
 
   const handleViewChange = (newView: AdminView) => {
     setIsLoading(true);

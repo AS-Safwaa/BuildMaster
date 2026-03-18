@@ -17,7 +17,6 @@ import {
   Layout,
   MessageSquare,
   Share2,
-  Share2,
   Settings,
   ShieldCheck,
   LayoutGrid
