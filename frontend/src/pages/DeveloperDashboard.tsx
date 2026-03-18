@@ -38,7 +38,8 @@ const STATUS_FLOW: ProjectStatus[] = ['Submitted', 'In Development', 'In Review'
 const AI_TEMPLATES = [
   { id: '1', title: 'Home Page Copy', prompt: 'Develop a high-converting homepage copy for [BUSINESS_NAME]. Include hero section with a strong headline about [USP_LIST].' },
   { id: '2', title: 'Service Details', prompt: 'Write detailed descriptions for these services: [SERVICES]. Focus on professionalism and expertise.' },
-  { id: '3', title: 'SEO Optimized Tags', prompt: 'Generate meta titles and descriptions for a [NICHE] business in [ADDRESS].' }
+  { id: '3', title: 'SEO Optimized Tags', prompt: 'Generate meta titles and descriptions for a [NICHE] business in [ADDRESS].' },
+  { id: '4', title: 'Technical Architecture', prompt: 'Analyze the client brief for [BUSINESS_NAME] and suggest a modern 7-section single page structure focuses on [GOALS].' }
 ];
 
 export function DeveloperDashboard() {
@@ -186,30 +187,6 @@ export function DeveloperDashboard() {
                         </div>
                       </div>
                     </div>
-
-                    {/* AI Prompts Area */}
-                    <div className="bg-slate-900 rounded-2xl p-6 space-y-6">
-                      <h3 className="text-xs font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
-                        <Sparkles size={14} /> AI Builder
-                      </h3>
-                      <div className="space-y-3">
-                        {AI_TEMPLATES.map(t => (
-                          <button
-                            key={t.id}
-                            onClick={() => setPromptInput(t.prompt)}
-                            className="w-full text-left p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-slate-400 transition-colors truncate"
-                          >
-                            {t.title}
-                          </button>
-                        ))}
-                      </div>
-                      <textarea
-                        className="w-full h-32 bg-slate-800 border-none rounded-xl p-3 text-[11px] font-mono text-emerald-400 focus:ring-1 focus:ring-emerald-500/50 outline-none placeholder:text-slate-600"
-                        placeholder="Type build prompt..."
-                        value={promptInput}
-                        onChange={(e) => setPromptInput(e.target.value)}
-                      />
-                    </div>
                   </aside>
 
                   {/* Main Console: Content & Links */}
@@ -242,113 +219,49 @@ export function DeveloperDashboard() {
                         </div>
                       </div>
 
-                      {/* Detailed Guest Data - Split into sections */}
-                      <div className="space-y-10 max-h-[60vh] overflow-y-auto pr-4 custom-scrollbar">
-                        {/* 1. Contact Info */}
-                        <section className="space-y-4">
-                          <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500 border-b border-indigo-50 pb-2">1. Personal & Contact Details</h4>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                            <div>
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Client Name</p>
-                              <p className="text-sm font-bold text-slate-900 mt-1">{selectedProject.contactPersonName || 'Mark Taylor'}</p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Client Phone</p>
-                              <p className="text-sm font-bold text-slate-900 mt-1">{selectedProject.contactPersonPhone || '+91 99001 22334'}</p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email Address</p>
-                              <p className="text-sm font-bold text-slate-900 mt-1">{selectedProject.email}</p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Address</p>
-                              <p className="text-sm font-bold text-slate-900 mt-1 truncate">{selectedProject.address}</p>
-                            </div>
-                          </div>
-                        </section>
+                      {/* Detailed Guest Data */}
+                      <div className="space-y-10 max-h-[80vh] overflow-y-auto pr-4 custom-scrollbar">
+                        <ProjectDataGrid project={selectedProject} />
 
-                        {/* 2. Business Details */}
-                        <section className="space-y-4">
-                          <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500 border-b border-indigo-50 pb-2">2. Business Environment</h4>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                            <div>
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Business Name</p>
-                              <p className="text-sm font-bold text-slate-900 mt-1">{selectedProject.businessName}</p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Established</p>
-                              <p className="text-sm font-bold text-slate-900 mt-1">{selectedProject.yearsOfEstablishment || '2018'}</p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Service Areas</p>
-                              <p className="text-sm font-bold text-slate-900 mt-1">{selectedProject.serviceAreas || 'Global'}</p>
+                        {/* AI Hub Integration */}
+                        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 bg-slate-900 rounded-[2.5rem] p-10 shadow-2xl">
+                          <div className="space-y-4">
+                            <h3 className="text-xs font-black uppercase tracking-widest text-[#50fa7b] flex items-center gap-2">
+                              <Terminal size={14} /> AI Builder
+                            </h3>
+                            <textarea
+                              className="w-full h-44 bg-slate-800/50 border border-slate-700/50 rounded-2xl p-4 text-[11px] font-mono text-emerald-400 focus:ring-1 focus:ring-emerald-500/50 outline-none placeholder:text-slate-600"
+                              placeholder="Type or click a template..."
+                              value={promptInput}
+                              onChange={(e) => setPromptInput(e.target.value)}
+                            />
+                            <div className="flex justify-between items-center bg-slate-800/20 p-3 rounded-xl">
+                              <span className="text-[9px] text-slate-600 font-black uppercase tracking-widest italic">Terminal Ready</span>
+                              <button onClick={() => { navigator.clipboard.writeText(promptInput); toast.success('Copied!'); }} className="text-[10px] text-emerald-400 font-black uppercase flex items-center gap-2">Copy Command <ExternalLink size={10} /></button>
                             </div>
                           </div>
-                        </section>
 
-                        {/* 3. Website Goals & Style */}
-                        <section className="space-y-4">
-                          <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500 border-b border-indigo-50 pb-2">3. Digital Strategy & Goals</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-3">
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Core Goals</p>
-                              <div className="flex flex-wrap gap-2">
-                                {selectedProject.websiteGoals.map(g => (
-                                  <span key={g} className="px-3 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded-lg border border-slate-100">{g}</span>
-                                ))}
-                              </div>
-                            </div>
-                            <div className="space-y-3">
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Required CTAs</p>
-                              <div className="flex flex-wrap gap-2">
-                                {selectedProject.ctaSelections.map(c => (
-                                  <span key={c} className="px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-lg border border-indigo-100">{c}</span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </section>
-
-                        {/* 4. Branding & Logo */}
-                        <section className="space-y-4">
-                          <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500 border-b border-indigo-50 pb-2">4. Branding & Asset Pipeline</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div className="bg-slate-50 p-4 rounded-xl space-y-2">
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Logo Status</p>
-                              <p className="text-xs font-bold text-slate-900">{selectedProject.hasLogo ? 'Supplied by Client' : 'To be Designed'}</p>
-                              {selectedProject.logoDriveLink && (
-                                <a href={selectedProject.logoDriveLink} target="_blank" className="text-[10px] text-indigo-600 font-bold hover:underline flex items-center gap-1">Open Assets <ExternalLink size={10} /></a>
-                              )}
-                            </div>
-                            <div className="md:col-span-2 space-y-2">
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Brand Personality</p>
-                              <div className="flex flex-wrap gap-2">
-                                {selectedProject.logoPreferences.brandPersonality.map(p => (
-                                  <span key={p} className="px-3 py-1 bg-white border border-slate-200 text-slate-600 text-[10px] font-bold rounded-lg uppercase tracking-tight">{p}</span>
-                                ))}
-                              </div>
+                          <div className="space-y-4 border-l border-slate-800/50 pl-0 md:pl-8">
+                            <h3 className="text-xs font-black uppercase tracking-widest text-indigo-400 flex items-center gap-2">
+                              <Layers size={14} /> Prompt Library
+                            </h3>
+                            <div className="space-y-3 overflow-y-auto max-h-56 pr-2 custom-scrollbar-slate">
+                              {AI_TEMPLATES.map(t => (
+                                <button
+                                  key={t.id}
+                                  onClick={() => setPromptInput(t.prompt)}
+                                  className="w-full text-left p-3.5 rounded-xl bg-slate-800/30 hover:bg-indigo-600/10 border border-slate-700/30 hover:border-indigo-500/20 transition-all group"
+                                >
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter group-hover:text-white">{t.title}</span>
+                                    <ChevronRight size={12} className="text-slate-700 group-hover:text-indigo-400" />
+                                  </div>
+                                  <p className="text-[9px] text-slate-600 leading-normal line-clamp-1 italic group-hover:text-slate-400">"{t.prompt}"</p>
+                                </button>
+                              ))}
                             </div>
                           </div>
-                        </section>
-
-                        {/* 5. Team & Navigation */}
-                        <section className="space-y-4">
-                          <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500 border-b border-indigo-50 pb-2">5. Structure & Human Capital</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-3">
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Site Menu (Navigation)</p>
-                              <div className="flex flex-wrap gap-2">
-                                {selectedProject.selectedNavigation.map(n => (
-                                  <span key={n} className="px-3 py-1 bg-slate-900 text-white text-[10px] font-bold rounded-lg">{n}</span>
-                                ))}
-                              </div>
-                            </div>
-                            <div className="space-y-3">
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Team Display</p>
-                              <p className="text-xs font-bold text-slate-900">{selectedProject.showTeam ? `Showcasing ${selectedProject.team.length} Member(s)` : 'Hide Team Section'}</p>
-                            </div>
-                          </div>
-                        </section>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -456,18 +369,13 @@ export function DeveloperDashboard() {
                         </div>
                       </motion.div>
                     ))}
-                    {projectPool.length === 0 && (
-                      <div className="col-span-full py-20 text-center">
-                        <p className="text-slate-400 font-medium italic">All quiet in the pool. Check back later for new submissions.</p>
-                      </div>
-                    )}
                   </div>
                 </section>
               </div>
             )}
           </AnimatePresence>
 
-          {/* --- VIEW ONLY MODAL (Project Details Preview) --- */}
+          {/* --- VIEW ONLY MODAL --- */}
           <AnimatePresence>
             {viewOnlyProject && (
               <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-sm">
@@ -475,42 +383,44 @@ export function DeveloperDashboard() {
                   initial={{ opacity: 0, scale: 0.9, y: 30 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9, y: 30 }}
-                  className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[3rem] shadow-2xl overflow-hidden flex flex-col"
+                  className="bg-white w-full max-w-5xl max-h-[90vh] rounded-[3rem] shadow-2xl overflow-hidden flex flex-col"
                 >
                   <div className="bg-slate-50 px-10 py-8 flex items-center justify-between border-b border-slate-100">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center border border-slate-100 shadow-sm">
                         <Eye className="text-indigo-600" size={24} />
                       </div>
-                      <div>
-                        <h3 className="text-2xl font-bold text-slate-900 leading-none">{viewOnlyProject.businessName}</h3>
-                        <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1 italic">Intake Data Preview</p>
-                      </div>
+                      <h3 className="text-2xl font-bold text-slate-900">{viewOnlyProject.businessName}</h3>
                     </div>
                     <button onClick={() => setViewOnlyProject(null)} className="p-3 hover:bg-white rounded-full transition-colors text-slate-400 hover:text-slate-900">
                       <X size={24} />
                     </button>
                   </div>
 
-                  <div className="p-10 overflow-y-auto custom-scrollbar flex-1 space-y-10">
+                  <div className="p-10 overflow-y-auto custom-scrollbar flex-1 space-y-12">
                     <ProjectDataGrid project={viewOnlyProject} />
 
-                    <div className="bg-slate-900 p-8 rounded-[2rem] space-y-4">
-                      <h4 className="text-xs font-black uppercase tracking-widest text-slate-500">AI Prompt Logic</h4>
-                      <textarea
-                        className="w-full h-24 bg-slate-800 border-none rounded-xl p-4 text-[11px] font-mono text-emerald-400 outline-none"
-                        readOnly
-                        value={`Develop architecture for ${viewOnlyProject.businessName}. Goals: ${viewOnlyProject.websiteGoals.join(', ')}.`}
-                      />
+                    {/* Prompt Logic in View Mode */}
+                    <div className="bg-slate-900 p-8 rounded-[2rem] space-y-6">
+                      <h4 className="text-xs font-black uppercase tracking-widest text-indigo-400">AI Prompt Library (Preview)</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {AI_TEMPLATES.map(t => (
+                          <div key={t.id} className="p-4 bg-slate-800 rounded-xl border border-slate-700/50">
+                            <p className="text-[10px] font-black text-slate-300 uppercase mb-2">{t.title}</p>
+                            <p className="text-[11px] text-slate-500 italic leading-relaxed">"{t.prompt}"</p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="p-8 border-t border-slate-50 bg-white flex justify-end">
+                  <div className="p-8 border-t border-slate-50 bg-white flex justify-end gap-4">
+                    <button onClick={() => setViewOnlyProject(null)} className="px-8 py-4 text-slate-400 font-bold text-xs uppercase">Close Preview</button>
                     <button
                       onClick={() => { handleClaim(viewOnlyProject.id); setViewOnlyProject(null); }}
                       className="bg-indigo-600 text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100"
                     >
-                      Claim & Start Build
+                      Claim Project
                     </button>
                   </div>
                 </motion.div>
@@ -557,56 +467,56 @@ function EmptyState({ type }: { type: 'workspace' | 'pool' }) {
 function ProjectDataGrid({ project }: { project: Project }) {
   return (
     <div className="space-y-12">
-      {/* Contact Section */}
+      {/* 1. Contact Info */}
       <section className="space-y-4">
-        <h4 className="text-[11px] font-black uppercase tracking-widest text-indigo-500 pb-2 border-b border-indigo-50">1. Personal Details</h4>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-6">
-          <DataItem title="Name" value={project.contactPersonName || 'Guest User'} />
-          <DataItem title="Phone" value={project.contactPersonPhone || 'Not Specified'} />
-          <DataItem title="Email" value={project.email} />
-          <DataItem title="Address" value={project.address} />
+        <h4 className="text-[11px] font-black uppercase tracking-widest text-indigo-500 border-b border-indigo-50 pb-2">1. Personal & Contact Details</h4>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <DataItem title="Client Name" value={project.contactPersonName || 'Guest User'} />
+          <DataItem title="Client Phone" value={project.contactPersonPhone || 'Not Specified'} />
+          <DataItem title="Email Address" value={project.email} />
+          <DataItem title="Physical Address" value={project.address} />
         </div>
       </section>
 
-      {/* Business Section */}
+      {/* 2. Business Details */}
       <section className="space-y-4">
-        <h4 className="text-[11px] font-black uppercase tracking-widest text-indigo-500 pb-2 border-b border-indigo-50">2. Business Details</h4>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-6">
-          <DataItem title="Business Name" value={project.businessName} />
-          <DataItem title="Establishment" value={project.yearsOfEstablishment || 'N/A'} />
-          <DataItem title="Areas" value={project.serviceAreas || 'Global'} />
-          <DataItem title="Tagline" value={project.tagline || 'No tagline set'} />
+        <h4 className="text-[11px] font-black uppercase tracking-widest text-indigo-500 border-b border-indigo-50 pb-2">2. Business Environment</h4>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <DataItem title="Business" value={project.businessName} />
+          <DataItem title="Established" value={project.yearsOfEstablishment || '2020'} />
+          <DataItem title="Service Areas" value={project.serviceAreas || 'Local'} />
+          <DataItem title="Business Phone" value={project.businessPhone || 'N/A'} />
         </div>
       </section>
 
-      {/* Website Section */}
+      {/* 3. Website Goals & Structure */}
       <section className="space-y-4">
-        <h4 className="text-[11px] font-black uppercase tracking-widest text-indigo-500 pb-2 border-b border-indigo-50">3. Website & Design</h4>
-        <div className="grid grid-cols-2 gap-10">
+        <h4 className="text-[11px] font-black uppercase tracking-widest text-indigo-500 border-b border-indigo-50 pb-2">3. Site structure & Goals</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-2">
-            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Main Goals</p>
+            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Selected Goals</p>
             <div className="flex flex-wrap gap-2">
-              {project.websiteGoals.map(g => <span key={g} className="px-2 py-1 bg-slate-50 text-[10px] font-bold text-slate-500 rounded border border-slate-100">{g}</span>)}
+              {project.websiteGoals.map(g => <span key={g} className="px-3 py-1 bg-slate-50 text-[10px] font-bold text-slate-500 rounded-lg">{g}</span>)}
             </div>
           </div>
           <div className="space-y-2">
-            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Selected Navigation</p>
+            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Navigation Builder</p>
             <div className="flex flex-wrap gap-2">
-              {project.selectedNavigation.map(n => <span key={n} className="px-2 py-1 bg-slate-900 text-[10px] font-bold text-white rounded">{n}</span>)}
+              {project.selectedNavigation.map(n => <span key={n} className="px-3 py-1 bg-slate-900 text-[10px] font-bold text-white rounded-lg">{n}</span>)}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Assets Section */}
+      {/* 4. Branding & Logo */}
       <section className="space-y-4">
-        <h4 className="text-[11px] font-black uppercase tracking-widest text-indigo-500 pb-2 border-b border-indigo-50">4. Branding & Logo Related</h4>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          <DataItem title="Logo Status" value={project.hasLogo ? 'Logo Provided' : 'Needs Design'} />
+        <h4 className="text-[11px] font-black uppercase tracking-widest text-indigo-500 border-b border-indigo-50 pb-2">4. Branding & Assets</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <DataItem title="Logo Requirement" value={project.hasLogo ? 'Logo Supplied' : 'Needs Design'} />
           <div className="space-y-2">
             <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Brand Personality</p>
             <div className="flex flex-wrap gap-2">
-              {project.logoPreferences.brandPersonality.map(p => <span key={p} className="px-3 py-1 bg-white border border-slate-200 text-[9px] font-black uppercase rounded-lg text-slate-400">{p}</span>)}
+              {project.logoPreferences.brandPersonality.map(p => <span key={p} className="px-3 py-1 bg-white border border-slate-200 text-[9px] font-black uppercase text-slate-400 rounded-lg">{p}</span>)}
             </div>
           </div>
         </div>
