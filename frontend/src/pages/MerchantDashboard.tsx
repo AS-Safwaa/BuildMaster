@@ -74,7 +74,7 @@ export function MerchantDashboard() {
         {/* Nav */}
         <nav className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-50">
           <div className="flex items-center gap-4">
-            <h1 className="font-black text-xl tracking-tighter">
+            <h1 className="font-bold text-lg tracking-tighter uppercase">
               <span className="text-blue-600">BUILD</span>MASTER
             </h1>
             <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">Merchant</span>
@@ -97,8 +97,8 @@ export function MerchantDashboard() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-3xl font-black text-gray-900">Merchant Dashboard</h2>
-              <p className="text-gray-500 mt-1">Manage your projects and view analytics</p>
+              <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Merchant Dashboard</h2>
+              <p className="text-[11px] text-gray-500 mt-1 uppercase tracking-wider">Manage your projects and view analytics</p>
             </div>
             <AnimatedButton onClick={() => setShowCreateModal(true)}>
               <Plus size={18} /> New Project
@@ -111,8 +111,8 @@ export function MerchantDashboard() {
               <AnimatedCard key={stat.label} delay={i * 0.1} className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
-                    <p className="text-3xl font-black text-gray-900 mt-1">{stat.value}</p>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{stat.label}</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
                   </div>
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${stat.color}`}>
                     <stat.icon size={22} />
@@ -151,8 +151,8 @@ export function MerchantDashboard() {
                 <AnimatedCard key={project.id} delay={i * 0.1} className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${project.status === 'active' ? 'bg-emerald-100 text-emerald-700' :
-                        project.status === 'completed' ? 'bg-blue-100 text-blue-700' :
-                          'bg-amber-100 text-amber-700'
+                      project.status === 'completed' ? 'bg-blue-100 text-blue-700' :
+                        'bg-amber-100 text-amber-700'
                       }`}>
                       {project.status}
                     </span>

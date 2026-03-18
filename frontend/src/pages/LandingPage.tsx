@@ -73,7 +73,7 @@ export function LandingPage() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50">
+      <div className="min-h-screen bg-white text-slate-800">
         {/* Onboarding Modal Overlay */}
         <AnimatePresence>
           {showOnboarding && (
@@ -171,16 +171,15 @@ export function LandingPage() {
           )}
         </AnimatePresence>
 
-        {/* ── Navbar ──────────────────────────────────── */}
-        <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-slate-100">
+          <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
             <motion.h1
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="font-black text-2xl tracking-tighter"
+              className="font-bold text-lg tracking-tighter"
             >
-              <span className="text-indigo-600">BUILD</span>
-              <span className="text-gray-900">MASTER</span>
+              <span className="text-blue-600">BUILD</span>
+              <span className="text-slate-900 border-l border-slate-200 ml-2 pl-2">MASTER</span>
             </motion.h1>
 
             <motion.div
@@ -188,61 +187,42 @@ export function LandingPage() {
               animate={{ opacity: 1, x: 0 }}
               className="flex items-center gap-3"
             >
-              {isAuthenticated ? (
-                <>
-                  <span className="text-sm text-gray-500">Welcome, <span className="font-bold text-gray-900">{user?.name}</span></span>
-                  <AnimatedButton size="sm" onClick={() => navigate(`/${user?.role}`)}>
-                    Dashboard <ArrowRight size={14} />
-                  </AnimatedButton>
-                </>
-              ) : (
-                <AnimatedButton size="sm" onClick={() => setShowOnboarding(true)}>
-                  Get Started <ArrowRight size={14} />
-                </AnimatedButton>
-              )}
+              <AnimatedButton size="sm" className="bg-blue-600 text-white" onClick={() => setShowOnboarding(true)}>
+                Get Started <ArrowRight size={14} />
+              </AnimatedButton>
             </motion.div>
           </div>
         </nav>
 
-        {/* ── Hero Section ────────────────────────────── */}
-        <section className="max-w-7xl mx-auto px-6 pt-20 pb-16 text-center">
+        <section className="max-w-7xl mx-auto px-6 pt-12 pb-8 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="space-y-6"
+            transition={{ duration: 0.5 }}
+            className="space-y-4"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-sm font-bold">
-              <Sparkles size={16} />
-              AI-Powered Project Management
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest">
+              <Sparkles size={12} />
+              AI Project Management v2.0
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-[1.1]">
-              Build Projects{' '}
-              <motion.span
-                className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 bg-clip-text text-transparent"
-                initial={{ backgroundPosition: '0% 50%' }}
-                animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-                transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
-                style={{ backgroundSize: '200% 200%' }}
-              >
-                Like a Pro
-              </motion.span>
+            <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+              Scale your agency <br /> with <span className="text-blue-600 italic">Precision.</span>
             </h1>
 
-            <p className="text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              The complete SaaS platform for agencies. Configure, build, and deploy client projects
-              with role-based workflows and AI-powered automation.
+            <p className="text-sm text-slate-500 max-w-xl mx-auto leading-relaxed font-medium">
+              A high-precision configuration engine for modern agency workflows.
+              Build, manage, and scale projects in a unified azure-themed workspace.
             </p>
 
-            <div className="flex items-center justify-center gap-4 pt-4">
-              <AnimatedButton size="lg" onClick={() => setShowOnboarding(true)}>
-                Quick Intake <Sparkles size={18} className="ml-1 text-amber-400" />
+            <div className="flex items-center justify-center gap-3 pt-2">
+              <AnimatedButton size="md" className="bg-blue-600 shadow-xl shadow-blue-500/20" onClick={() => setShowOnboarding(true)}>
+                Launch Intake <ArrowRight size={16} />
               </AnimatedButton>
-              <AnimatedButton variant="secondary" size="lg" onClick={() => {
+              <AnimatedButton variant="secondary" size="md" className="border-slate-200" onClick={() => {
                 document.getElementById('roles')?.scrollIntoView({ behavior: 'smooth' });
               }}>
-                Explore Roles
+                Role Matrix
               </AnimatedButton>
             </div>
           </motion.div>
@@ -269,42 +249,37 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* ── Role Cards ──────────────────────────────── */}
-        <section id="roles" className="max-w-7xl mx-auto px-6 py-20">
+        <section id="roles" className="max-w-7xl mx-auto px-6 py-12">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-10"
           >
-            <h2 className="text-2xl md:text-3xl font-black text-gray-900">Choose Your Role</h2>
-            <p className="text-gray-500 mt-3 text-base">Each role unlocks a tailored dashboard experience</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight underline adorn decoration-blue-500/30 underline-offset-8 decoration-4">Role Access Control</h2>
+            <p className="text-slate-500 mt-4 text-sm font-medium">Precision-built dashboards for every stage of your build cycle</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {roleCards.map((card, i) => (
               <motion.div
                 key={card.role}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.15, duration: 0.5 }}
-                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                transition={{ delay: i * 0.1, duration: 0.4 }}
                 onClick={() => handleRoleClick(card.path)}
-                className={`relative group cursor-pointer bg-white rounded-3xl p-8 border border-gray-100 shadow-lg ${card.shadowColor} hover:shadow-xl transition-shadow duration-300 overflow-hidden`}
+                className="group cursor-pointer bg-white rounded-3xl p-6 border border-slate-100 hover:border-blue-500/10 hover:shadow-2xl hover:shadow-blue-500/5 transition-all text-center"
               >
-                {/* Gradient accent */}
-                <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${card.gradient}`} />
-
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${card.gradient} flex items-center justify-center mb-6 shadow-lg`}>
-                  <card.icon size={28} className="text-white" />
+                <div className={`w-14 h-14 rounded-2xl bg-slate-50 group-hover:bg-blue-600 transition-all flex items-center justify-center mx-auto mb-6`}>
+                  <card.icon size={24} className="text-blue-600 group-hover:text-white transition-colors" />
                 </div>
 
-                <h3 className="text-2xl font-black text-gray-900 mb-3">{card.title}</h3>
-                <p className="text-gray-500 leading-relaxed mb-6">{card.description}</p>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">{card.title}</h3>
+                <p className="text-xs text-slate-500 leading-relaxed font-medium mb-6 line-clamp-2">{card.description}</p>
 
-                <div className={`inline-flex items-center gap-2 text-sm font-bold bg-gradient-to-r ${card.gradient} bg-clip-text text-transparent group-hover:gap-3 transition-all`}>
-                  Enter Dashboard <ArrowRight size={16} className="text-indigo-500" />
+                <div className="text-[10px] font-black uppercase tracking-widest text-blue-600 group-hover:text-blue-500 transition-colors flex items-center justify-center gap-2">
+                  Access Portal <ArrowRight size={12} />
                 </div>
               </motion.div>
             ))}
