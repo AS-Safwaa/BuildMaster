@@ -21,7 +21,7 @@ import { MasterConfig, Project, Developer } from '../types';
 import { INITIAL_MASTER_CONFIG, MOCK_PROJECTS, DEVELOPERS } from '../constants';
 import toast from 'react-hot-toast';
 
-type AdminView = 'overview' | 'config' | 'admin-panel' | 'pool' | 'detail' | 'users';
+type AdminView = 'overview' | 'config' | 'pool' | 'detail' | 'users';
 
 export function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -68,11 +68,6 @@ export function AdminDashboard() {
     navigate('/');
   };
 
-  const stats = [
-    { label: 'Total Projects', value: projects.length, icon: Briefcase, color: 'bg-blue-50 text-blue-600' },
-    { label: 'Active', value: projects.filter((p: Project) => p.status === 'Submitted' || p.status === 'In Development').length, icon: LayoutGrid, color: 'bg-blue-50 text-blue-600' },
-    { label: 'Completed', value: projects.filter((p: Project) => p.status === 'Completed').length, icon: Settings, color: 'bg-emerald-50 text-emerald-600' },
-  ];
 
   if (isLoading && view === 'overview') return <SkeletonDashboard />;
 
@@ -105,16 +100,10 @@ export function AdminDashboard() {
                 <Users size={18} /> Users
               </button>
               <button
-                onClick={() => handleViewChange('admin-panel')}
-                className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'admin-panel' ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50'}`}
-              >
-                <ShieldCheck size={18} /> Admin Panel
-              </button>
-              <button
                 onClick={() => handleViewChange('pool')}
                 className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'pool' ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:bg-gray-50'}`}
               >
-                <Users size={18} /> All Projects
+                <Users size={18} /> Project Pool
               </button>
             </div>
           </div>
@@ -134,60 +123,6 @@ export function AdminDashboard() {
 
         <main className="pb-12">
           {view === 'overview' && (
-            <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
-              <div>
-                <h2 className="text-xl font-bold text-slate-900 tracking-tight">Admin Intelligence</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Global system telemetry and project management</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {stats.map((stat, i) => (
-                  <AnimatedCard key={stat.label} delay={i * 0.1} className="p-5">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{stat.label}</p>
-                        <p className="text-xl font-bold text-slate-900 mt-1">{stat.value}</p>
-                      </div>
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${stat.color}`}>
-                        <stat.icon size={18} />
-                      </div>
-                    </div>
-                  </AnimatedCard>
-                ))}
-              </div>
-
-              {/* Recent Projects */}
-              <AnimatedCard delay={0.3} className="p-5">
-                <h3 className="text-base font-bold text-slate-900 mb-3">Recent Activity</h3>
-                <div className="space-y-2">
-                  {projects.slice(0, 5).map((project: Project) => (
-                    <div
-                      key={project.id}
-                      className="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl hover:bg-slate-100 transition-all cursor-pointer"
-                      onClick={() => { setActiveProjectId(project.id); handleViewChange('detail'); }}
-                    >
-                      <div>
-                        <p className="text-sm font-bold text-slate-900">{project.businessName}</p>
-                        <p className="text-[10px] text-slate-400 font-bold">{project.id}</p>
-                      </div>
-                      <span className={`px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider ${project.status === 'Completed' ? 'bg-emerald-50 text-emerald-600' :
-                        project.status === 'In Development' ? 'bg-blue-50 text-blue-600' :
-                          'bg-slate-200 text-slate-600'
-                        }`}>
-                        {project.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </AnimatedCard>
-            </div>
-          )}
-
-          {view === 'config' && (
-            <AdminConfig config={masterConfig} setConfig={setMasterConfig} />
-          )}
-
-          {view === 'admin-panel' && (
             <AdminPanel
               projects={projects}
               developers={DEVELOPERS}
@@ -195,6 +130,11 @@ export function AdminDashboard() {
               onViewProject={(id) => { setActiveProjectId(id); handleViewChange('detail'); }}
             />
           )}
+
+          {view === 'config' && (
+            <AdminConfig config={masterConfig} setConfig={setMasterConfig} />
+          )}
+
 
           {view === 'pool' && (
             <ProjectPool
@@ -211,7 +151,7 @@ export function AdminDashboard() {
               project={activeProject}
               role="admin"
               onUpdate={(updates: Partial<Project>) => updateProject(activeProject.id, updates)}
-              onBack={() => handleViewChange('admin-panel')}
+              onBack={() => handleViewChange('overview')}
             />
           )}
 
