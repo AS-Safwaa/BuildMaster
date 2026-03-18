@@ -43,10 +43,21 @@ The project uses a **monorepo structure** to maintain synchronization between th
 ### 2. Role-Based Navigation
 - The platform uses **3 distinct dashboards**:
   - **Admin**: Full oversight. Can view all projects, manage system-wide settings, and check project pools.
-  - **Merchant**: Focused on creation. Can create new projects, view their own project analytics, and manage their status.
+  - **Developer**: Implementation-focused. Manage assigned projects and claim new ones from the pool.
   - **User**: Submission-focused. Users can view status updates on their assigned projects and submit complex intake forms.
 
-### 3. AI-Powered Workflow
+### 3. Developer System Flow
+1. **Access & Control**: Standard Auth with Profile Management. Developers access available projects through a specialized workspace.
+2. **Project Pool**: A centralized queue of "Submitted" projects. Developers can preview basic info (Niche, Branding, Logo needs) and **Claim** them.
+3. **Workspace (My Projects)**: A dedicated management area for claimed work.
+   - **Progress Tracking**: Metadata validation (checking for missing brief details).
+   - **Work Area**: Integration with AI Prompt Engines for automated site/code generation.
+   - **Technical Checklist**: Interactive task tracking for Content, Mobile-friendliness, Links, and Assets.
+4. **Lifecycle Management**: 
+   - **Stages**: `Submitted` → `In Progress` → `In Review` → `Approved`.
+   - **Output**: Direct input for **Draft Preview Links** and **Final Live URLs**.
+
+### 4. AI Integration
 - Instead of calling Gemini directly from the browser (risky), the frontend calls `/api/ai/generate`.
 - The backend appends necessary context and the API key before communicating with Google's servers.
 - This ensures your API usage is audited, secure, and hidden from the client's network tab.
