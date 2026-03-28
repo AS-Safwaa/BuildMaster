@@ -4,6 +4,7 @@ import { useWizard } from '../../context/WizardContext';
 import { CheckCircle2, Loader2, Rocket, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export const Phase5 = () => {
   const { data, setPhase } = useWizard();
@@ -11,16 +12,35 @@ export const Phase5 = () => {
   const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API Submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      // 1. Start submission session
+      const startRes = await axios.post('http://localhost:5000/api/v1/guest/submissions/start');
+      const sessionId = startRes.data.session_id;
+
+      // 2. Transmit the complete JSON state blob
+      await axios.post(`http://localhost:5000/api/v1/guest/submissions/${sessionId}/answers`, {
+        answers: [{ question_id: 999, answer_value: data }]
+      });
+
+      // 3. Complete submission with business profile details
+      await axios.post(`http://localhost:5000/api/v1/guest/submissions/${sessionId}/complete`, {
+        contact_email: data.email,
+        contact_phone: data.phone,
+        business_name: data.businessName || data.referrerCompany
+      });
+
       setSubmitted(true);
-      toast.success("Project brief successfully submitted!");
-    }, 2000);
+      toast.success("Project brief successfully submitted over API!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to connect to backend Server. Ensure it is running.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (submitted) {
