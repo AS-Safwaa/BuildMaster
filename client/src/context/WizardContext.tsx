@@ -3,6 +3,9 @@ import React, { createContext, useContext, useState } from 'react';
 // Form Data Interface based on 16 sections
 interface WizardData {
   leadSource: 'self' | 'referral' | '';
+  referrerName: string;
+  referrerCompany: string;
+  referrerEmail: string;
   // Phase 1
   businessName: string;
   establishmentYear: string;
@@ -30,6 +33,7 @@ interface WizardData {
 
 const defaultData: WizardData = {
   leadSource: '',
+  referrerName: '', referrerCompany: '', referrerEmail: '',
   businessName: '', establishmentYear: '', contactName: '', phone: '', email: '', address: '', domainConfig: '', hostingConfig: '',
   category: '', services: [], usps: [],
   taglineStyle: '', taglineCustom: '',
