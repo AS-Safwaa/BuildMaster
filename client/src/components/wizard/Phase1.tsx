@@ -3,8 +3,17 @@ import { motion } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
 import { ArrowRight, UserPlus, Send } from 'lucide-react';
 
+import { useLocation } from 'react-router-dom';
+
 export const Phase1 = () => {
   const { data, updateData, setPhase } = useWizard();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    if (location.state?.leadSource && !data.leadSource) {
+      updateData({ leadSource: location.state.leadSource });
+    }
+  }, [location.state]);
 
   return (
     <motion.div
@@ -15,28 +24,7 @@ export const Phase1 = () => {
     >
       <div>
         <h2 className="text-3xl font-extrabold text-slate-900 mb-2">Project Initialization</h2>
-        <p className="text-slate-500">How did you hear about us, and what is your core identity?</p>
-      </div>
-
-      {/* Lead Source */}
-      <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100">
-        <label className="text-sm font-bold text-slate-800 block mb-4">Are you starting this for yourself, or were you referred by our team/partner?</label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <button 
-            onClick={() => updateData({ leadSource: 'self' })}
-            className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${data.leadSource === 'self' ? 'border-blue-600 bg-white shadow-md' : 'border-slate-200 bg-white opacity-70 hover:opacity-100'}`}
-          >
-            <UserPlus className={`w-5 h-5 ${data.leadSource === 'self' ? 'text-blue-600' : 'text-slate-400'}`} />
-            <span className="font-semibold text-slate-700">Starting for myself</span>
-          </button>
-          <button 
-            onClick={() => updateData({ leadSource: 'referral' })}
-            className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${data.leadSource === 'referral' ? 'border-blue-600 bg-white shadow-md' : 'border-slate-200 bg-white opacity-70 hover:opacity-100'}`}
-          >
-            <Send className={`w-5 h-5 ${data.leadSource === 'referral' ? 'text-blue-600' : 'text-slate-400'}`} />
-            <span className="font-semibold text-slate-700">I was referred</span>
-          </button>
-        </div>
+        <p className="text-slate-500">Let's start with your core identity and contact details.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

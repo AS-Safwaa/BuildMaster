@@ -38,7 +38,7 @@ const WizardContent = () => {
           </h1>
         </div>
 
-        <div className="px-8 mt-6">
+        <div className="flex-1 overflow-y-auto px-8 py-6">
           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Progress</p>
           <div className="space-y-6">
             {steps.map((step) => {
@@ -69,8 +69,8 @@ const WizardContent = () => {
           </div>
         </div>
 
-        <div className="mt-auto p-8">
-          <div className="flex items-center gap-3 p-4 bg-slate-100 rounded-xl">
+        <div className="p-8 border-t border-slate-100 bg-white">
+          <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
             <User className="w-8 h-8 text-slate-400" />
             <div>
               <p className="text-sm font-bold text-slate-700">Guest Client</p>
