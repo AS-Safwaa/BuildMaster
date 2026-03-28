@@ -19,23 +19,21 @@ export const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      if (email === 'admin@demo.com' && password === 'Admin@123') {
-        const res = await axios.post('http://localhost:5000/api/v1/admin/auth/login', { email, password });
-        login(res.data.token, { id: res.data.admin.id, email: res.data.admin.email, name: res.data.admin.name, role: 'admin' });
-        toast.success('Welcome back to standard operations!');
-        navigate('/admin');
-        return;
-      }
-      if (email === 'developer@demo.com' && password === 'Developer@123') {
-        login('mock-jwt-token-developer', { id: '2', email, name: 'Developer', role: 'developer' });
-        toast.success('Welcome back!');
-        navigate('/developer');
-        return;
+      const res = await axios.post('http://localhost:5000/api/v1/admin/auth/login', { email, password });
+      
+      const userData = res.data.admin; // Currently mapped as 'admin' in backend response
+      login(res.data.token, userData);
+
+      if (userData.role === 'admin') {
+          toast.success('Welcome to the Admin Engine.');
+          navigate('/admin');
+      } else {
+          toast.success('Welcome to the Developer Portal.');
+          navigate('/developer');
       }
 
-      toast.error('Invalid prototype credentials. Use admin@demo.com or developer@demo.com');
-    } catch (err) {
-      toast.error('Login failed.');
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Invalid credentials. Network error.');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -43,54 +41,58 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 selection:bg-blue-500 selection:text-white">
+      {/* Background Orbs */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+
       <button 
         onClick={() => navigate('/')}
-        className="absolute top-8 left-8 flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors font-medium cursor-pointer"
+        className="absolute top-8 left-8 flex items-center gap-2 text-slate-400 hover:text-white transition-colors font-medium cursor-pointer z-20"
       >
-        <ArrowLeft className="w-5 h-5" /> Back Home
+        <ArrowLeft className="w-5 h-5" /> Back to ProjectHub
       </button>
 
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white max-w-md w-full rounded-3xl shadow-xl overflow-hidden"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-slate-900 border border-white/10 max-w-md w-full rounded-3xl shadow-2xl overflow-hidden z-10"
       >
-        <div className="bg-[#1a1a2e] p-8 text-center">
-          <h2 className="text-2xl font-bold text-white mb-2">Workspace Login</h2>
-          <p className="text-blue-200 text-sm">Access your ProjectHub dashboard</p>
+        <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-8 text-center border-b border-white/10">
+          <h2 className="text-2xl font-black text-white mb-2 tracking-tight">System Authentication</h2>
+          <p className="text-blue-400 text-sm font-medium">Restricted Workspace Access</p>
         </div>
 
         <div className="p-8">
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+              <label className="block text-sm font-bold text-slate-300 mb-2">Platform Identity</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-slate-400" />
+                  <Mail className="h-5 w-5 text-slate-500" />
                 </div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                  placeholder="admin@demo.com"
+                  className="block w-full pl-11 pr-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                  placeholder="name@demo.com"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Password</label>
+              <label className="block text-sm font-bold text-slate-300 mb-2">Secret Key</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400" />
+                  <Lock className="h-5 w-5 text-slate-500" />
                 </div>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                  className="block w-full pl-11 pr-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                   placeholder="••••••••"
                   required
                 />
@@ -100,17 +102,18 @@ export const LoginPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-70"
+              className="w-full flex justify-center py-4 px-4 border border-transparent rounded-xl shadow-lg text-sm font-black text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all disabled:opacity-70 disabled:hover:bg-blue-600"
             >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign In'}
+              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Authorize'}
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-            <p className="text-xs text-slate-400 font-medium">Prototype Login</p>
-            <div className="mt-2 text-xs text-slate-500 space-y-1">
-               <p>Admin: admin@demo.com / Admin@123</p>
-               <p>Developer: developer@demo.com / Developer@123</p>
+          <div className="mt-8 pt-6 border-t border-slate-800 text-center">
+            <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-3">Live Engineering Credentials</p>
+            <div className="text-xs text-slate-400 space-y-2 font-mono">
+               <p className="flex justify-between px-4"><span>Admin:</span> <span>admin@demo.com</span></p>
+               <p className="flex justify-between px-4"><span>Dev:</span> <span>developer@demo.com</span></p>
+               <p className="text-center text-slate-600 mt-2">Pass: Developer@123 / Admin@123</p>
             </div>
           </div>
         </div>

@@ -20,11 +20,13 @@ const masterRoutes = require('./routes/admin/masterRoutes');
 const formBuilderRoutes = require('./routes/admin/formBuilderRoutes');
 const dashboardRoutes = require('./routes/admin/dashboardRoutes');
 const guestRoutes = require('./routes/guest/guestRoutes');
+const developerRoutes = require('./routes/developer/developerRoutes');
 
 app.use('/api/v1/admin/auth', authRoutes);
 app.use('/api/v1/admin/masters', masterRoutes);
 app.use('/api/v1/admin/forms', formBuilderRoutes);
 app.use('/api/v1/admin/dashboard', dashboardRoutes);
+app.use('/api/v1/developer', developerRoutes);
 app.use('/api/v1/guest', guestRoutes);
 
 const PORT = process.env.PORT || 5000;

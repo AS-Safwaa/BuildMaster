@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles, Building2, UserCircle, UserPlus, Send, X, Layers, Paintbrush, Rocket, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Sparkles, UserPlus, Send, X, Zap, Target, Globe, ChevronRight } from 'lucide-react';
 
 export const LandingPage = () => {
   const navigate = useNavigate();
@@ -12,32 +12,44 @@ export const LandingPage = () => {
     navigate('/questionnaire', { state: { leadSource: source } });
   };
 
-  const features = [
-    { icon: <Layers className="text-blue-500" />, title: "Structured Briefs", desc: "No more endless email chains. Our 5-phase questionnaire captures everything needed." },
-    { icon: <Paintbrush className="text-purple-500" />, title: "Visual Vibe Boards", desc: "Select aesthetic directions natively with curated design themes and mockups." },
-    { icon: <Rocket className="text-green-500" />, title: "Instant Delivery", desc: "Your completed brief is securely routed directly to our developer pool." }
+  const steps = [
+    { num: "01", title: "Initialize Request", desc: "Launch the dynamic brief generator. Tell us exactly who you are and what your market needs." },
+    { num: "02", title: "Select Aesthetics", desc: "Interact with our stunning Vibe Boards to pinpoint the exact visual language of your brand." },
+    { num: "03", title: "AI Tagline Generation", desc: "Let our system analyze your inputs to suggest powerful, market-ready business taglines." },
+    { num: "04", title: "Developer Handoff", desc: "Hit submit. Your structured JSON brief is instantly routed to our elite Developer Pool." }
+  ];
+
+  const benefits = [
+    { icon: <Target className="text-white" />, color: "bg-blue-600", title: "Eliminate Ambiguity", desc: "Stop guessing what the client wants. Our structured 16-phase forms extract the absolute truth." },
+    { icon: <Zap className="text-white" />, color: "bg-purple-600", title: "Lightning Fast Intake", desc: "What used to take 3 weeks of email ping-pong now takes 5 minutes of focused clicking." },
+    { icon: <Globe className="text-white" />, color: "bg-emerald-600", title: "Global Fulfillment", desc: "The second a brief is submitted, developers worldwide receive assignment notifications." }
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-slate-950 text-slate-50 relative overflow-hidden font-sans selection:bg-blue-500 selection:text-white">
       
-      {/* Decorative Orbs */}
-      <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-300 rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob"></div>
-      <div className="absolute top-[10%] right-[-10%] w-[800px] h-[800px] bg-purple-300 rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob animation-delay-2000"></div>
-      <div className="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] bg-emerald-300 rounded-full mix-blend-multiply filter blur-[120px] opacity-30 animate-blob animation-delay-4000"></div>
+      {/* Intense Background Glows */}
+      <div className="absolute top-[-30%] left-[-10%] w-[1000px] h-[1000px] bg-blue-600 rounded-full mix-blend-screen filter blur-[150px] opacity-30 animate-pulse"></div>
+      <div className="absolute top-[20%] right-[-20%] w-[800px] h-[800px] bg-purple-600 rounded-full mix-blend-screen filter blur-[150px] opacity-30 animate-pulse animation-delay-2000"></div>
+      <div className="absolute bottom-[-20%] left-[20%] w-[800px] h-[800px] bg-emerald-600 rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse animation-delay-4000"></div>
+
+      {/* Grid Pattern overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none"></div>
 
       {/* Nav */}
-      <nav className="relative z-20 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-blue-600" />
-          <span className="font-extrabold text-2xl tracking-tight text-slate-900">ProjectHub</span>
+      <nav className="relative z-20 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto border-b border-white/5">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+          <span className="font-extrabold text-2xl tracking-tight text-white">ProjectHub</span>
         </div>
-        <div className="flex items-center gap-6">
-          <button onClick={() => navigate('/login')} className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors hidden sm:block">Developer Portal</button>
-          <button onClick={() => navigate('/login')} className="text-sm font-semibold text-slate-600 hover:text-purple-600 transition-colors hidden sm:block">Admin Portal</button>
+        <div className="flex items-center gap-8">
+          <button onClick={() => navigate('/login')} className="text-sm font-bold text-slate-300 hover:text-white transition-colors hidden sm:block">Developer Portal</button>
+          <button onClick={() => navigate('/login')} className="text-sm font-bold text-slate-300 hover:text-white transition-colors hidden sm:block">Admin Engine</button>
           <button 
             onClick={() => navigate('/login')}
-            className="px-5 py-2.5 bg-white/50 backdrop-blur-md border border-slate-200 text-slate-900 rounded-full text-sm font-bold shadow-sm hover:bg-white transition-all hover:shadow-md"
+            className="px-6 py-2.5 bg-white text-slate-950 rounded-full text-sm font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] hover:scale-105 transition-all"
           >
             Sign In
           </button>
@@ -45,137 +57,167 @@ export const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <main className="relative z-10 flex flex-col items-center justify-center pt-24 pb-32 px-6 max-w-5xl mx-auto text-center">
+      <main className="relative z-10 flex flex-col items-center justify-center pt-32 pb-40 px-6 max-w-6xl mx-auto text-center">
         <motion.div 
-          initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
-          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-semibold mb-8">
-            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-            Seamless Website Intake Platform
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-slate-200 text-sm font-bold mb-10 backdrop-blur-md">
+            <span className="px-2 py-0.5 rounded-full bg-blue-500 text-white text-xs font-black uppercase tracking-wider mr-2">New</span>
+            The Ultimate Intake Architecture
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-black text-slate-900 mb-8 tracking-tighter leading-[1.1]">
-            Transform your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">vision</span> into reality.
+          <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-black text-white mb-8 tracking-tighter leading-[1] drop-shadow-2xl">
+            Design Your <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 animate-gradient-x">
+              Masterpiece.
+            </span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
-            The world's most elegant onboarding experience for founders and agencies. Define your branding, aesthetic, and digital requirements in minutes.
+          <p className="text-xl md:text-2xl text-slate-300 mb-14 max-w-3xl mx-auto leading-relaxed font-medium">
+            ProjectHub is the world's most expressive client onboarding engine. Transform scattered thoughts into highly structured, actionable developer blueprints in minutes.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowSourceModal(true)}
-              className="group flex items-center justify-center gap-3 px-10 py-5 bg-slate-900 text-white rounded-full text-lg font-bold shadow-2xl shadow-blue-900/20 hover:shadow-blue-900/40 transition-all z-20"
+              className="group flex items-center justify-center gap-3 px-12 py-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-xl font-black shadow-[0_0_40px_rgba(59,130,246,0.4)] hover:shadow-[0_0_60px_rgba(147,51,234,0.6)] transition-all z-20 border border-white/20"
             >
-              Start New Project
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              Start Your Project
+              <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
             </motion.button>
           </div>
-          
-          <p className="mt-6 text-sm font-medium text-slate-500">Takes less than 5 minutes to complete.</p>
         </motion.div>
       </main>
 
-      {/* Feature Section */}
-      <section className="relative z-10 bg-white/60 backdrop-blur-2xl border-t border-slate-200 py-32">
+      {/* What it helps us do */}
+      <section className="relative z-10 py-32 bg-slate-950/50 backdrop-blur-3xl border-y border-white/5">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">Built for Agency Scale</h2>
-            <p className="text-lg text-slate-500 mt-4 max-w-2xl mx-auto">ProjectHub bridges the gap between chaotic email briefs and stunning execution.</p>
+          <div className="text-center mb-24">
+            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6">Why ProjectHub?</h2>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto font-medium">We built this platform to obliterate the friction between a client's dream and a developer's execution context.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feat, idx) => (
+            {benefits.map((b, idx) => (
               <motion.div 
                 key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.2 }}
-                className="bg-white p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300"
+                transition={{ delay: idx * 0.1 }}
+                className="bg-white/5 border border-white/10 p-10 rounded-[2rem] hover:bg-white/10 transition-all hover:-translate-y-2 group"
               >
-                <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 shadow-sm border border-slate-100">
-                  {feat.icon}
+                <div className={`w-16 h-16 rounded-2xl ${b.color} flex items-center justify-center mb-8 shadow-lg shadow-black/20 group-hover:scale-110 transition-transform duration-500`}>
+                  {b.icon}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{feat.title}</h3>
-                <p className="text-slate-500 leading-relaxed font-medium">{feat.desc}</p>
+                <h3 className="text-2xl font-black text-white mb-4">{b.title}</h3>
+                <p className="text-slate-400 leading-relaxed font-medium text-lg">{b.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Social Proof */}
-      <div className="relative z-10 py-20 bg-slate-900 text-white text-center">
-        <p className="font-bold text-slate-400 tracking-widest uppercase text-sm mb-8">Trusted by 500+ Innovators</p>
-        <div className="flex flex-wrap justify-center gap-12 sm:gap-24 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-          {/* Mock Logos */}
-          <div className="font-black text-2xl tracking-tighter">ACME Corp</div>
-          <div className="font-black text-2xl tracking-tighter">Globex</div>
-          <div className="font-black text-2xl tracking-tighter">Soylent</div>
-          <div className="font-black text-2xl tracking-tighter">Initech</div>
-        </div>
-      </div>
+      {/* How It Works (Timeline) */}
+      <section className="relative z-10 py-32 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-24">
+            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6 relative inline-block">
+              How It Works
+              <div className="absolute -bottom-4 left-0 w-1/2 h-2 bg-gradient-to-r from-blue-500 to-transparent rounded-full"></div>
+            </h2>
+          </div>
 
-      {/* Footer */}
-      <footer className="relative z-10 bg-slate-50 py-12 border-t border-slate-200 text-center">
-         <p className="text-slate-500 font-medium">© 2026 ProjectHub Platform. All rights reserved.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {steps.map((step, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.2 }}
+                className="relative"
+              >
+                <div className="text-8xl font-black text-white/5 mb-6 -ml-4 select-none">{step.num}</div>
+                <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                  {step.title}
+                  {idx < steps.length - 1 && <ChevronRight className="w-5 h-5 text-blue-500 hidden lg:block absolute -right-6 top-12" />}
+                </h3>
+                <p className="text-slate-400 font-medium leading-relaxed">{step.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Footer */}
+      <footer className="relative z-10 border-t border-white/10 bg-slate-900 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent pointer-events-none"></div>
+        <div className="max-w-4xl mx-auto px-6 py-32 text-center relative z-20">
+          <h2 className="text-5xl font-black text-white mb-8">Ready to revolutionize your workflow?</h2>
+          <button onClick={() => setShowSourceModal(true)} className="px-10 py-5 bg-white text-slate-950 rounded-full text-lg font-bold shadow-xl hover:scale-105 transition-all">
+            Launch Platform Now
+          </button>
+        </div>
+        <div className="border-t border-white/5 py-8 text-center text-slate-500 font-medium text-sm">
+          © {new Date().getFullYear()} ProjectHub SaaS Platform. Engineered for absolute perfection.
+        </div>
       </footer>
 
       {/* Lead Source Modal */}
       <AnimatePresence>
         {showSourceModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xl">
             <motion.div 
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white rounded-[2rem] p-10 max-w-xl w-full shadow-2xl relative"
+              className="bg-slate-900 border border-white/10 rounded-[2rem] p-10 max-w-xl w-full shadow-2xl relative"
             >
               <button 
                 onClick={() => setShowSourceModal(false)}
-                className="absolute top-8 right-8 p-2 text-slate-400 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"
+                className="absolute top-8 right-8 p-2 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-full transition-colors hidden sm:block"
               >
                 <X className="w-6 h-6" />
               </button>
 
-              <h3 className="text-4xl font-black text-slate-900 mb-3 tracking-tight">Let's get started</h3>
-              <p className="text-lg text-slate-500 mb-10 font-medium">Are you initializing this project for your own business, or were you referred by our team?</p>
+              <h3 className="text-4xl font-black text-white mb-3 tracking-tight">Let's get started</h3>
+              <p className="text-lg text-slate-400 mb-10 font-medium">Are you initializing this project for your own business, or were you referred by our team?</p>
 
               <div className="space-y-4">
                 <button 
                   onClick={() => startProject('self')}
-                  className="w-full flex items-center gap-6 p-6 rounded-[1.5rem] border-2 border-slate-200 hover:border-blue-600 hover:bg-blue-50 hover:shadow-lg hover:shadow-blue-600/10 transition-all text-left group"
+                  className="w-full flex items-center gap-6 p-6 rounded-[1.5rem] bg-slate-800/50 border-2 border-slate-700 hover:border-blue-500 hover:bg-blue-900/20 transition-all text-left group"
                 >
-                  <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
+                  <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center text-blue-400 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all shadow-sm">
                     <UserPlus className="w-8 h-8" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-800 text-xl mb-1">Starting for myself</h4>
-                    <p className="text-sm font-medium text-slate-500">I am the business owner / direct client</p>
+                    <h4 className="font-bold text-white text-xl mb-1">Starting for myself</h4>
+                    <p className="text-sm font-medium text-slate-400">I am the business owner / direct client</p>
                   </div>
                   <div className="ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-                    <ArrowRight className="w-6 h-6 text-blue-600" />
+                    <ArrowRight className="w-6 h-6 text-blue-400" />
                   </div>
                 </button>
 
                 <button 
                   onClick={() => startProject('referral')}
-                  className="w-full flex items-center gap-6 p-6 rounded-[1.5rem] border-2 border-slate-200 hover:border-purple-600 hover:bg-purple-50 hover:shadow-lg hover:shadow-purple-600/10 transition-all text-left group"
+                  className="w-full flex items-center gap-6 p-6 rounded-[1.5rem] bg-slate-800/50 border-2 border-slate-700 hover:border-purple-500 hover:bg-purple-900/20 transition-all text-left group"
                 >
-                  <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all shadow-sm">
+                  <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center text-purple-400 group-hover:scale-110 group-hover:bg-purple-500 group-hover:text-white transition-all shadow-sm">
                     <Send className="w-8 h-8" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-800 text-xl mb-1">I was referred</h4>
-                    <p className="text-sm font-medium text-slate-500">A partner or team member sent me</p>
+                    <h4 className="font-bold text-white text-xl mb-1">I was referred</h4>
+                    <p className="text-sm font-medium text-slate-400">A partner or team member sent me</p>
                   </div>
                   <div className="ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-                    <ArrowRight className="w-6 h-6 text-purple-600" />
+                    <ArrowRight className="w-6 h-6 text-purple-400" />
                   </div>
                 </button>
               </div>
