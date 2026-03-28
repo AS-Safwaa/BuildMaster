@@ -18,11 +18,11 @@ export const Phase5 = () => {
     
     try {
       // 1. Start submission session
-      const startRes = await axios.post('http://localhost:5000/api/v1/guest/submissions/start');
+      const startRes = await axios.post('http://localhost:5000/api/v1/guest/submissions');
       const sessionId = startRes.data.session_id;
 
       // 2. Transmit the complete JSON state blob
-      await axios.post(`http://localhost:5000/api/v1/guest/submissions/${sessionId}/answers`, {
+      await axios.put(`http://localhost:5000/api/v1/guest/submissions/${sessionId}/answers`, {
         answers: [{ question_id: 999, answer_value: data }]
       });
 
