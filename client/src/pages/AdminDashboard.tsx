@@ -7,7 +7,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 export const AdminDashboard = () => {
-  const { user, token, logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('forms');
   
@@ -22,10 +22,9 @@ export const AdminDashboard = () => {
 
   const fetchForms = async () => {
     try {
-      const config = { headers: { Authorization: `Bearer ${token}` } };
       const [stepsRes, qsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/v1/admin/forms/steps', config),
-        axios.get('http://localhost:5000/api/v1/admin/forms/questions', config)
+        axios.get('http://localhost:5000/api/v1/admin/forms/steps'),
+        axios.get('http://localhost:5000/api/v1/admin/forms/questions')
       ]);
       setSteps(stepsRes.data);
       setQuestions(qsRes.data);
@@ -37,8 +36,7 @@ export const AdminDashboard = () => {
 
   const fetchMasters = async () => {
     try {
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get('http://localhost:5000/api/v1/admin/masters/types', config);
+      const res = await axios.get('http://localhost:5000/api/v1/admin/masters/types');
       setMasterTypes(res.data);
     } catch (err) {
       console.error(err);
