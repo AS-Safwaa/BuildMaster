@@ -19,28 +19,20 @@ export const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      // Mock validation to redirect correctly based on role in prototype since backend might not be fully seeded
-      if (email.includes('admin')) {
+      if (email === 'admin@demo.com' && password === 'Admin@123') {
         login('mock-jwt-token-admin', { id: '1', email, name: 'Admin User', role: 'admin' });
         toast.success('Welcome back, Admin!');
         navigate('/admin');
         return;
       }
-      if (email.includes('developer')) {
+      if (email === 'developer@demo.com' && password === 'Developer@123') {
         login('mock-jwt-token-developer', { id: '2', email, name: 'Developer', role: 'developer' });
         toast.success('Welcome back!');
         navigate('/developer');
         return;
       }
 
-      // If backend is running and we want real integration:
-      /*
-      const res = await axios.post('http://localhost:5000/api/v1/admin/auth/login', { email, password });
-      login(res.data.token, res.data.admin);
-      navigate('/admin');
-      */
-      
-      toast.error('Invalid prototype credentials. Use admin@demo.com or student1@demo.com');
+      toast.error('Invalid prototype credentials. Use admin@demo.com or developer@demo.com');
     } catch (err) {
       toast.error('Login failed.');
       console.error(err);
