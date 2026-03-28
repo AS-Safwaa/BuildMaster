@@ -1,32 +1,32 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth, UserRole } from '../context/AuthContext';
-import { SkeletonDashboard } from './ui/Skeleton';
+import { useAuth } from '../context/AuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  role?: UserRole;
+  role?: 'admin' | 'student' | 'guest'; // Optional specific role check
 }
 
-/**
- * Route Guard — ensures user is authenticated and has correct role
- */
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, role }) => {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
   const location = useLocation();
 
   if (isLoading) {
-    return <SkeletonDashboard />;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-slate-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
-  if (!isAuthenticated) {
-    // Redirect to login but keep current location
-    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  if (!user) {
+    // Save the attempted url
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (role && user?.role !== role) {
-    // If user has wrong role, send them to their own dashboard or home
-    return <Navigate to={user?.role === 'admin' ? '/admin' : '/developer'} replace />;
+  if (role && user.role !== role) {
+    // Not authorized for this specific role
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

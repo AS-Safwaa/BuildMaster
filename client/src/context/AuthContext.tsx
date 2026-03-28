@@ -1,124 +1,64 @@
-// ─────────────────────────────────────────────────────────
-// Auth Context — global authentication state
-// ─────────────────────────────────────────────────────────
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { authApi } from '../services/auth.service';
-
-export type UserRole = 'admin' | 'developer';
-
-export interface AuthUser {
+interface User {
   id: string;
-  name: string;
   email: string;
-  role: UserRole;
+  role: 'admin' | 'student' | 'guest';
+  name: string;
 }
 
 interface AuthContextType {
-  user: AuthUser | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string, role?: UserRole) => Promise<void>;
+  user: User | null;
+  login: (token: string, userData: User) => void;
   logout: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Restore session on mount
   useEffect(() => {
+    // Check local storage for persistent login
+    const token = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
-    const token = localStorage.getItem('accessToken');
 
-    if (storedUser && token) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch {
-        clearSession();
-      }
+    if (token && storedUser) {
+      setUser(JSON.parse(storedUser));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
+    
     setIsLoading(false);
   }, []);
 
-  const clearSession = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-    setUser(null);
+  const login = (token: string, userData: User) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   };
 
-  const login = useCallback(async (email: string, password: string) => {
-    // --- Prototype Fallback (Mock Login) ---
-    if (password === 'password123') {
-      let mockUser: AuthUser | null = null;
-      if (email === 'admin@buildmaster.com') {
-        mockUser = { id: 'admin-01', name: 'Master Admin', email: 'admin@buildmaster.com', role: 'admin' };
-      } else if (email === 'developer@buildmaster.com') {
-        mockUser = { id: 'dev-01', name: 'Elite Developer', email: 'developer@buildmaster.com', role: 'developer' };
-      }
-
-      if (mockUser) {
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        localStorage.setItem('accessToken', 'mock-token');
-        setUser(mockUser);
-        return;
-      }
-    }
-
-    // --- Standard Backend Login ---
-    const { data: res } = await authApi.login({ email, password });
-    if (res.success) {
-      const { user: userData, tokens } = res.data;
-      localStorage.setItem('accessToken', tokens.accessToken);
-      localStorage.setItem('refreshToken', tokens.refreshToken);
-      localStorage.setItem('user', JSON.stringify(userData));
-      setUser(userData);
-    } else {
-      throw new Error(res.error || 'Login failed');
-    }
-  }, []);
-
-  const register = useCallback(async (name: string, email: string, password: string, role: UserRole = 'developer') => {
-    const { data: res } = await authApi.register({ name, email, password, role });
-    if (res.success) {
-      const { user: userData, tokens } = res.data;
-      localStorage.setItem('accessToken', tokens.accessToken);
-      localStorage.setItem('refreshToken', tokens.refreshToken);
-      localStorage.setItem('user', JSON.stringify(userData));
-      setUser(userData);
-    } else {
-      throw new Error(res.error || 'Registration failed');
-    }
-  }, []);
-
-  const logout = useCallback(() => {
-    clearSession();
-  }, []);
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    delete axios.defaults.headers.common['Authorization'];
+  };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isLoading,
-        isAuthenticated: !!user,
-        login,
-        register,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}
+};

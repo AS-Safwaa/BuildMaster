@@ -1,19 +1,16 @@
-// ─────────────────────────────────────────────────────────
-// App Root — React Router setup with animated routes
-// ─────────────────────────────────────────────────────────
-
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
+
+// Pages
 import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
-import { GuestPage } from './pages/GuestPage';
+import { GuestWizard } from './pages/GuestWizard';
 import { AdminDashboard } from './pages/AdminDashboard';
-import { DeveloperDashboard } from './pages/DeveloperDashboard';
-import { MerchantDashboard } from './pages/MerchantDashboard';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { StudentDashboard } from './pages/StudentDashboard';
 
 export default function App() {
   return (
@@ -21,40 +18,42 @@ export default function App() {
       <BrowserRouter>
         <AnimatePresence mode="wait">
           <Routes>
+            {/* Public / Landing */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/guest" element={<GuestPage />} />
+            
+            {/* Guest Journey */}
+            <Route path="/questionnaire" element={<GuestWizard />} />
 
-            {/* Protected Role-Based Routes */}
-            <Route path="/admin" element={
+            {/* Admin Workspace */}
+            <Route path="/admin/*" element={
               <ProtectedRoute role="admin">
                 <AdminDashboard />
               </ProtectedRoute>
             } />
-            <Route path="/developer" element={
-              <ProtectedRoute role="developer">
-                <DeveloperDashboard />
+
+            {/* Student (Designer) Workspace */}
+            <Route path="/student/*" element={
+              <ProtectedRoute role="student">
+                <StudentDashboard />
               </ProtectedRoute>
             } />
-            <Route path="/merchant" element={
-              <ProtectedRoute role="admin">
-                <MerchantDashboard />
-              </ProtectedRoute>
-            } />
+
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AnimatePresence>
 
-        {/* Global Toast Notifications */}
         <Toaster
           position="top-right"
           toastOptions={{
-            duration: 3000,
+            duration: 4000,
             style: {
               borderRadius: '12px',
-              background: '#1f2937',
+              background: '#1a1a2e',
               color: '#fff',
               fontSize: '14px',
-              fontWeight: 600,
+              fontWeight: 500,
             },
             success: {
               iconTheme: { primary: '#10b981', secondary: '#fff' },
