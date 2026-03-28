@@ -114,9 +114,11 @@ export const LoginPage = () => {
           </form>
 
           <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-            <p className="text-xs text-slate-400">
-              Prototype Hint: Use 'admin' or 'developer' in your email to route correctly.
-            </p>
+            <p className="text-xs text-slate-400 font-medium">Prototype Login</p>
+            <div className="mt-2 text-xs text-slate-500 space-y-1">
+               <p>Admin: admin@demo.com / Admin@123</p>
+               <p>Developer: developer@demo.com / Developer@123</p>
+            </div>
           </div>
         </div>
       </motion.div>
