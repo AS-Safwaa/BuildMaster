@@ -18,10 +18,17 @@ export const AdminDashboard = () => {
   // Modals state
   const [showAddStep, setShowAddStep] = useState(false);
   const [showAddMaster, setShowAddMaster] = useState(false);
+  const [showAddQuestion, setShowAddQuestion] = useState<number | null>(null); // holds step_id
+  const [manageMasterId, setManageMasterId] = useState<any | null>(null); // holds entire master object
   
-  // Form definitions
+  // Create definitions
   const [newStep, setNewStep] = useState({ title: '', step_order: '' });
   const [newMaster, setNewMaster] = useState({ name: '', description: '' });
+  const [newQuestion, setNewQuestion] = useState({ text: '', type: 'text', order: '' });
+  
+  // Master Values internal state for Modal
+  const [masterValues, setMasterValues] = useState<any[]>([]);
+  const [newValueLabel, setNewValueLabel] = useState('');
 
   const handleLogout = () => {
     logout();
@@ -55,21 +62,47 @@ export const AdminDashboard = () => {
     if (activeTab === 'masters') fetchMasters();
   }, [activeTab]);
 
+  // Master Options Modal Loader
+  useEffect(() => {
+    if (manageMasterId) {
+      axios.get(`http://localhost:5000/api/v1/admin/masters/values?type_id=${manageMasterId.id}`)
+        .then(res => setMasterValues(res.data))
+        .catch(err => console.error(err));
+    }
+  }, [manageMasterId]);
+
   const handleAddStep = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await axios.post('http://localhost:5000/api/v1/admin/forms/steps', {
-        title: newStep.title,
-        step_order: parseInt(newStep.step_order, 10),
-        is_active: true
+        title: newStep.title, step_order: parseInt(newStep.step_order, 10), is_active: true
       });
       toast.success('Form Step Created!');
       setShowAddStep(false);
       setNewStep({ title: '', step_order: '' });
       fetchForms();
     } catch (err) {
-      console.error(err);
-      toast.error('Failed to create step. Check order number.');
+      toast.error('Failed to create step.');
+    }
+  };
+
+  const handleAddQuestion = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!showAddQuestion) return;
+    try {
+      await axios.post('http://localhost:5000/api/v1/admin/forms/questions', {
+        step_id: showAddQuestion,
+        question_text: newQuestion.text,
+        input_type: newQuestion.type,
+        question_order: parseInt(newQuestion.order, 10),
+        is_required: false
+      });
+      toast.success('Question Added!');
+      setShowAddQuestion(null);
+      setNewQuestion({ text: '', type: 'text', order: '' });
+      fetchForms();
+    } catch (err) {
+      toast.error('Failed to add question. Check order number.');
     }
   };
 
@@ -77,16 +110,31 @@ export const AdminDashboard = () => {
     e.preventDefault();
     try {
       await axios.post('http://localhost:5000/api/v1/admin/masters/types', {
-        name: newMaster.name,
-        description: newMaster.description
+        name: newMaster.name, description: newMaster.description
       });
-      toast.success('Master Category Created!');
+      toast.success('Category Created!');
       setShowAddMaster(false);
       setNewMaster({ name: '', description: '' });
       fetchMasters();
     } catch (err) {
-      console.error(err);
-      toast.error('Failed to create master type.');
+      toast.error('Failed to create category.');
+    }
+  };
+
+  const handleAddMasterValue = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!manageMasterId) return;
+    try {
+      const res = await axios.post('http://localhost:5000/api/v1/admin/masters/values', {
+        master_type_id: manageMasterId.id,
+        label: newValueLabel,
+        value: newValueLabel.replace(/\s+/g, '_').toLowerCase() // auto-generate safe value string
+      });
+      toast.success('Option Added!');
+      setMasterValues([...masterValues, res.data]);
+      setNewValueLabel('');
+    } catch (err) {
+      toast.error('Failed to add master option.');
     }
   };
 
@@ -165,15 +213,15 @@ export const AdminDashboard = () => {
                                   </p>
                                   <div className="flex gap-3 text-xs text-slate-500 mt-2 font-medium">
                                     <span className="bg-slate-100 px-2 py-1 rounded">Type: {q.input_type}</span>
-                                    {q.master_type_id && <span className="bg-blue-50 text-blue-600 px-2 py-1 rounded">Linked Master ID: {q.master_type_id}</span>}
+                                    {q.master_type_id && <span className="bg-blue-50 text-blue-600 px-2 py-1 rounded">Linked Master: {q.master_type_id}</span>}
                                   </div>
                                </div>
                                <button className="text-blue-600 text-xs font-bold hover:underline">Edit</button>
                             </div>
                           ))}
                         </div>
-                        <button className="mt-4 flex items-center gap-2 text-sm text-blue-600 font-bold hover:underline">
-                          <Plus className="w-4 h-4" /> Add Question
+                        <button onClick={() => setShowAddQuestion(step.id)} className="mt-4 flex items-center gap-2 text-sm text-blue-600 font-bold hover:underline">
+                          <Plus className="w-4 h-4" /> Add Question to Step
                         </button>
                       </div>
                     </div>
@@ -197,7 +245,7 @@ export const AdminDashboard = () => {
                        <Settings className="w-10 h-10 text-slate-300 mb-3" />
                        <h3 className="font-bold text-slate-800">{m.name}</h3>
                        <p className="text-xs text-slate-500 mt-1">{m.description || 'Configurable Master List'}</p>
-                       <button className="mt-4 text-xs font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-lg hover:bg-blue-100 w-full transition-colors">
+                       <button onClick={() => setManageMasterId(m)} className="mt-4 text-xs font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-lg hover:bg-blue-100 w-full transition-colors">
                          Manage Options
                        </button>
                     </div>
@@ -249,6 +297,69 @@ export const AdminDashboard = () => {
                     <input type="text" value={newMaster.description} onChange={e => setNewMaster({...newMaster, description: e.target.value})} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none" placeholder="A list of target user demographics" />
                   </div>
                   <button type="submit" className="w-full py-3 bg-blue-600 text-white font-bold rounded-xl mt-4 hover:bg-blue-700">Save Master Category</button>
+                </form>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {showAddQuestion && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-bold text-slate-800">Add Form Question</h2>
+                  <button onClick={() => setShowAddQuestion(null)} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
+                </div>
+                <form onSubmit={handleAddQuestion} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Question Text</label>
+                    <input type="text" required value={newQuestion.text} onChange={e => setNewQuestion({...newQuestion, text: e.target.value})} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none" placeholder="e.g., What is your favorite color?" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Input Type</label>
+                    <select required value={newQuestion.type} onChange={e => setNewQuestion({...newQuestion, type: e.target.value})} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none">
+                      <option value="text">Short Text</option>
+                      <option value="textarea">Long Text</option>
+                      <option value="dropdown">Dropdown (Needs Master Map)</option>
+                      <option value="radio">Radio Buttons</option>
+                      <option value="multiselect">Multi-select</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Question Order (Sequence #)</label>
+                    <input type="number" required value={newQuestion.order} onChange={e => setNewQuestion({...newQuestion, order: e.target.value})} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none" placeholder="1" />
+                  </div>
+                  <button type="submit" className="w-full py-3 bg-blue-600 text-white font-bold rounded-xl mt-4 hover:bg-blue-700">Save Question</button>
+                </form>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {manageMasterId && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg max-h-[80vh] flex flex-col">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-bold text-slate-800">Options for '{manageMasterId.name}'</h2>
+                  <button onClick={() => setManageMasterId(null)} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
+                </div>
+                
+                <div className="flex-1 overflow-y-auto mb-6 pr-2">
+                  {masterValues.length === 0 ? (
+                    <p className="text-sm text-slate-400 italic text-center py-4">No options found. Add one below.</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {masterValues.map((v, i) => (
+                        <div key={i} className="flex justify-between p-3 bg-slate-50 border border-slate-100 rounded-lg text-sm font-medium text-slate-700">
+                           <span>{v.label}</span>
+                           <button className="text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <form onSubmit={handleAddMasterValue} className="flex gap-2">
+                  <input type="text" required value={newValueLabel} onChange={e => setNewValueLabel(e.target.value)} className="flex-1 px-4 py-2 border border-slate-200 rounded-lg outline-none focus:border-blue-500" placeholder="New Option Label" />
+                  <button type="submit" className="px-6 py-2 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 text-sm">Add</button>
                 </form>
               </motion.div>
             </motion.div>
