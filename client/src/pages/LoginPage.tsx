@@ -20,8 +20,9 @@ export const LoginPage = () => {
 
     try {
       if (email === 'admin@demo.com' && password === 'Admin@123') {
-        login('mock-jwt-token-admin', { id: '1', email, name: 'Admin User', role: 'admin' });
-        toast.success('Welcome back, Admin!');
+        const res = await axios.post('http://localhost:5000/api/v1/admin/auth/login', { email, password });
+        login(res.data.token, { id: res.data.admin.id, email: res.data.admin.email, name: res.data.admin.name, role: 'admin' });
+        toast.success('Welcome back to standard operations!');
         navigate('/admin');
         return;
       }
