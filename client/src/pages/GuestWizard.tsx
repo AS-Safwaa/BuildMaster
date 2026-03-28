@@ -22,7 +22,7 @@ const WizardContent = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
+    <div className="h-screen bg-slate-50 flex flex-col md:flex-row overflow-hidden">
       <button 
         onClick={() => navigate('/')}
         className="md:hidden absolute top-4 right-4 z-50 p-2 bg-white rounded-full shadow-md"
@@ -90,7 +90,7 @@ const WizardContent = () => {
       </div>
 
       {/* Form Content Area */}
-      <main className="flex-1 overflow-auto relative p-6 md:p-12 lg:p-20">
+      <main className="flex-1 overflow-y-auto relative p-6 md:p-12 lg:p-20 h-full">
         <AnimatePresence mode="wait">
           {currentPhase === 1 && <Phase1 key="phase1" />}
           {currentPhase === 2 && <Phase2 key="phase2" />}

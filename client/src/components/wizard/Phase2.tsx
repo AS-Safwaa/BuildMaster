@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useWizard } from '../context/WizardContext';
+import { useWizard } from '../../context/WizardContext';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 const mockCategories = ["Healthcare", "Technology", "Retail", "Services", "Food & Beverage"];

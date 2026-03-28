@@ -10,7 +10,7 @@ import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { GuestWizard } from './pages/GuestWizard';
 import { AdminDashboard } from './pages/AdminDashboard';
-import { StudentDashboard } from './pages/StudentDashboard';
+import { DeveloperDashboard } from './pages/DeveloperDashboard';
 
 export default function App() {
   return (
@@ -32,10 +32,10 @@ export default function App() {
               </ProtectedRoute>
             } />
 
-            {/* Student (Designer) Workspace */}
-            <Route path="/student/*" element={
-              <ProtectedRoute role="student">
-                <StudentDashboard />
+            {/* Developer Workspace */}
+            <Route path="/developer/*" element={
+              <ProtectedRoute role="developer">
+                <DeveloperDashboard />
               </ProtectedRoute>
             } />
 

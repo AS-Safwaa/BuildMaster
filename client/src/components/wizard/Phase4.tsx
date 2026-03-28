@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useWizard } from '../context/WizardContext';
+import { useWizard } from '../../context/WizardContext';
 import { ArrowRight, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 
 export const Phase4 = () => {
@@ -89,6 +89,42 @@ export const Phase4 = () => {
              <div>
               <span className="font-bold text-slate-800 block">I need a completely new logo</span>
               <span className="text-sm text-slate-500 block">Start from scratch and design my brand.</span>
+            </div>
+          </label>
+        </div>
+
+        <hr className="border-slate-200" />
+
+        {/* Competitors & Assets */}
+        <div className="space-y-6">
+          <div>
+            <label className="text-sm font-semibold text-slate-700 block mb-1">Top Competitors (URLs)</label>
+            <p className="text-xs text-slate-500 mb-3">Who do you admire or compete with? (Comma separated links)</p>
+            <input 
+              type="text" placeholder="e.g. www.competitor1.com, www.competitor2.com"
+              value={data.competitors.join(', ')} 
+              onChange={(e) => updateData({ competitors: e.target.value.split(',').map(s => s.trim()) })}
+              className="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" 
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-semibold text-slate-700 block mb-1">Social Media Links</label>
+            <input 
+              type="text" placeholder="Instagram, LinkedIn, Facebook profiles (comma separated)"
+              value={data.socialLinks['general'] || ''} 
+              onChange={(e) => updateData({ socialLinks: { general: e.target.value } })}
+              className="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" 
+            />
+          </div>
+
+          <label className="flex items-center gap-3 p-4 bg-blue-50/50 border border-blue-100 rounded-xl cursor-pointer hover:bg-blue-50 transition-colors">
+            <input type="checkbox" className="w-5 h-5 text-blue-600 focus:ring-blue-500 rounded" 
+              onChange={(e) => updateData({ hasPhotos: e.target.checked })} 
+              checked={data.hasPhotos} />
+            <div>
+              <span className="font-bold text-slate-800 block">I have professional photos/assets</span>
+              <span className="text-sm text-slate-500 block">Check if you will be providing a gallery link.</span>
             </div>
           </label>
         </div>

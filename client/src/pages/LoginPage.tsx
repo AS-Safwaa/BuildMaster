@@ -26,10 +26,10 @@ export const LoginPage = () => {
         navigate('/admin');
         return;
       }
-      if (email.includes('student')) {
-        login('mock-jwt-token-student', { id: '2', email, name: 'Student Designer', role: 'student' });
+      if (email.includes('developer')) {
+        login('mock-jwt-token-developer', { id: '2', email, name: 'Developer', role: 'developer' });
         toast.success('Welcome back!');
-        navigate('/student');
+        navigate('/developer');
         return;
       }
 
@@ -115,7 +115,7 @@ export const LoginPage = () => {
 
           <div className="mt-8 pt-6 border-t border-slate-100 text-center">
             <p className="text-xs text-slate-400">
-              Prototype Hint: Use 'admin' or 'student' in your email to route correctly.
+              Prototype Hint: Use 'admin' or 'developer' in your email to route correctly.
             </p>
           </div>
         </div>

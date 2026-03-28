@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useWizard } from '../context/WizardContext';
+import { useWizard } from '../../context/WizardContext';
 import { ArrowRight, ArrowLeft, Sparkles, Loader2, Edit3 } from 'lucide-react';
 
 export const Phase3 = () => {

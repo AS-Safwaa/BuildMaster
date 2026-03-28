@@ -56,7 +56,7 @@ export const LandingPage = () => {
               className="flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium transition-colors"
             >
               <UserCircle className="w-5 h-5" />
-              Student Login
+              Developer Login
             </button>
             <button 
               onClick={() => navigate('/login')}

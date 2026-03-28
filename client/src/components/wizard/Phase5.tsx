@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useWizard } from '../context/WizardContext';
+import { useWizard } from '../../context/WizardContext';
 import { CheckCircle2, Loader2, Rocket, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -49,10 +49,18 @@ export const Phase5 = () => {
 
       <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
         {/* Review blocks mapped from data context */}
+        <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+            <div>
+              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Lead Source</p>
+              <p className="text-sm font-bold text-slate-800 capitalize">{data.leadSource || <span className="text-red-400 italic">Not Selected</span>}</p>
+            </div>
+        </div>
+
         <div className="p-6 border-b border-slate-100 flex justify-between items-center">
             <div>
               <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Business Name</p>
               <p className="text-lg font-bold text-slate-800">{data.businessName || <span className="text-red-400 italic">Not Entered</span>}</p>
+              <p className="text-sm border-t border-slate-200 pt-2 mt-2 font-medium text-slate-600">Contact: {data.contactName} ({data.phone})</p>
             </div>
             <button onClick={() => setPhase(1)} className="text-blue-600 text-sm font-semibold hover:underline">Edit</button>
         </div>
@@ -68,6 +76,11 @@ export const Phase5 = () => {
             </div>
         </div>
         
+        <div className="p-6 border-b border-slate-100">
+            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-2">Competitors</p>
+            <p className="text-sm text-slate-600">{data.competitors.length > 0 ? data.competitors.join(', ') : 'None provided'}</p>
+        </div>
+
         <div className="p-6">
             <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-2">Your USPs</p>
             <div className="flex flex-wrap gap-2">
