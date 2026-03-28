@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Settings, LogOut, CodeSquare, Plus, Edit2, Trash2, X } from 'lucide-react';
+import { LayoutDashboard, Settings, LogOut, CodeSquare, Plus, Edit2, Trash2, X, BarChart2, CheckSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -9,8 +9,10 @@ import toast from 'react-hot-toast';
 export const AdminDashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('forms');
+  const [activeTab, setActiveTab] = useState('overview'); // Default to overview
   
+  // Data states
+  const [overviewData, setOverviewData] = useState<any>(null);
   const [steps, setSteps] = useState<any[]>([]);
   const [questions, setQuestions] = useState<any[]>([]);
   const [masterTypes, setMasterTypes] = useState<any[]>([]);
@@ -18,8 +20,8 @@ export const AdminDashboard = () => {
   // Modals state
   const [showAddStep, setShowAddStep] = useState(false);
   const [showAddMaster, setShowAddMaster] = useState(false);
-  const [showAddQuestion, setShowAddQuestion] = useState<number | null>(null); // holds step_id
-  const [manageMasterId, setManageMasterId] = useState<any | null>(null); // holds entire master object
+  const [showAddQuestion, setShowAddQuestion] = useState<number | null>(null);
+  const [manageMasterId, setManageMasterId] = useState<any | null>(null);
   
   // Create definitions
   const [newStep, setNewStep] = useState({ title: '', step_order: '' });
@@ -33,6 +35,16 @@ export const AdminDashboard = () => {
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const fetchOverview = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/v1/admin/dashboard/overview');
+      setOverviewData(res.data);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to load Dashboard Metrics');
+    }
   };
 
   const fetchForms = async () => {
@@ -58,6 +70,7 @@ export const AdminDashboard = () => {
   };
 
   useEffect(() => {
+    if (activeTab === 'overview') fetchOverview();
     if (activeTab === 'forms') fetchForms();
     if (activeTab === 'masters') fetchMasters();
   }, [activeTab]);
@@ -152,9 +165,15 @@ export const AdminDashboard = () => {
 
         <nav className="flex-1 p-4 space-y-2">
           <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 mt-4">Admin Engine</p>
-          <button onClick={() => setActiveTab('forms')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'forms' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'}`}>
-            <LayoutDashboard className="w-5 h-5" /> Form Builder
+          
+          <button onClick={() => setActiveTab('overview')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'overview' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'}`}>
+            <LayoutDashboard className="w-5 h-5" /> Overview
           </button>
+          
+          <button onClick={() => setActiveTab('forms')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'forms' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'}`}>
+            <CheckSquare className="w-5 h-5" /> Form Builder
+          </button>
+          
           <button onClick={() => setActiveTab('masters')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeTab === 'masters' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'}`}>
             <Settings className="w-5 h-5" /> Master Configs
           </button>
@@ -180,6 +199,59 @@ export const AdminDashboard = () => {
         <div className="flex-1 p-8 overflow-auto pb-32">
           <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="h-full">
             
+            {activeTab === 'overview' && overviewData && (
+              <div>
+                <h1 className="text-2xl font-bold text-slate-800 mb-6">System Overview</h1>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                  <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <p className="text-sm font-medium text-slate-500 mb-1">Total Project Briefs</p>
+                    <p className="text-3xl font-bold text-slate-800">{overviewData.kpis.totalProjects}</p>
+                  </div>
+                  <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <p className="text-sm font-medium text-slate-500 mb-1">Configured Questions</p>
+                    <p className="text-3xl font-bold text-slate-800">{overviewData.kpis.totalQuestions}</p>
+                  </div>
+                  <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <p className="text-sm font-medium text-slate-500 mb-1">Master Categories</p>
+                    <p className="text-3xl font-bold text-slate-800">{overviewData.kpis.totalCategories}</p>
+                  </div>
+                  <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <p className="text-sm font-medium text-slate-500 mb-1">Assigned Developers</p>
+                    <p className="text-3xl font-bold text-slate-800">{overviewData.kpis.roles.developers}</p>
+                  </div>
+                </div>
+
+                <h2 className="text-lg font-bold text-slate-800 mb-4">Recent Guest Projects</h2>
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                  <table className="w-full text-left text-sm text-slate-600">
+                    <thead className="bg-slate-50 text-slate-500 font-medium">
+                      <tr>
+                        <th className="px-6 py-4">Project ID</th>
+                        <th className="px-6 py-4">Business Name</th>
+                        <th className="px-6 py-4">Guest Email</th>
+                        <th className="px-6 py-4">Submitted On</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {overviewData.recentProjects.length === 0 ? (
+                        <tr><td colSpan={4} className="px-6 py-8 text-center text-slate-400">No projects submitted yet.</td></tr>
+                      ) : (
+                        overviewData.recentProjects.map((p: any) => (
+                          <tr key={p.id} className="hover:bg-slate-50 transition-colors">
+                            <td className="px-6 py-4 font-mono text-xs">PRJ-{(p.id || 0).toString().padStart(4, '0')}</td>
+                            <td className="px-6 py-4 font-semibold text-slate-800">{p.businessName}</td>
+                            <td className="px-6 py-4">{p.email}</td>
+                            <td className="px-6 py-4">{new Date(p.createdAt).toLocaleDateString()}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
             {activeTab === 'forms' && (
               <div>
                 <div className="flex justify-between items-center mb-6">
