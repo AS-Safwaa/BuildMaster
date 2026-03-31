@@ -5,17 +5,20 @@
   "workspaces": [
     "client",
     "backend",
+    "guest-questionnaire-backend",
     "shared"
   ],
   "scripts": {
     "install:all": "npm install",
     "dev:frontend": "npm run dev --workspace=client",
     "dev:backend": "npm run dev --workspace=backend",
+    "dev:backend-v1": "nodemon --cwd guest-questionnaire-backend server.js",
     "build:frontend": "npm run build --workspace=client",
     "build:backend": "npm run build --workspace=backend",
     "db:push": "npm run db:push --workspace=backend",
     "db:seed": "npm run db:seed --workspace=backend",
     "deploy:vercel": "vercel --prod --cwd client",
+    "deploy:backend-v1": "vercel --prod --cwd guest-questionnaire-backend",
     "deploy:railway": "railway up --service backend"
   },
   "devDependencies": {
