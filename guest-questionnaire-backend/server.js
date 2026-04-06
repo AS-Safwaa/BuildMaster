@@ -29,6 +29,12 @@ app.use('/api/v1/admin/dashboard', dashboardRoutes);
 app.use('/api/v1/developer', developerRoutes);
 app.use('/api/v1/guest', guestRoutes);
 
+// Global 404 Logger
+app.use((req, res, next) => {
+    console.log(`404 at ${req.method} ${req.url}`);
+    res.status(404).send(`Cannot ${req.method} ${req.url}`);
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

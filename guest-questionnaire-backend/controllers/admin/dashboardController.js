@@ -93,3 +93,50 @@ exports.getAllProjects = async (req, res) => {
         res.status(500).json({ message: 'Error fetching projects' });
     }
 };
+
+exports.getProjectDetails = async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log('Fetching details for project ID:', id);
+        
+        // 1. Try to find the exact wizard state dump (question 999)
+        const [blobAnswers] = await db.execute(`
+            SELECT ga.answer_value 
+            FROM guest_answers ga
+            WHERE ga.submission_id = ? AND ga.question_id = 999
+        `, [id]);
+        
+        if (blobAnswers.length > 0) {
+            return res.status(200).json(blobAnswers[0].answer_value);
+        }
+
+        // 2. Fallback: Aggregate all individual answers for legacy/other records
+        const [allAnswers] = await db.execute(`
+            SELECT ga.question_id, ga.answer_value, fq.question_text
+            FROM guest_answers ga
+            JOIN form_questions fq ON ga.question_id = fq.id
+            WHERE ga.submission_id = ?
+        `, [id]);
+
+        if (allAnswers.length === 0) {
+            return res.status(200).json({ 
+                noData: true, 
+                message: 'Detailed brief data is missing for this record. (Possible draft or legacy manual entry)' 
+            });
+        }
+
+        // Transform list into a UI-friendly object
+        const aggregated = {
+            isLegacy: true,
+            details: allAnswers.reduce((acc, curr) => {
+                acc[curr.question_text || `Question ${curr.question_id}`] = curr.answer_value;
+                return acc;
+            }, {})
+        };
+
+        res.status(200).json(aggregated);
+    } catch (err) {
+        console.error('Fetch Details Error:', err);
+        res.status(500).json({ message: 'Error fetching project details' });
+    }
+};

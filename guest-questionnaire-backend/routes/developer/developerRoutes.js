@@ -9,6 +9,7 @@ router.get('/dashboard/overview', developerController.getOverviewMetrics);
 router.get('/projects/pool', developerController.getPoolProjects);
 router.get('/projects/mine', developerController.getMyProjects);
 router.post('/projects/:id/claim', developerController.claimProject);
+router.post('/projects/:id/unclaim', developerController.unclaimProject);
 router.post('/projects/:id/status', developerController.updateStatus);
 
 module.exports = router;

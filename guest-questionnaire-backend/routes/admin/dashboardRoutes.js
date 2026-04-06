@@ -10,6 +10,7 @@ router.use(authMiddleware);
 router.get('/overview', dashboardController.getOverviewMetrics);
 router.get('/developers', dashboardController.getDevelopers);
 router.post('/assign-project', dashboardController.assignProject);
+router.get('/view-project/:id', dashboardController.getProjectDetails);
 router.get('/projects', dashboardController.getAllProjects);
 
 module.exports = router;
