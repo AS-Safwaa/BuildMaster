@@ -9,22 +9,22 @@ export const Phase1 = () => {
   const options = [
     { 
       id: 'Logo Design', 
-      title: 'Just a Logo', 
-      desc: 'A unique symbol that represents your brand.', 
+      title: 'Design a Logo', 
+      desc: 'Get a unique symbol for your business.', 
       icon: <Palette className="w-8 h-8" />,
       color: 'bg-rose-500'
     },
     { 
       id: 'Website', 
-      title: 'Just a Website', 
-      desc: 'Your professional profile online for all to see.', 
+      title: 'Build a Website', 
+      desc: 'Your professional home on the internet.', 
       icon: <Globe className="w-8 h-8" />,
       color: 'bg-emerald-500'
     },
     { 
       id: 'Website + Logo', 
-      title: 'The Full Package', 
-      desc: 'Everything you need to kickstart your presence.', 
+      title: 'Both Logo & Site', 
+      desc: 'The best way to start your business.', 
       icon: <Layout className="w-8 h-8" />,
       color: 'bg-blue-600'
     }
