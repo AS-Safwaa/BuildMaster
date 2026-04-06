@@ -1,81 +1,114 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
-
-const mockCategories = ["Healthcare", "Technology", "Retail", "Services", "Food & Beverage"];
-const mockUSPs = ["24/7 Support", "Award Winning", "Eco-Friendly", "Fast Delivery", "Premium Quality"];
+import { MapPin, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export const Phase2 = () => {
   const { data, updateData, setPhase } = useWizard();
-
-  const toggleUSP = (usp: string) => {
-    const current = new Set(data.usps);
-    if (current.has(usp)) current.delete(usp);
-    else current.add(usp);
-    updateData({ usps: Array.from(current) });
-  };
 
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
-      className="max-w-3xl space-y-8"
+      className="space-y-10 pb-20 px-4"
     >
-      <div>
-        <h2 className="text-3xl font-extrabold text-slate-900 mb-2">Business Context</h2>
-        <p className="text-slate-500">Help us understand your niche and what makes you unique.</p>
+      <div className="text-center md:text-left">
+        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Step 2: About Your Business</h2>
+        <p className="text-base text-slate-500 font-medium">Please tell us the basic details so we can set up your profile.</p>
       </div>
 
-      <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-700">Select Main Category (Fetched from admin master)</label>
-          <select 
-            value={data.category} 
-            onChange={(e) => updateData({ category: e.target.value })}
-            className="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
-          >
-            <option value="">Choose a category...</option>
-            {mockCategories.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
+          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-2">
+            Business Name <span className="text-rose-400">*</span>
+          </label>
+          <input 
+            type="text" placeholder="e.g. SR FoodKraft"
+            value={data.businessName} onChange={(e) => updateData({ businessName: e.target.value })}
+            className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 focus:bg-white font-bold transition-all text-sm md:text-base" 
+          />
         </div>
 
-        <div className="space-y-4">
-          <label className="text-sm font-semibold text-slate-700 block">Unique Selling Points (Select multiple)</label>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-            {mockUSPs.map(usp => (
-              <button
-                key={usp}
-                onClick={() => toggleUSP(usp)}
-                className={`p-3 border rounded-xl text-sm font-medium transition-all text-left ${
-                  data.usps.includes(usp) 
-                  ? 'border-blue-600 bg-blue-50 text-blue-800 shadow-[0_0_0_1px_#2563eb]' 
-                  : 'border-slate-200 hover:border-slate-300 text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                {usp}
-              </button>
-            ))}
+        <div className="space-y-2">
+          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-2">
+            When did you start?
+          </label>
+          <input 
+            type="text" placeholder="Year (e.g. 2015)"
+            value={data.establishmentYear} onChange={(e) => updateData({ establishmentYear: e.target.value })}
+            className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 focus:bg-white font-bold transition-all text-sm md:text-base" 
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-2">
+            Owner / Manager Name <span className="text-rose-400">*</span>
+          </label>
+          <input 
+            type="text" placeholder="Your full name"
+            value={data.contactName} onChange={(e) => updateData({ contactName: e.target.value })}
+            className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 focus:bg-white font-bold transition-all text-sm md:text-base" 
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-2">
+            Mobile Number <span className="text-rose-400">*</span>
+          </label>
+          <input 
+            type="tel" placeholder="10-digit number"
+            value={data.phone} onChange={(e) => updateData({ phone: e.target.value })}
+            className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 focus:bg-white font-bold transition-all text-sm md:text-base" 
+          />
+        </div>
+
+        <div className="md:col-span-2 space-y-2">
+          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-2">
+            Where do you work? (Area / City)
+          </label>
+          <input 
+            type="text" placeholder="e.g. Mumbai, Navi Mumbai, etc."
+            value={data.serviceAreas} onChange={(e) => updateData({ serviceAreas: e.target.value })}
+            className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 focus:bg-white font-bold transition-all text-sm md:text-base" 
+          />
+        </div>
+      </div>
+
+      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-slate-50 bg-slate-50/30 flex items-center gap-4">
+          <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+            <MapPin className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="font-black text-slate-900 text-sm tracking-tight leading-none mb-1">Your Full Address</p>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Help people find your shop/office</p>
           </div>
         </div>
+
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+          <input type="text" placeholder="Building / Shop No." value={data.addressLine1} onChange={(e) => updateData({ addressLine1: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
+          <input type="text" placeholder="Street / Road Name" value={data.addressLine2} onChange={(e) => updateData({ addressLine2: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
+          <input type="text" placeholder="Area / Colony" value={data.area} onChange={(e) => updateData({ area: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
+          <input type="text" placeholder="City" value={data.city} onChange={(e) => updateData({ city: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
+          <input type="text" placeholder="State" value={data.state} onChange={(e) => updateData({ state: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
+          <input type="text" placeholder="Pincode" value={data.pincode} onChange={(e) => updateData({ pincode: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
+        </div>
       </div>
 
-      <div className="flex justify-between pt-8 border-t border-slate-100">
-        <button 
-          onClick={() => setPhase(1)}
-          className="flex items-center gap-2 px-6 py-3.5 bg-white border border-slate-200 text-slate-600 rounded-xl font-medium hover:bg-slate-50 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" /> Back
+      <div className="flex justify-between items-center pt-10">
+        <button onClick={() => setPhase(1)} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm">
+          <ArrowLeft className="w-4 h-4" /> Go Back
         </button>
         <button 
           onClick={() => setPhase(3)}
-          className="flex items-center gap-2 px-8 py-3.5 bg-slate-900 text-white rounded-xl font-medium hover:bg-blue-600 transition-colors"
+          disabled={!data.businessName || !data.contactName || !data.phone}
+          className="group flex items-center gap-4 px-10 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-3xl font-black shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm"
         >
-          Brand Tagline <ArrowRight className="w-5 h-5" />
+          Next Step
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
-
     </motion.div>
   );
 };

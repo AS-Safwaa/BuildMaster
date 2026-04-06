@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, Mail, ArrowLeft, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import API_BASE_URL from '../config/api';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
@@ -19,7 +20,7 @@ export const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/v1/admin/auth/login', { email, password });
+      const res = await axios.post(`${API_BASE_URL}/admin/auth/login`, { email, password });
       
       const userData = res.data.admin; // Currently mapped as 'admin' in backend response
       login(res.data.token, userData);

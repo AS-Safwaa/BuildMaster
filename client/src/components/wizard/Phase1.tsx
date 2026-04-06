@@ -1,166 +1,131 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
-import { ArrowRight, UserPlus, Send, Handshake } from 'lucide-react';
-
-import { useLocation } from 'react-router-dom';
+import { Layout, Palette, Globe, User, Users, ArrowRight } from 'lucide-react';
 
 export const Phase1 = () => {
   const { data, updateData, setPhase } = useWizard();
-  const location = useLocation();
 
-  React.useEffect(() => {
-    if (location.state?.leadSource && !data.leadSource) {
-      updateData({ leadSource: location.state.leadSource });
+  const options = [
+    { 
+      id: 'Logo Design', 
+      title: 'Just a Logo', 
+      desc: 'A unique symbol that represents your brand.', 
+      icon: <Palette className="w-8 h-8" />,
+      color: 'bg-rose-500'
+    },
+    { 
+      id: 'Website', 
+      title: 'Just a Website', 
+      desc: 'Your professional profile online for all to see.', 
+      icon: <Globe className="w-8 h-8" />,
+      color: 'bg-emerald-500'
+    },
+    { 
+      id: 'Website + Logo', 
+      title: 'The Full Package', 
+      desc: 'Everything you need to kickstart your presence.', 
+      icon: <Layout className="w-8 h-8" />,
+      color: 'bg-blue-600'
     }
-  }, [location.state]);
+  ];
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="max-w-3xl space-y-10 pb-20"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="space-y-10 pb-20 px-4"
     >
-      <div>
-        <h2 className="text-4xl font-extrabold text-slate-900 mb-2">Project Initialization</h2>
-        <p className="text-lg text-slate-500">Let's start with your core identity and contact details.</p>
+      <div className="text-center md:text-left">
+        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance">Step 1: Let's Get Started!</h2>
+        <p className="text-base text-slate-500 font-medium font-sans">What can we build for you today? Pick one to begin.</p>
       </div>
 
-      {data.leadSource === 'referral' && (
-        <motion.div 
-          initial={{ opacity: 0, height: 0 }} 
-          animate={{ opacity: 1, height: 'auto' }} 
-          className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100 p-8 rounded-3xl relative overflow-hidden shadow-sm"
-        >
-          <div className="absolute top-0 right-0 p-6 opacity-10">
-            <Handshake className="w-32 h-32 text-purple-600" />
-          </div>
-          
-          <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-            <Handshake className="w-6 h-6 text-purple-600" /> Referrer Details
-          </h3>
-          <p className="text-sm text-slate-600 mb-6">Since you were referred to us, please provide the details of the person or agency that sent you. We want to thank them!</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">Referrer Name *</label>
-              <input 
-                type="text" placeholder="e.g. Jane Smith"
-                value={data.referrerName} onChange={(e) => updateData({ referrerName: e.target.value })}
-                className="w-full p-4 bg-white/80 backdrop-blur-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" 
-              />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {options.map((opt) => (
+          <button
+            key={opt.id}
+            onClick={() => updateData({ projectType: opt.id as any })}
+            className={`p-6 md:p-8 rounded-[2.5rem] border-2 transition-all duration-300 text-left relative overflow-hidden group ${
+              data.projectType === opt.id 
+                ? 'border-blue-600 bg-blue-50/50 shadow-sm' 
+                : 'border-slate-50 bg-white hover:border-slate-200 shadow-sm'
+            }`}
+          >
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-transform duration-500 group-hover:scale-110 ${
+              data.projectType === opt.id ? opt.color + ' text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 text-slate-400 group-hover:bg-slate-100'
+            }`}>
+              {opt.icon}
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">Referrer Company</label>
-              <input 
-                type="text" placeholder="e.g. Acme Agency (Optional)"
-                value={data.referrerCompany} onChange={(e) => updateData({ referrerCompany: e.target.value })}
-                className="w-full p-4 bg-white/80 backdrop-blur-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" 
-              />
-            </div>
-            <div className="space-y-2 md:col-span-2">
-              <label className="text-sm font-semibold text-slate-700">Referrer Email</label>
-              <input 
-                type="email" placeholder="jane.smith@agency.com"
-                value={data.referrerEmail} onChange={(e) => updateData({ referrerEmail: e.target.value })}
-                className="w-full p-4 bg-white/80 backdrop-blur-sm border border-purple-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" 
-              />
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      <div>
-        <h3 className="text-2xl font-bold text-slate-800 mb-6">Your Business Details</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-700">Business Name *</label>
-            <input 
-              type="text" placeholder="e.g. HeartCare Advanced Clinic"
-              value={data.businessName} onChange={(e) => updateData({ businessName: e.target.value })}
-              className="w-full p-4 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-shadow" 
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-700">Years of Establishment</label>
-            <input 
-              type="number" placeholder="YYYY"
-              value={data.establishmentYear} onChange={(e) => updateData({ establishmentYear: e.target.value })}
-              className="w-full p-4 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-shadow" 
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-700">Contact Person Name *</label>
-            <input 
-              type="text" placeholder="John Doe"
-              value={data.contactName} onChange={(e) => updateData({ contactName: e.target.value })}
-              className="w-full p-4 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-shadow" 
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-700">Contact Phone *</label>
-            <input 
-              type="tel" placeholder="+1 (555) 000-0000"
-              value={data.phone} onChange={(e) => updateData({ phone: e.target.value })}
-              className="w-full p-4 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-shadow" 
-            />
-          </div>
-
-          <div className="space-y-2 md:col-span-2">
-            <label className="text-sm font-semibold text-slate-700">Primary Contact Email *</label>
-            <input 
-              type="email" placeholder="hello@yourbusiness.com"
-              value={data.email} onChange={(e) => updateData({ email: e.target.value })}
-              className="w-full p-4 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-shadow" 
-            />
-          </div>
-
-          <div className="space-y-2 md:col-span-2">
-            <label className="text-sm font-semibold text-slate-700">Full Business Address</label>
-            <textarea 
-              placeholder="Street Address, City, State, Country"
-              rows={2}
-              value={data.address} onChange={(e) => updateData({ address: e.target.value })}
-              className="w-full p-4 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 shadow-sm resize-none transition-shadow" 
-            />
-          </div>
-        </div>
+            <h3 className="text-xl font-black text-slate-900 mb-2 leading-none">{opt.title}</h3>
+            <p className="text-sm font-medium text-slate-500 leading-relaxed font-sans">{opt.desc}</p>
+            
+            {data.projectType === opt.id && (
+              <div className="absolute top-6 right-6">
+                <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center shadow-md">
+                   <div className="w-2.5 h-2.5 bg-white rounded-full" />
+                </div>
+              </div>
+            )}
+          </button>
+        ))}
       </div>
 
-      <hr className="border-slate-200" />
+      <AnimatePresence>
+        {data.projectType && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="space-y-6 pt-10"
+          >
+            <div className="text-center md:text-left">
+              <h3 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">Who is this for?</h3>
+              <p className="text-base text-slate-500 font-medium font-sans">This helps us use the right words for your project.</p>
+            </div>
 
-      <div>
-        <h3 className="text-2xl font-bold text-slate-800 mb-6">Domain Selection</h3>
-        <div className="space-y-4">
-          <label className="flex items-center gap-4 p-5 border-2 border-slate-200 rounded-2xl cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-all">
-            <input type="radio" name="domain" className="w-5 h-5 text-blue-600 focus:ring-blue-500" 
-              onChange={() => updateData({ domainConfig: 'existing' })} 
-              checked={data.domainConfig === 'existing'} />
-            <span className="font-bold text-slate-700 text-lg">I already have a domain</span>
-          </label>
-          
-          <label className="flex items-center gap-4 p-5 border-2 border-slate-200 rounded-2xl cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-all">
-            <input type="radio" name="domain" className="w-5 h-5 text-blue-600 focus:ring-blue-500" 
-              onChange={() => updateData({ domainConfig: 'need_help' })}
-              checked={data.domainConfig === 'need_help'} />
-            <span className="font-bold text-slate-700 text-lg">No, I need help to create one</span>
-          </label>
-        </div>
-      </div>
+            <div className="flex flex-col md:flex-row gap-4 max-w-lg">
+              <button
+                onClick={() => updateData({ projectFor: 'self' })}
+                className={`flex-1 flex items-center gap-4 px-8 py-5 rounded-3xl border-2 transition-all ${
+                  data.projectFor === 'self' 
+                    ? 'border-slate-900 bg-slate-900 text-white shadow-xl' 
+                    : 'border-slate-50 bg-white hover:border-slate-200 text-slate-600 shadow-sm'
+                }`}
+              >
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${data.projectFor === 'self' ? 'bg-slate-800' : 'bg-slate-50'}`}>
+                  <User className="w-4 h-4" />
+                </div>
+                <span className="font-bold text-sm tracking-tight">My own business</span>
+              </button>
+              <button
+                onClick={() => updateData({ projectFor: 'friend' })}
+                className={`flex-1 flex items-center gap-4 px-8 py-5 rounded-3xl border-2 transition-all ${
+                  data.projectFor === 'friend' 
+                    ? 'border-slate-900 bg-slate-900 text-white shadow-xl' 
+                    : 'border-slate-50 bg-white hover:border-slate-200 text-slate-600 shadow-sm'
+                }`}
+              >
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${data.projectFor === 'friend' ? 'bg-slate-800' : 'bg-slate-50'}`}>
+                  <Users className="w-4 h-4" />
+                </div>
+                <span className="font-bold text-sm tracking-tight">For a client or friend</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="flex justify-end pt-10">
-        <button 
+      <div className="flex justify-center md:justify-start pt-8">
+        <button
           onClick={() => setPhase(2)}
-          className="group flex items-center gap-2 px-10 py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:bg-blue-600 hover:-translate-y-1 transition-all"
+          disabled={!data.projectType || !data.projectFor}
+          className="group flex items-center gap-4 px-12 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[2rem] font-black shadow-2xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm"
         >
-          Continue to Context <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          Sounds good, Next Step!
+          <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
-
     </motion.div>
   );
 };

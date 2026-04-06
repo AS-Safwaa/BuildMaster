@@ -1,123 +1,114 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
-import { CheckCircle2, Loader2, Rocket, ArrowLeft } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 export const Phase5 = () => {
-  const { data, setPhase } = useWizard();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const navigate = useNavigate();
+  const { data, updateData, setPhase } = useWizard();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    try {
-      // 1. Start submission session
-      const startRes = await axios.post('http://localhost:5000/api/v1/guest/submissions');
-      const sessionId = startRes.data.session_id;
+  const businessCategories = [
+    { id: 'Food', name: 'Food / Catering', sub: 'Cafe, Restaurant, Bakers' },
+    { id: 'Healthcare', name: 'Healthcare', sub: 'Clinics, Doctors, Pharmacy' },
+    { id: 'RealEstate', name: 'Real Estate', sub: 'Builders, Agents, Interior' },
+    { id: 'Education', name: 'Education', sub: 'Tutors, Schools, Coaches' },
+    { id: 'Retail', name: 'Retail / Shop', sub: 'Stores, Fashion, Gifts' },
+    { id: 'Service', name: 'Other Services', sub: 'Legal, IT, CA, Beauty' }
+  ];
 
-      // 2. Transmit the complete JSON state blob
-      await axios.put(`http://localhost:5000/api/v1/guest/submissions/${sessionId}/answers`, {
-        answers: [{ question_id: 999, answer_value: data }]
-      });
-
-      // 3. Complete submission with business profile details
-      await axios.post(`http://localhost:5000/api/v1/guest/submissions/${sessionId}/complete`, {
-        contact_email: data.email,
-        contact_phone: data.phone,
-        business_name: data.businessName || data.referrerCompany
-      });
-
-      setSubmitted(true);
-      toast.success("Project brief successfully submitted over API!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to connect to backend Server. Ensure it is running.");
-    } finally {
-      setIsSubmitting(false);
-    }
+  const subCategoriesData: Record<string, string[]> = {
+    'Food': ['Restaurant', 'Street Food', 'Bakery', 'Catering Service'],
+    'Healthcare': ['General Clinic', 'Specialist Doctor', 'Dental', 'Pharmacy'],
+    'RealEstate': ['New Projects', 'Rent / Sell', 'Interior Design', 'Home Reno'],
+    'Education': ['Private Tutor', 'Online Course', 'Pre-school', 'Coaching Center'],
+    'Retail': ['Clothing', 'Grocery', 'Electronics', 'Footwear'],
+    'Service': ['Salon / Spa', 'Legal Help', 'Tax / CA', 'AC / Home Repair']
   };
 
-  if (submitted) {
-    return (
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-20 max-w-xl mx-auto">
-        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
-          <Rocket className="w-12 h-12 text-green-600" />
-        </div>
-        <h2 className="text-4xl font-extrabold text-slate-900 mb-4">You're All Set!</h2>
-        <p className="text-lg text-slate-600 mb-10">
-          Your project brief has been sent to our design pool. You will receive an email shortly with access to your tracking dashboard.
-        </p>
-        <button onClick={() => navigate('/')} className="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
-          Return Home
-        </button>
-      </motion.div>
-    );
-  }
-
   return (
-    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="max-w-4xl space-y-8">
-      <div>
-        <h2 className="text-3xl font-extrabold text-slate-900 mb-2">Final Review</h2>
-        <p className="text-slate-500">Review your choices before submitting to the design pool.</p>
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      className="space-y-10 pb-20 px-4"
+    >
+      <div className="text-center md:text-left">
+        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none">Step 5: What do you do?</h2>
+        <p className="text-base text-slate-500 font-medium font-sans">Please pick your industry so we can set the right vibe.</p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-        {/* Review blocks mapped from data context */}
-        <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-            <div>
-              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Lead Source</p>
-              <p className="text-sm font-bold text-slate-800 capitalize">{data.leadSource || <span className="text-red-400 italic">Not Selected</span>}</p>
-            </div>
-        </div>
-
-        <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-            <div>
-              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Business Name</p>
-              <p className="text-lg font-bold text-slate-800">{data.businessName || <span className="text-red-400 italic">Not Entered</span>}</p>
-              <p className="text-sm border-t border-slate-200 pt-2 mt-2 font-medium text-slate-600">Contact: {data.contactName} ({data.phone})</p>
-            </div>
-            <button onClick={() => setPhase(1)} className="text-blue-600 text-sm font-semibold hover:underline">Edit</button>
-        </div>
-
-        <div className="p-6 border-b border-slate-100 grid grid-cols-2 gap-6">
-            <div>
-              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Main Category</p>
-              <p className="font-medium text-slate-800">{data.category || <span className="text-slate-400 italic">Not Selected</span>}</p>
-            </div>
-            <div>
-              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Theme Style</p>
-              <p className="font-medium text-slate-800 capitalize">{data.websiteStyle || <span className="text-slate-400 italic">Not Selected</span>}</p>
-            </div>
-        </div>
-        
-        <div className="p-6 border-b border-slate-100">
-            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-2">Competitors</p>
-            <p className="text-sm text-slate-600">{data.competitors.length > 0 ? data.competitors.join(', ') : 'None provided'}</p>
-        </div>
-
-        <div className="p-6">
-            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-2">Your USPs</p>
-            <div className="flex flex-wrap gap-2">
-              {data.usps.length > 0 ? data.usps.map(u => (
-                <span key={u} className="px-3 py-1 bg-slate-100 text-slate-700 text-sm font-medium rounded-full">{u}</span>
-              )) : <span className="text-slate-400 italic text-sm">Not Selected</span>}
-            </div>
+      <div className="space-y-4">
+        <h3 className="text-lg font-black text-slate-900">Which Industry do you work in?</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {businessCategories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => updateData({ mainCategory: cat.id })}
+              className={`p-5 rounded-[1.5rem] border-2 transition-all text-left relative overflow-hidden group ${
+                data.mainCategory === cat.id 
+                  ? 'border-blue-600 bg-blue-50/50 shadow-sm' 
+                  : 'border-slate-50 bg-white hover:border-slate-200 shadow-sm'
+              }`}
+            >
+              <h4 className="font-black text-slate-900 text-sm mb-1">{cat.name}</h4>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{cat.sub}</p>
+              {data.mainCategory === cat.id && (
+                <div className="absolute top-2 right-2 w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                </div>
+              )}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="flex justify-between pt-10">
-        <button onClick={() => setPhase(4)} className="flex items-center gap-2 px-6 py-3.5 bg-white border border-slate-200 text-slate-600 rounded-xl font-medium hover:bg-slate-50 transition-colors">
-          <ArrowLeft className="w-5 h-5" /> Back
+      <AnimatePresence>
+        {data.mainCategory && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="space-y-6 pt-4 overflow-hidden"
+          >
+            <div className="space-y-4">
+               <h3 className="text-lg font-black text-slate-900">What exactly is your specialty?</h3>
+               <div className="flex flex-wrap gap-2">
+                 {(subCategoriesData[data.mainCategory] || []).map(sub => (
+                   <button
+                      key={sub}
+                      onClick={() => updateData({ subCategory: sub })}
+                      className={`px-6 py-3 rounded-2xl border-2 text-sm font-bold transition-all ${
+                        data.subCategory === sub ? 'border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'border-slate-50 bg-white text-slate-500 hover:border-slate-200 shadow-sm'
+                      }`}
+                   >
+                     {sub}
+                   </button>
+                 ))}
+               </div>
+            </div>
+
+            <div className="space-y-3">
+               <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-2">Tell us more about what you offer</label>
+               <textarea 
+                 rows={3} placeholder="Example: We provide organic catering for weddings and small events..."
+                 value={data.specialisation} onChange={(e) => updateData({ specialisation: e.target.value })}
+                 className="w-full p-5 bg-white border-2 border-slate-50 rounded-3xl outline-none focus:border-blue-500 font-bold transition-all text-sm resize-none shadow-sm"
+               />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex justify-between items-center pt-8">
+        <button onClick={() => setPhase(4)} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm">
+          <ArrowLeft className="w-4 h-4" /> Go Back
         </button>
-        <button onClick={handleSubmit} disabled={isSubmitting || !data.businessName} className="flex items-center gap-2 px-8 py-3.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors disabled:opacity-50 shadow-lg shadow-blue-600/30">
-          {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
-          {isSubmitting ? 'Submitting...' : 'Submit Brief'}
+        <button 
+          onClick={() => setPhase(6)}
+          disabled={!data.mainCategory}
+          className="group flex items-center gap-4 px-10 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-3xl font-black shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm"
+        >
+          Almost Done!
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
     </motion.div>

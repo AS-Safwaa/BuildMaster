@@ -5,11 +5,8 @@ import { ArrowRight, Sparkles, UserPlus, Send, X, Zap, Target, Globe, ChevronRig
 
 export const LandingPage = () => {
   const navigate = useNavigate();
-  const [showSourceModal, setShowSourceModal] = useState(false);
-
-  const startProject = (source: 'self' | 'referral') => {
-    setShowSourceModal(false);
-    navigate('/questionnaire', { state: { leadSource: source } });
+  const startProject = () => {
+    navigate('/questionnaire', { state: { leadSource: 'self' } });
   };
 
   const steps = [
@@ -83,7 +80,7 @@ export const LandingPage = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setShowSourceModal(true)}
+              onClick={startProject}
               className="group flex items-center justify-center gap-3 px-12 py-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-xl font-black shadow-[0_0_40px_rgba(59,130,246,0.2)] hover:shadow-[0_0_60px_rgba(147,51,234,0.4)] transition-all z-20 border border-blue-500/20"
             >
               Start Your Project
@@ -159,7 +156,7 @@ export const LandingPage = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-blue-50 to-transparent pointer-events-none"></div>
         <div className="max-w-4xl mx-auto px-6 py-32 text-center relative z-20">
           <h2 className="text-5xl font-black text-slate-900 mb-8">Ready to revolutionize your workflow?</h2>
-          <button onClick={() => setShowSourceModal(true)} className="px-10 py-5 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-full text-lg font-bold shadow-xl shadow-slate-900/20 hover:shadow-2xl hover:scale-105 transition-all">
+          <button onClick={startProject} className="px-10 py-5 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-full text-lg font-bold shadow-xl shadow-slate-900/20 hover:shadow-2xl hover:scale-105 transition-all">
             Launch Platform Now
           </button>
         </div>
@@ -167,64 +164,6 @@ export const LandingPage = () => {
           © {new Date().getFullYear()} ProjectHub SaaS Platform. Engineered for absolute perfection.
         </div>
       </footer>
-
-      {/* Lead Source Modal */}
-      <AnimatePresence>
-        {showSourceModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white border border-slate-200 rounded-[2rem] p-10 max-w-xl w-full shadow-2xl relative"
-            >
-              <button 
-                onClick={() => setShowSourceModal(false)}
-                className="absolute top-8 right-8 p-2 text-slate-400 hover:text-slate-600 bg-slate-50 hover:bg-slate-100 rounded-full transition-colors hidden sm:block"
-              >
-                <X className="w-6 h-6" />
-              </button>
-
-              <h3 className="text-4xl font-black text-slate-900 mb-3 tracking-tight">Let's get started</h3>
-              <p className="text-lg text-slate-500 mb-10 font-medium">Are you initializing this project for your own business, or were you referred by our team?</p>
-
-              <div className="space-y-4">
-                <button 
-                  onClick={() => startProject('self')}
-                  className="w-full flex items-center gap-6 p-6 rounded-[1.5rem] bg-white border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all text-left shadow-sm hover:shadow-md group"
-                >
-                  <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
-                    <UserPlus className="w-8 h-8" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 text-xl mb-1">Starting for myself</h4>
-                    <p className="text-sm font-medium text-slate-500">I am the business owner / direct client</p>
-                  </div>
-                  <div className="ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-                    <ArrowRight className="w-6 h-6 text-blue-600" />
-                  </div>
-                </button>
-
-                <button 
-                  onClick={() => startProject('referral')}
-                  className="w-full flex items-center gap-6 p-6 rounded-[1.5rem] bg-white border-2 border-slate-200 hover:border-purple-500 hover:bg-purple-50 transition-all text-left shadow-sm hover:shadow-md group"
-                >
-                  <div className="w-16 h-16 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all shadow-sm">
-                    <Send className="w-8 h-8" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 text-xl mb-1">I was referred</h4>
-                    <p className="text-sm font-medium text-slate-500">A partner or team member sent me</p>
-                  </div>
-                  <div className="ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-                    <ArrowRight className="w-6 h-6 text-purple-600" />
-                  </div>
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
     </div>
   );

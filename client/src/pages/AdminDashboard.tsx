@@ -5,6 +5,7 @@ import { LayoutDashboard, Settings, LogOut, CodeSquare, Plus, Edit2, Trash2, X, 
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import API_BASE_URL from '../config/api';
 
 export const AdminDashboard = () => {
   const { user, logout } = useAuth();
@@ -45,7 +46,7 @@ export const AdminDashboard = () => {
 
   const fetchOverview = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/v1/admin/dashboard/overview', {
+      const res = await axios.get(`${API_BASE_URL}/admin/dashboard/overview`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setOverviewData(res.data);
@@ -55,8 +56,8 @@ export const AdminDashboard = () => {
   const fetchProjectsData = async () => {
     try {
       const [projRes, devRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/v1/admin/dashboard/projects', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }),
-          axios.get('http://localhost:5000/api/v1/admin/dashboard/developers', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+          axios.get(`${API_BASE_URL}/admin/dashboard/projects`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }),
+          axios.get(`${API_BASE_URL}/admin/dashboard/developers`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
       ]);
       setProjects(projRes.data);
       setDevelopers(devRes.data);
@@ -66,8 +67,8 @@ export const AdminDashboard = () => {
   const fetchForms = async () => {
     try {
       const [stepsRes, qsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/v1/admin/forms/steps'),
-        axios.get('http://localhost:5000/api/v1/admin/forms/questions')
+        axios.get(`${API_BASE_URL}/admin/forms/steps`),
+        axios.get(`${API_BASE_URL}/admin/forms/questions`)
       ]);
       setSteps(stepsRes.data);
       setQuestions(qsRes.data);
@@ -76,7 +77,7 @@ export const AdminDashboard = () => {
 
   const fetchMasters = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/v1/admin/masters/types');
+      const res = await axios.get(`${API_BASE_URL}/admin/masters/types`);
       setMasterTypes(res.data);
     } catch (err) { console.error(err); }
   };
@@ -90,7 +91,7 @@ export const AdminDashboard = () => {
 
   useEffect(() => {
     if (manageMasterId) {
-      axios.get(`http://localhost:5000/api/v1/admin/masters/values?type_id=${manageMasterId.id}`)
+      axios.get(`${API_BASE_URL}/admin/masters/values?type_id=${manageMasterId.id}`)
         .then(res => setMasterValues(res.data))
         .catch(err => console.error(err));
     }
@@ -99,7 +100,7 @@ export const AdminDashboard = () => {
   // Assignment Handlers
   const handleAssign = async (projectId: number, developerId: string) => {
     try {
-      await axios.post('http://localhost:5000/api/v1/admin/dashboard/assign-project', 
+      await axios.post(`${API_BASE_URL}/admin/dashboard/assign-project`, 
         { project_id: projectId, developer_id: developerId ? parseInt(developerId) : null },
         { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
@@ -112,7 +113,7 @@ export const AdminDashboard = () => {
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/v1/admin/auth/profile', 
+      await axios.post(`${API_BASE_URL}/admin/auth/profile`, 
         { id: user?.id, name: profileName, email: profileEmail }
       );
       toast.success('Profile CMS Updated Successfully');
@@ -122,7 +123,7 @@ export const AdminDashboard = () => {
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/v1/admin/auth/update-password', 
+      await axios.post(`${API_BASE_URL}/admin/auth/update-password`, 
         { id: user?.id, newPassword }
       );
       toast.success('Password changed securely.');
@@ -134,7 +135,7 @@ export const AdminDashboard = () => {
   const handleAddStep = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/v1/admin/forms/steps', { title: newStep.title, step_order: parseInt(newStep.step_order, 10), is_active: true });
+      await axios.post(`${API_BASE_URL}/admin/forms/steps`, { title: newStep.title, step_order: parseInt(newStep.step_order, 10), is_active: true });
       toast.success('Form Step Created!');
       setShowAddStep(false); setNewStep({ title: '', step_order: '' }); fetchForms();
     } catch (err) { toast.error('Failed to create step.'); }
@@ -144,7 +145,7 @@ export const AdminDashboard = () => {
     e.preventDefault();
     if (!showAddQuestion) return;
     try {
-      await axios.post('http://localhost:5000/api/v1/admin/forms/questions', { step_id: showAddQuestion, question_text: newQuestion.text, input_type: newQuestion.type, question_order: parseInt(newQuestion.order, 10), is_required: false });
+      await axios.post(`${API_BASE_URL}/admin/forms/questions`, { step_id: showAddQuestion, question_text: newQuestion.text, input_type: newQuestion.type, question_order: parseInt(newQuestion.order, 10), is_required: false });
       toast.success('Question Added!');
       setShowAddQuestion(null); setNewQuestion({ text: '', type: 'text', order: '' }); fetchForms();
     } catch (err) { toast.error('Failed to add question. Check order number.'); }
@@ -153,7 +154,7 @@ export const AdminDashboard = () => {
   const handleAddMaster = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/v1/admin/masters/types', { name: newMaster.name, description: newMaster.description });
+      await axios.post(`${API_BASE_URL}/admin/masters/types`, { name: newMaster.name, description: newMaster.description });
       toast.success('Category Created!');
       setShowAddMaster(false); setNewMaster({ name: '', description: '' }); fetchMasters();
     } catch (err) { toast.error('Failed to create category.'); }
@@ -163,7 +164,7 @@ export const AdminDashboard = () => {
     e.preventDefault();
     if (!manageMasterId) return;
     try {
-      const res = await axios.post('http://localhost:5000/api/v1/admin/masters/values', { master_type_id: manageMasterId.id, label: newValueLabel, value: newValueLabel.replace(/\s+/g, '_').toLowerCase() });
+      const res = await axios.post(`${API_BASE_URL}/admin/masters/values`, { master_type_id: manageMasterId.id, label: newValueLabel, value: newValueLabel.replace(/\s+/g, '_').toLowerCase() });
       toast.success('Option Added!');
       setMasterValues([...masterValues, res.data]); setNewValueLabel('');
     } catch (err) { toast.error('Failed to add master option.'); }
