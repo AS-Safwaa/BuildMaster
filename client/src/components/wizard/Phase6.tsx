@@ -72,12 +72,12 @@ export const Phase6 = () => {
       className="space-y-10 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(6)}: Your Website Goals</h2>
-        <p className="text-base text-slate-500 font-medium">Finalize how you want to attract and talk to customers.</p>
+        <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(6)}: Goals & Strategy</h2>
+        <p className="text-base text-slate-500 font-medium opacity-90">What is the primary objective of your new digital home?</p>
       </div>
 
       <div className="space-y-5">
-        <h3 className="text-lg font-black text-slate-900 flex items-center gap-3">
+        <h3 className="text-lg font-bold text-slate-800 flex items-center gap-3">
            <Target className="w-5 h-5 text-blue-600" /> What do you want your website to do?
         </h3>
         <div className="flex flex-wrap gap-2">

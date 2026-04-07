@@ -80,23 +80,23 @@ const WizardContent = () => {
                 return (
                   <div 
                     key={phase.id} 
-                    className={`flex gap-4 p-4 rounded-2xl transition-all duration-300 border ${
-                      isActive ? 'bg-gradient-to-br from-slate-900 to-slate-800 border-slate-800 shadow-xl' : 
+                    className={`flex gap-4 p-4 rounded-3xl transition-all duration-300 border ${
+                      isActive ? 'bg-white border-blue-100 shadow-xl shadow-blue-500/10 ring-4 ring-blue-50/50' : 
                       'border-transparent'
                     }`}
                   >
                     <div className="flex flex-col items-center">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-500 ${
-                        isPast ? 'bg-green-500 text-white border-green-500 shadow-lg shadow-green-500/20' : 
-                        isActive ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-600/20' : 
+                        isPast ? 'bg-emerald-500 text-white border-emerald-500 shadow-xl shadow-emerald-500/20' : 
+                        isActive ? 'bg-blue-500 text-white border-blue-500 shadow-lg shadow-blue-500/20' : 
                         'bg-slate-50 border-slate-200 text-slate-400 border'
                       }`}>
                         {isPast ? <Check className="w-4 h-4" /> : idx + 1}
                       </div>
                     </div>
                     <div>
-                      <p className={`text-sm font-bold leading-none mb-1.5 ${isActive ? 'text-white' : 'text-slate-700'}`}>{phase.title}</p>
-                      <p className={`text-[10px] uppercase font-bold tracking-wider ${isActive ? 'text-blue-400' : 'text-slate-400'}`}>{phase.desc}</p>
+                      <p className={`text-sm font-bold leading-none mb-1.5 ${isActive ? 'text-slate-800' : 'text-slate-600'}`}>{phase.title}</p>
+                      <p className={`text-[10px] uppercase font-bold tracking-widest ${isActive ? 'text-blue-500' : 'text-slate-400'}`}>{phase.desc}</p>
                     </div>
                   </div>
                 );
@@ -104,14 +104,14 @@ const WizardContent = () => {
             </div>
           </div>
 
-          <div className="p-8 border-t border-slate-100 bg-slate-50/50">
+          <div className="p-8 border-t border-slate-50 bg-slate-50/30">
             <div className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center">
                 <User className="w-5 h-5 text-slate-400" />
               </div>
               <div>
-                <p className="text-xs font-black text-slate-800 uppercase tracking-tight">Guest Client</p>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Pipeline Start</p>
+                <p className="text-xs font-bold text-slate-700 uppercase tracking-tight">Guest Client</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pipeline Start</p>
               </div>
             </div>
           </div>

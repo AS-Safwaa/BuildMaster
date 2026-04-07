@@ -38,8 +38,8 @@ export const Phase1 = () => {
       className="space-y-10 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance">Step 1: Let's Get Started!</h2>
-        <p className="text-base text-slate-500 font-medium font-sans">What can we build for you today? Pick one to begin.</p>
+        <h2 className="text-3xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance">Step 1: Let's Get Started!</h2>
+        <p className="text-base text-slate-500 font-medium font-sans">Which creative path should we embark on today? Choose the best fit for your venture.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -47,19 +47,19 @@ export const Phase1 = () => {
           <button
             key={opt.id}
             onClick={() => updateData({ projectType: opt.id as any })}
-            className={`p-6 md:p-8 rounded-[2.5rem] border-2 transition-all duration-300 text-left relative overflow-hidden group ${
+            className={`p-6 md:p-8 rounded-[2rem] border-2 transition-all duration-500 text-left relative overflow-hidden group ${
               data.projectType === opt.id 
-                ? 'border-blue-600 bg-blue-50/50 shadow-sm' 
-                : 'border-slate-50 bg-white hover:border-slate-200 shadow-sm'
+                ? 'border-blue-500 bg-blue-50/30 shadow-sm' 
+                : 'border-slate-50 bg-white hover:border-slate-100 shadow-sm'
             }`}
           >
             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-transform duration-500 group-hover:scale-110 ${
-              data.projectType === opt.id ? opt.color + ' text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 text-slate-400 group-hover:bg-slate-100'
+              data.projectType === opt.id ? opt.color + ' text-white shadow-xl shadow-blue-500/10' : 'bg-slate-50 text-slate-400 group-hover:bg-slate-100'
             }`}>
               {opt.icon}
             </div>
-            <h3 className="text-xl font-black text-slate-900 mb-2 leading-none">{opt.title}</h3>
-            <p className="text-sm font-medium text-slate-500 leading-relaxed font-sans">{opt.desc}</p>
+            <h3 className="text-lg font-bold text-slate-800 mb-2 leading-none">{opt.title}</h3>
+            <p className="text-sm font-medium text-slate-500 leading-relaxed font-sans opacity-90">{opt.desc}</p>
             
             {data.projectType === opt.id && (
               <div className="absolute top-6 right-6">
@@ -120,9 +120,9 @@ export const Phase1 = () => {
         <button
           onClick={goToNext}
           disabled={!data.projectType || !data.projectFor}
-          className="group flex items-center gap-4 px-12 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[2rem] font-black shadow-2xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm"
+          className="group flex items-center gap-4 px-12 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[2rem] font-bold shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-0.5 transition-all text-sm"
         >
-          Sounds good, Next Step!
+          Sounds good, let's proceed
           <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>

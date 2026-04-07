@@ -96,8 +96,8 @@ export const Phase9 = () => {
       className="pb-20 px-4"
     >
       <div className="text-center md:text-left mb-10">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance">Review & Submit</h2>
-        <p className="text-base text-slate-500 font-medium font-sans">Please look over everything before you submit it to us.</p>
+        <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight">Review & Perfect</h2>
+        <p className="text-base text-slate-500 font-medium font-sans">Look over your vision one last time before we bring it to life.</p>
       </div>
 
       <Section title="The Basics" icon={<Shield className="w-5 h-5"/>} phase={1}>

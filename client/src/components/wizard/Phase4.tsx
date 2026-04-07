@@ -43,12 +43,12 @@ export const Phase4 = () => {
       className="space-y-10 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(4)}: Your Website Name</h2>
+        <h2 className="text-3xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(4)}: Your Website Name</h2>
         <p className="text-base text-slate-500 font-medium font-sans">Do you already have a name like www.business.com?</p>
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
            <Globe className="w-5 h-5 text-blue-600" /> Website Name (Domain)
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -86,7 +86,7 @@ export const Phase4 = () => {
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-lg font-black text-slate-900 flex items-center gap-2 font-sans">
+        <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2 font-sans">
           <Server className="w-5 h-5 text-purple-600" /> The "Technical House" (Hosting)
         </h3>
         <p className="text-sm text-slate-500 font-medium tracking-tight font-sans">Where should we keep your website files?</p>
@@ -113,7 +113,7 @@ export const Phase4 = () => {
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
            <Mail className="w-5 h-5 text-indigo-500" /> Features for your customers
         </h3>
         <p className="text-sm text-slate-500 font-medium font-sans">Which buttons should we put on your website?</p>
@@ -163,7 +163,7 @@ export const Phase4 = () => {
         </button>
         <button 
           onClick={goToNext}
-          className="group flex items-center gap-4 px-10 py-5 bg-blue-600 text-white rounded-3xl font-black shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm font-sans"
+          className="group flex items-center gap-4 px-10 py-5 bg-blue-600 text-white rounded-3xl font-bold shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm font-sans"
         >
           Next Step!
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

@@ -4,7 +4,7 @@ import { useWizard } from '../../context/WizardContext';
 import { MapPin, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export const Phase2 = () => {
-  const { data, updateData, goToNext, goToPrev } = useWizard();
+  const { data, updateData, goToNext, goToPrev, getStepNumber } = useWizard();
 
   return (
     <motion.div
@@ -14,13 +14,13 @@ export const Phase2 = () => {
       className="space-y-10 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Step 2: About Your Business</h2>
+        <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight">Step {getStepNumber(2)}: About Your Business</h2>
         <p className="text-base text-slate-500 font-medium">Please tell us the basic details so we can set up your profile.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-2">
+          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-2">
             Business Name <span className="text-rose-400">*</span>
           </label>
           <input 
@@ -31,7 +31,7 @@ export const Phase2 = () => {
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-2">
+          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-2">
             When did you start?
           </label>
           <input 
@@ -42,7 +42,7 @@ export const Phase2 = () => {
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-2">
+          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-2">
             Owner / Manager Name <span className="text-rose-400">*</span>
           </label>
           <input 
@@ -53,7 +53,7 @@ export const Phase2 = () => {
         </div>
 
         <div className="space-y-2">
-          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-2">
+          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-2">
             Mobile Number <span className="text-rose-400">*</span>
           </label>
           <input 
@@ -64,7 +64,7 @@ export const Phase2 = () => {
         </div>
 
         <div className="md:col-span-2 space-y-2">
-          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-2">
+          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-2">
             Where do you work? (Area / City)
           </label>
           <input 
@@ -82,6 +82,7 @@ export const Phase2 = () => {
           </div>
           <div>
             <p className="font-black text-slate-900 text-sm tracking-tight leading-none mb-1">Your Full Address</p>
+            <p className="font-bold text-slate-800 text-sm tracking-tight leading-none mb-1">Your Full Address</p>
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Help people find your shop/office</p>
           </div>
         </div>
@@ -103,7 +104,7 @@ export const Phase2 = () => {
         <button 
           onClick={goToNext}
           disabled={!data.businessName || !data.contactName || !data.phone}
-          className="group flex items-center gap-4 px-10 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-3xl font-black shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm"
+          className="group flex items-center gap-4 px-10 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-3xl font-bold shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-0.5 transition-all text-sm"
         >
           Next Step
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

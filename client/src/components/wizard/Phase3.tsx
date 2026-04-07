@@ -90,13 +90,13 @@ export const Phase3 = () => {
       className="space-y-12 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance">Step {getStepNumber(3)}: Logo & Brand DNA</h2>
-        <p className="text-lg text-slate-500 font-medium font-sans">Defining the soul of your business and how it resonates with customers.</p>
+        <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance">Step {getStepNumber(3)}: Logo & Brand DNA</h2>
+        <p className="text-base text-slate-500 font-medium font-sans opacity-90">Defining the soul of your business and how it resonates with customers.</p>
       </div>
 
       {/* Logo Status Selector */}
       <div className="space-y-6">
-        <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
           Current Pulse: Do you have a logo?
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
