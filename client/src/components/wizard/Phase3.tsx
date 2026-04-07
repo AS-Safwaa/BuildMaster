@@ -34,7 +34,7 @@ const COLOR_PSYCHOLOGY: Record<string, string> = {
 };
 
 export const Phase3 = () => {
-  const { data, updateData, goToNext, goToPrev } = useWizard();
+  const { data, updateData, goToNext, goToPrev, getStepNumber } = useWizard();
 
   const personalities = Object.keys(VIBE_DATA);
   const designStyles = Object.keys(STYLE_DATA);
@@ -90,7 +90,7 @@ export const Phase3 = () => {
       className="space-y-12 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-4xl font-black text-slate-900 mb-2 tracking-tighter leading-none">Step 3: Visual Identity</h2>
+        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance">Step {getStepNumber(3)}: Logo & Brand DNA</h2>
         <p className="text-lg text-slate-500 font-medium font-sans">Defining the soul of your business and how it resonates with customers.</p>
       </div>
 

@@ -42,7 +42,7 @@ export const Phase7 = () => {
       className="space-y-10 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none">Step 7: Photos & Social Links</h2>
+        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none">Step {getStepNumber(7)}: Photos & Social Links</h2>
         <p className="text-base text-slate-500 font-medium">Let's gather some beautiful pictures and your social links.</p>
       </div>
 

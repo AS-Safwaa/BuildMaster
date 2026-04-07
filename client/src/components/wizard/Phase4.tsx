@@ -43,7 +43,7 @@ export const Phase4 = () => {
       className="space-y-10 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance font-sans">Step 4: Your Website Name</h2>
+        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(4)}: Your Website Name</h2>
         <p className="text-base text-slate-500 font-medium font-sans">Do you already have a name like www.business.com?</p>
       </div>
 

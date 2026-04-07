@@ -163,6 +163,7 @@ interface WizardContextType {
   phases: WizardPhase[];
   goToNext: () => void;
   goToPrev: () => void;
+  getStepNumber: (id: number) => number;
 }
 
 const WizardContext = createContext<WizardContextType | undefined>(undefined);
@@ -188,6 +189,10 @@ export const WizardProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const visiblePhases = getVisiblePhases();
 
+  const getStepNumber = (id: number) => {
+    return visiblePhases.findIndex(p => p.id === id) + 1;
+  };
+
   const goToNext = () => {
     const currentIndex = visiblePhases.findIndex(p => p.id === currentPhase);
     if (currentIndex < visiblePhases.length - 1) {
@@ -209,7 +214,7 @@ export const WizardProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   return (
     <WizardContext.Provider value={{ 
       data, updateData, currentPhase, setPhase: setCurrentPhase,
-      phases: visiblePhases, goToNext, goToPrev 
+      phases: visiblePhases, goToNext, goToPrev, getStepNumber
     }}>
       {children}
     </WizardContext.Provider>

@@ -73,9 +73,9 @@ const WizardContent = () => {
           <div className="flex-1 overflow-y-auto px-8 py-8 custom-scrollbar">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">Current Phase</p>
             <div className="space-y-4 pb-10">
-              {phases.map((phase) => {
+              {phases.map((phase, idx) => {
                 const isActive = currentPhase === phase.id;
-                const isPast = currentPhase > phase.id;
+                const isPast = phases.findIndex(p => p.id === currentPhase) > idx;
                 
                 return (
                   <div 
@@ -91,7 +91,7 @@ const WizardContent = () => {
                         isActive ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-600/20' : 
                         'bg-slate-50 border-slate-200 text-slate-400 border'
                       }`}>
-                        {isPast ? <Check className="w-4 h-4" /> : phase.id}
+                        {isPast ? <Check className="w-4 h-4" /> : idx + 1}
                       </div>
                     </div>
                     <div>

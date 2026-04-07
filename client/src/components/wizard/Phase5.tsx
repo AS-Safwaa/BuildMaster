@@ -4,7 +4,7 @@ import { useWizard } from '../../context/WizardContext';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 export const Phase5 = () => {
-  const { data, updateData, goToNext, goToPrev } = useWizard();
+  const { data, updateData, goToNext, goToPrev, getStepNumber } = useWizard();
 
   const businessCategories = [
     { id: 'Food', name: 'Food / Catering', sub: 'Cafe, Restaurant, Bakers' },
@@ -32,7 +32,7 @@ export const Phase5 = () => {
       className="space-y-10 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none">Step 5: What do you do?</h2>
+        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none">Step {getStepNumber(5)}: What do you do?</h2>
         <p className="text-base text-slate-500 font-medium font-sans">Please pick your industry so we can set the right vibe.</p>
       </div>
 

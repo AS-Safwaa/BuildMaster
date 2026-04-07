@@ -48,7 +48,7 @@ export const Phase8 = () => {
       className="space-y-10 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance">Step 8: Similar Websites & Extras</h2>
+        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance">Step {getStepNumber(8)}: Similar Websites & Extras</h2>
         <p className="text-base text-slate-500 font-medium">Show us some websites you like or are like yours.</p>
       </div>
 
