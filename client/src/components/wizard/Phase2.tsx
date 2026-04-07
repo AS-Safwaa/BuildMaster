@@ -4,7 +4,7 @@ import { useWizard } from '../../context/WizardContext';
 import { MapPin, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export const Phase2 = () => {
-  const { data, updateData, setPhase } = useWizard();
+  const { data, updateData, goToNext, goToPrev } = useWizard();
 
   return (
     <motion.div
@@ -97,11 +97,11 @@ export const Phase2 = () => {
       </div>
 
       <div className="flex justify-between items-center pt-10">
-        <button onClick={() => setPhase(1)} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm">
+        <button onClick={goToPrev} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm">
           <ArrowLeft className="w-4 h-4" /> Go Back
         </button>
         <button 
-          onClick={() => setPhase(3)}
+          onClick={goToNext}
           disabled={!data.businessName || !data.contactName || !data.phone}
           className="group flex items-center gap-4 px-10 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-3xl font-black shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm"
         >

@@ -13,22 +13,12 @@ import { Phase9 } from '../components/wizard/Phase9';
 import { Check, User, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const phases = [
-  { id: 1, title: 'Project Type', desc: 'Selection' },
-  { id: 2, title: 'Business Profile', desc: 'Contact & Details' },
-  { id: 3, title: 'Logo & Brand', desc: 'Design personality' },
-  { id: 4, title: 'Technical Setup', desc: 'Domain & Hosting' },
-  { id: 5, title: 'Offerings', desc: 'Categories' },
-  { id: 6, title: 'Strategy', desc: 'Goals & USP' },
-  { id: 7, title: 'Media & Social', desc: 'Trust elements' },
-  { id: 8, title: 'References', desc: 'Addons' },
-  { id: 9, title: 'Review', desc: 'Final check' }
-];
-
 const WizardContent = () => {
-  const { currentPhase, data } = useWizard();
+  const { currentPhase, data, phases } = useWizard();
   const navigate = useNavigate();
-  const progress = (currentPhase / phases.length) * 100;
+  
+  const currentIndex = phases.findIndex(p => p.id === currentPhase);
+  const progress = ((currentIndex + 1) / phases.length) * 100;
 
   return (
     <div className="h-screen bg-slate-50 flex flex-col overflow-hidden">

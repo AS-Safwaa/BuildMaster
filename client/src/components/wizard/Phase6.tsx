@@ -4,7 +4,7 @@ import { useWizard } from '../../context/WizardContext';
 import { Target, Zap, Mic, Type, Palette, ArrowRight, ArrowLeft, Plus, X } from 'lucide-react';
 
 export const Phase6 = () => {
-  const { data, updateData, setPhase } = useWizard();
+  const { data, updateData, goToNext, goToPrev } = useWizard();
 
   const goals = ['Get more calls', 'Show my work', 'Sell things online', 'Book appointments', 'Look professional'];
   const actions = ['Call Now', 'Get a Price', 'Book Now', 'Message Us', 'See Photos'];
@@ -255,11 +255,11 @@ export const Phase6 = () => {
       </div>
 
       <div className="flex justify-between items-center pt-10">
-        <button onClick={() => setPhase(5)} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm shadow-sm font-sans">
+        <button onClick={goToPrev} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm shadow-sm font-sans">
           <ArrowLeft className="w-4 h-4" /> Go Back
         </button>
         <button 
-          onClick={() => setPhase(7)}
+          onClick={goToNext}
           className="group flex items-center gap-4 px-10 py-5 bg-blue-600 text-white rounded-3xl font-black shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm font-sans"
         >
           Sounds great!

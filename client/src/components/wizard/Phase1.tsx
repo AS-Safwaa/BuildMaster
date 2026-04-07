@@ -4,7 +4,7 @@ import { useWizard } from '../../context/WizardContext';
 import { Layout, Palette, Globe, User, Users, ArrowRight } from 'lucide-react';
 
 export const Phase1 = () => {
-  const { data, updateData, setPhase } = useWizard();
+  const { data, updateData, goToNext } = useWizard();
 
   const options = [
     { 
@@ -118,7 +118,7 @@ export const Phase1 = () => {
 
       <div className="flex justify-center md:justify-start pt-8">
         <button
-          onClick={() => setPhase(2)}
+          onClick={goToNext}
           disabled={!data.projectType || !data.projectFor}
           className="group flex items-center gap-4 px-12 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[2rem] font-black shadow-2xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm"
         >

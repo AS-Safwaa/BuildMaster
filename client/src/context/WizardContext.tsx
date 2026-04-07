@@ -137,11 +137,32 @@ const defaultData: WizardData = {
   referrerName: '', referrerCompany: '', referrerEmail: '',
 };
 
+interface WizardPhase {
+  id: number;
+  title: string;
+  desc: string;
+}
+
+const ALL_PHASES: WizardPhase[] = [
+  { id: 1, title: 'Project Type', desc: 'Selection' },
+  { id: 2, title: 'Business Profile', desc: 'Contact & Details' },
+  { id: 3, title: 'Logo & Brand', desc: 'Design personality' },
+  { id: 4, title: 'Technical Setup', desc: 'Domain & Hosting' },
+  { id: 5, title: 'Offerings', desc: 'Categories' },
+  { id: 6, title: 'Strategy', desc: 'Goals & USP' },
+  { id: 7, title: 'Media & Social', desc: 'Trust elements' },
+  { id: 8, title: 'References', desc: 'Addons' },
+  { id: 9, title: 'Review', desc: 'Final check' }
+];
+
 interface WizardContextType {
   data: WizardData;
   updateData: (fields: Partial<WizardData>) => void;
   currentPhase: number;
   setPhase: (phase: number) => void;
+  phases: WizardPhase[];
+  goToNext: () => void;
+  goToPrev: () => void;
 }
 
 const WizardContext = createContext<WizardContextType | undefined>(undefined);
@@ -150,12 +171,46 @@ export const WizardProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [data, setData] = useState<WizardData>(defaultData);
   const [currentPhase, setCurrentPhase] = useState(1);
 
+  const getVisiblePhases = () => {
+    return ALL_PHASES.filter(p => {
+      // Logic for skipping
+      if (data.projectType === 'Logo Design') {
+        // Skip Technical, Offerings, Media & Social
+        if ([4, 5, 7].includes(p.id)) return false;
+      }
+      if (data.projectType === 'Website') {
+        // Skip Logo & Brand (Step 3)
+        if (p.id === 3) return false;
+      }
+      return true;
+    });
+  };
+
+  const visiblePhases = getVisiblePhases();
+
+  const goToNext = () => {
+    const currentIndex = visiblePhases.findIndex(p => p.id === currentPhase);
+    if (currentIndex < visiblePhases.length - 1) {
+      setCurrentPhase(visiblePhases[currentIndex + 1].id);
+    }
+  };
+
+  const goToPrev = () => {
+    const currentIndex = visiblePhases.findIndex(p => p.id === currentPhase);
+    if (currentIndex > 0) {
+      setCurrentPhase(visiblePhases[currentIndex - 1].id);
+    }
+  };
+
   const updateData = (fields: Partial<WizardData>) => {
     setData((prev) => ({ ...prev, ...fields }));
   };
 
   return (
-    <WizardContext.Provider value={{ data, updateData, currentPhase, setPhase: setCurrentPhase }}>
+    <WizardContext.Provider value={{ 
+      data, updateData, currentPhase, setPhase: setCurrentPhase,
+      phases: visiblePhases, goToNext, goToPrev 
+    }}>
       {children}
     </WizardContext.Provider>
   );

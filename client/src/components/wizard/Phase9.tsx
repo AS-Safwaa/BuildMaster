@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../../config/api';
 
 export const Phase9 = () => {
-  const { data, setPhase } = useWizard();
+  const { data, goToPrev, setPhase } = useWizard();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitted, setSubmitted] = React.useState(false);
   const navigate = useNavigate();
@@ -96,7 +96,7 @@ export const Phase9 = () => {
       className="pb-20 px-4"
     >
       <div className="text-center md:text-left mb-10">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance">Final Check!</h2>
+        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none text-balance">Review & Submit</h2>
         <p className="text-base text-slate-500 font-medium font-sans">Please look over everything before you submit it to us.</p>
       </div>
 
@@ -112,43 +112,61 @@ export const Phase9 = () => {
         <Entry label="Area of Work" value={data.serviceAreas} />
       </Section>
 
-      <Section title="Look & Style" icon={<Paint className="w-5 h-5"/>} phase={3}>
-        <Entry label="Logo Status" value={data.logoStatus === 'have' ? 'I have a logo' : data.logoStatus === 'improve' ? 'Update my logo' : 'Need new logo'} />
-        {data.logoStatus !== 'have' && (
-          <>
-            <Entry label="Logo Vibe" value={data.brandPersonality} />
-            <Entry label="Logo Style" value={data.designStyle} />
-            <Entry label="Colors" value={data.preferredColors} />
-          </>
-        )}
-      </Section>
+      {data.projectType !== 'Website' && (
+        <Section title="Look & Style" icon={<Paint className="w-5 h-5"/>} phase={3}>
+          <Entry label="Logo Status" value={data.logoStatus === 'have' ? 'I have a logo' : data.logoStatus === 'improve' ? 'Update my logo' : 'Need new logo'} />
+          {data.logoStatus !== 'have' && (
+            <>
+              <Entry label="Logo Vibe" value={data.brandPersonality} />
+              <Entry label="Logo Style" value={data.designStyle} />
+              <Entry label="Colors" value={data.preferredColors} />
+            </>
+          )}
+        </Section>
+      )}
 
-      <Section title="Technical Details" icon={<Web className="w-5 h-5"/>} phase={4}>
-        <Entry label="Website Name" value={data.hasDomain ? `Yes: ${data.preferredDomain}` : 'Need new name'} />
-        <Entry label="Hosting" value={data.hasHosting ? 'I have my own' : 'You handle it'} />
-        <Entry label="Features" value={[
-          data.callNowToggle ? 'Call Button' : null,
-          data.whatsappToggle ? 'WhatsApp' : null,
-          data.contactFormToggle ? 'Email Form' : null,
-          ...data.customFeatures
-        ].filter(Boolean)} />
-      </Section>
+      {data.projectType !== 'Logo Design' && (
+        <>
+          <Section title="Technical Details" icon={<Web className="w-5 h-5"/>} phase={4}>
+            <Entry label="Website Name" value={data.hasDomain ? `Yes: ${data.preferredDomain}` : 'Need new name'} />
+            <Entry label="Hosting" value={data.hasHosting ? 'I have my own' : 'You handle it'} />
+            <Entry label="Features" value={[
+              data.callNowToggle ? 'Call Button' : null,
+              data.whatsappToggle ? 'WhatsApp' : null,
+              data.contactFormToggle ? 'Email Form' : null,
+              ...data.customFeatures
+            ].filter(Boolean)} />
+          </Section>
 
-      <Section title="Goals & Talking" icon={<Fast className="w-5 h-5"/>} phase={6}>
+          <Section title="Talking & Vibe" icon={<Fast className="w-5 h-5"/>} phase={5}>
+            <Entry label="Industry" value={data.mainCategory} />
+            <Entry label="Specialty" value={data.subCategory} />
+            <Entry label="Website Style" value={data.websiteStyle} />
+            <Entry label="Brand Voice" value={data.preferredTone} />
+          </Section>
+        </>
+      )}
+
+      <Section title="Goals & Strategy" icon={<Fast className="w-5 h-5"/>} phase={6}>
         <Entry label="Website Goals" value={[...data.websiteGoals, ...data.customGoals]} />
-        <Entry label="Style" value={data.websiteStyle} />
-        <Entry label="Brand Voice" value={data.preferredTone} />
         <Entry label="Start Action" value={data.userAction === 'custom' ? data.customActions : data.userAction} />
       </Section>
 
-      <Section title="Photos & Links" icon={<Photo className="w-5 h-5"/>} phase={7}>
-        <Entry label="Photos" value={data.businessPhotosStatus ? 'I provide my own' : 'Use generic ones'} />
-        <Entry label="Social Links" value={Object.keys(data.socialLinks).filter(k => data.socialLinks[k])} />
-        <Entry label="Add-ons" value={data.addons} />
+      {data.projectType !== 'Logo Design' && (
+        <Section title="Photos & Links" icon={<Photo className="w-5 h-5"/>} phase={7}>
+          <Entry label="Photos" value={data.businessPhotosStatus ? 'I provide my own' : 'Use generic ones'} />
+          <Entry label="Social Links" value={Object.keys(data.socialLinks).filter(k => data.socialLinks[k])} />
+          <Entry label="Add-ons" value={data.addons} />
+        </Section>
+      )}
+
+      <Section title="References" icon={<Photo className="w-5 h-5"/>} phase={8}>
+        <Entry label="Similar Sites" value={data.competitorWebsites} />
+        <Entry label="Inspiration" value={data.inspirationWebsites} />
       </Section>
 
       <div className="flex justify-between items-center pt-10">
-        <button onClick={() => setPhase(8)} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm shadow-sm font-sans">
+        <button onClick={goToPrev} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm shadow-sm font-sans">
           <ArrowLeft className="w-4 h-4" /> Go Back
         </button>
         <button 

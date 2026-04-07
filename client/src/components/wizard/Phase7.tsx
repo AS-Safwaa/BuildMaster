@@ -4,7 +4,7 @@ import { useWizard } from '../../context/WizardContext';
 import { Camera, Image as ImageIcon, Users, Star, Share2, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export const Phase7 = () => {
-  const { data, updateData, setPhase } = useWizard();
+  const { data, updateData, goToNext, goToPrev } = useWizard();
 
   const BooleanToggle = ({ label, value, onChange, icon }: any) => (
     <div className="flex items-center justify-between p-6 bg-white rounded-3xl border-2 border-slate-50 hover:border-slate-200 shadow-sm transition-all cursor-pointer" onClick={() => onChange(!value)}>
@@ -96,11 +96,11 @@ export const Phase7 = () => {
       </div>
 
       <div className="flex justify-between items-center pt-10">
-        <button onClick={() => setPhase(6)} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm">
+        <button onClick={goToPrev} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm">
           <ArrowLeft className="w-4 h-4" /> Go Back
         </button>
         <button 
-          onClick={() => setPhase(8)}
+          onClick={goToNext}
           className="group flex items-center gap-4 px-10 py-5 bg-blue-600 text-white rounded-3xl font-black shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm"
         >
           Check and Finish!
