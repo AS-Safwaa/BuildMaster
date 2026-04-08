@@ -1,10 +1,9 @@
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
 import { Layout, Palette, Globe, User, Users, ArrowRight } from 'lucide-react';
 
 export const Phase1 = () => {
-  const { data, updateData, goToNext } = useWizard();
+  const { data, updateData, goToNext, getStepNumber, autofill } = useWizard();
 
   const options = [
     { 
@@ -38,7 +37,7 @@ export const Phase1 = () => {
       className="space-y-10 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance">Step 1: Let's Get Started!</h2>
+        <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance">Step {getStepNumber(1)}: Let's Get Started!</h2>
         <p className="text-base text-slate-500 font-medium font-sans">Which creative path should we embark on today? Choose the best fit for your venture.</p>
       </div>
 
@@ -125,6 +124,25 @@ export const Phase1 = () => {
           Sounds good, let's proceed
           <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
         </button>
+      </div>
+
+      {/* Prototype Quick Fill Section */}
+      <div className="mt-20 pt-10 border-t border-slate-100">
+         <div className="flex items-center gap-3 mb-6">
+            <div className="w-1 h-6 bg-blue-600 rounded-full" />
+            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Prototype Quick Fill (Demo Only)</h3>
+         </div>
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {(['Logo Design', 'Website', 'Website + Logo'] as const).map(type => (
+              <button
+                key={type}
+                onClick={() => autofill(type)}
+                className="p-4 bg-slate-100 hover:bg-slate-200 rounded-2xl border-2 border-transparent hover:border-blue-200 text-[10px] font-bold text-slate-600 uppercase tracking-widest transition-all"
+              >
+                Autofill: {type}
+              </button>
+            ))}
+         </div>
       </div>
     </motion.div>
   );

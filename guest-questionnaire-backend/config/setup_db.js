@@ -19,7 +19,7 @@ async function setupDatabase() {
 
         console.log('2. Dropping old tables to refresh schema...');
         await connection.query(`SET FOREIGN_KEY_CHECKS = 0;`);
-        const tables = ['guest_answers', 'guest_submissions', 'form_question_options', 'form_questions', 'form_steps', 'master_values', 'master_types', 'admins'];
+        const tables = ['guest_answers', 'guest_submissions', 'form_question_options', 'form_questions', 'form_steps', 'master_values', 'master_types', 'users'];
         for (const table of tables) {
             await connection.query(`DROP TABLE IF EXISTS ${table};`);
         }
@@ -27,8 +27,8 @@ async function setupDatabase() {
 
         console.log('3. Creating Tables...');
         const createStatements = [
-            `CREATE TABLE admins (
-                id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL UNIQUE, password_hash VARCHAR(255) NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            `CREATE TABLE users (
+                id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL UNIQUE, password_hash VARCHAR(255) NOT NULL, role ENUM('admin', 'developer', 'guest') NOT NULL DEFAULT 'guest', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             );`,
             `CREATE TABLE master_types (
                 id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL UNIQUE, description TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -65,10 +65,10 @@ async function setupDatabase() {
         // This validates "deploy if working" smoothly.
         await connection.query(`INSERT INTO form_questions (id, step_id, question_text, input_type, question_order) VALUES (999, 1, 'Full Wizard State Dump', 'json', 1);`);
 
-        // Seed some Admins
+        // Seed users
         const bcrypt = require('bcrypt');
-        const defaultPassword = await bcrypt.hash('Admin@123', 10);
-        await connection.query(`INSERT INTO admins (name, email, password_hash) VALUES ('Super Admin', 'admin@demo.com', ?)`, [defaultPassword]);
+        const defaultPassword = await bcrypt.hash('password123', 10);
+        await connection.query(`INSERT INTO users (name, email, password_hash, role) VALUES ('Admin User', 'admin@buildmaster.com', ?, 'admin'), ('Developer User', 'developer@buildmaster.com', ?, 'developer')`, [defaultPassword, defaultPassword]);
 
         console.log('Database Setup & Seed Complete! ✨');
     } catch (err) {

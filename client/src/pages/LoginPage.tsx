@@ -19,6 +19,25 @@ export const LoginPage = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    // Prototype Mode Bypass
+    const { IS_PROTOTYPE, MOCK_ADMIN_USER, MOCK_DEV_USER } = await import('../config/prototype');
+    
+    if (IS_PROTOTYPE) {
+      await new Promise(resolve => setTimeout(resolve, 800)); // Realistic delay
+      
+      let mockUser = null;
+      if (email === 'admin@buildmaster.com') mockUser = MOCK_ADMIN_USER;
+      else if (email === 'developer@buildmaster.com') mockUser = MOCK_DEV_USER;
+      
+      if (mockUser && password === 'password123') {
+        login('mock-token', mockUser as any);
+        toast.success(`Welcome to the Prototype ${mockUser.role === 'admin' ? 'Engine' : 'Portal'}.`);
+        navigate(mockUser.role === 'admin' ? '/admin' : '/developer');
+        setIsLoading(false);
+        return;
+      }
+    }
+
     try {
       const res = await axios.post(`${API_BASE_URL}/admin/auth/login`, { email, password });
       
@@ -112,9 +131,9 @@ export const LoginPage = () => {
           <div className="mt-8 pt-6 border-t border-slate-800 text-center">
             <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-3">Live Engineering Credentials</p>
             <div className="text-xs text-slate-400 space-y-2 font-mono">
-               <p className="flex justify-between px-4"><span>Admin:</span> <span>admin@demo.com</span></p>
-               <p className="flex justify-between px-4"><span>Dev:</span> <span>developer@demo.com</span></p>
-               <p className="text-center text-slate-600 mt-2">Pass: Developer@123 / Admin@123</p>
+               <p className="flex justify-between px-4"><span>Admin:</span> <span>admin@buildmaster.com</span></p>
+               <p className="flex justify-between px-4"><span>Dev:</span> <span>developer@buildmaster.com</span></p>
+               <p className="text-center text-slate-600 mt-2">Pass: password123</p>
             </div>
           </div>
         </div>

@@ -73,12 +73,16 @@ export const Phase6 = () => {
     >
       <div className="text-center md:text-left">
         <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(6)}: Goals & Strategy</h2>
-        <p className="text-base text-slate-500 font-medium opacity-90">What is the primary objective of your new digital home?</p>
+        <p className="text-base text-slate-500 font-medium opacity-90">
+          {data.projectType === 'Logo Design' 
+            ? "Let's define your brand's mission and marketing direction."
+            : "Finalize how you want to attract and talk to customers online."}
+        </p>
       </div>
 
       <div className="space-y-5">
         <h3 className="text-lg font-bold text-slate-800 flex items-center gap-3">
-           <Target className="w-5 h-5 text-blue-600" /> What do you want your website to do?
+           <Target className="w-5 h-5 text-blue-600" /> {data.projectType === 'Logo Design' ? 'What are your brand goals?' : 'What do you want your website to do?'}
         </h3>
         <div className="flex flex-wrap gap-2">
           {goals.map(g => (
@@ -214,31 +218,33 @@ export const Phase6 = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-6 border-t border-slate-100">
-         <div className="space-y-5">
-           <h3 className="text-lg font-black text-slate-900 flex items-center gap-3">
-              <Palette className="w-5 h-5 text-pink-600" /> Website Look
-           </h3>
-           <div className="grid grid-cols-1 gap-2">
-             {styles.map(s => (
-               <button
-                  key={s} onClick={() => handleToggleSingle('websiteStyle', s)}
-                  className={`p-4 rounded-xl border-2 transition-all text-left flex items-center justify-between shadow-sm ${
-                    data.websiteStyle === s ? 'border-pink-600 bg-pink-50 ring-2 ring-pink-50' : 'border-slate-50 bg-white hover:border-slate-200'
-                  }`}
-               >
-                  <span className="font-bold text-slate-800 text-sm font-sans">{s}</span>
-                  {data.websiteStyle === s && <div className="w-2 h-2 bg-pink-600 rounded-full" />}
-               </button>
-             ))}
+         {data.projectType !== 'Logo Design' && (
+           <div className="space-y-5">
+             <h3 className="text-lg font-bold text-slate-800 flex items-center gap-3">
+                <Palette className="w-5 h-5 text-pink-600" /> Website Look
+             </h3>
+             <div className="grid grid-cols-1 gap-2">
+               {styles.map(s => (
+                 <button
+                    key={s} onClick={() => handleToggleSingle('websiteStyle', s)}
+                    className={`p-4 rounded-xl border-2 transition-all text-left flex items-center justify-between shadow-sm ${
+                      data.websiteStyle === s ? 'border-pink-600 bg-pink-50 ring-2 ring-pink-50' : 'border-slate-50 bg-white hover:border-slate-200'
+                    }`}
+                 >
+                    <span className="font-bold text-slate-800 text-sm font-sans">{s}</span>
+                    {data.websiteStyle === s && <div className="w-2 h-2 bg-pink-600 rounded-full" />}
+                 </button>
+               ))}
+             </div>
            </div>
-         </div>
+         )}
 
-         <div className="space-y-5">
-           <h3 className="text-lg font-black text-slate-900 flex items-center gap-3">
-              <Mic className="w-5 h-5 text-emerald-600" /> Your Brand's "Voice"
+         <div className={`space-y-5 ${data.projectType === 'Logo Design' ? 'md:col-span-2' : ''}`}>
+           <h3 className="text-lg font-bold text-slate-800 flex items-center gap-3">
+              <Mic className="w-5 h-5 text-emerald-600" /> {data.projectType === 'Logo Design' ? "Your Brand's Personality" : "Your Brand's Voice"}
            </h3>
            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans ml-8">How should we talk to your customers?</p>
-           <div className="grid grid-cols-1 gap-2">
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
              {tones.map(t => (
                <button
                   key={t} onClick={() => handleToggleSingle('preferredTone', t)}
@@ -260,7 +266,7 @@ export const Phase6 = () => {
         </button>
         <button 
           onClick={goToNext}
-          className="group flex items-center gap-4 px-10 py-5 bg-blue-600 text-white rounded-3xl font-black shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm font-sans"
+          className="group flex items-center gap-4 px-10 py-5 bg-blue-600 text-white rounded-3xl font-bold shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-0.5 transition-all text-sm font-sans"
         >
           Sounds great!
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

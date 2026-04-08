@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Settings, LogOut, CodeSquare, Plus, Edit2, Trash2, X, CheckSquare, ClipboardList, UserCircle, Key, Activity } from 'lucide-react';
+import { LayoutDashboard, Settings, LogOut, CodeSquare, Plus, Edit2, Trash2, X, CheckSquare, ClipboardList, UserCircle, Key, Activity, Palette, Globe, Layout } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';

@@ -27,6 +27,17 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    // Prototype Mode Bypass: Don't redirect or clear session if API fails in prototype mode
+    try {
+      const { IS_PROTOTYPE } = await import('../config/prototype');
+      if (IS_PROTOTYPE) {
+        console.warn('API Call failed in Prototype Mode. Staying logged in.');
+        return Promise.reject(error);
+      }
+    } catch (e) {
+      // Config not found or other error, proceed with standard logic
+    }
+
     const originalRequest = error.config;
 
     // If 401 and we haven't retried yet, attempt refresh

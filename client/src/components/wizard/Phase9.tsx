@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
-import { CheckCircle2, Rocket, ArrowLeft, Loader2, Edit2, ShieldCheck, Briefcase, Palette, Globe, Zap, Camera } from 'lucide-react';
+import { CheckCircle2, Rocket, ArrowLeft, Loader2, Edit2 } from 'lucide-react';
 import { ShieldCheck as Shield, Briefcase as Case, Palette as Paint, Globe as Web, Zap as Fast, Camera as Photo } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -18,6 +18,17 @@ export const Phase9 = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
+    // Prototype Mode Simulation
+    const { IS_PROTOTYPE } = await import('../../config/prototype');
+
+    if (IS_PROTOTYPE) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setSubmitted(true);
+        toast.success("Success! (Prototype Mode: Details encrypted and saved)");
+        setIsSubmitting(false);
+        return;
+    }
+
     try {
       const startRes = await axios.post(`${API_BASE_URL}/guest/submissions`);
       const sessionId = startRes.data.session_id;

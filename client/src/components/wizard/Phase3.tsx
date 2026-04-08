@@ -34,7 +34,7 @@ const COLOR_PSYCHOLOGY: Record<string, string> = {
 };
 
 export const Phase3 = () => {
-  const { data, updateData, goToNext, goToPrev, getStepNumber } = useWizard();
+  const { data, updateData, goToNext, goToPrev, getStepNumber, getNextPhaseTitle } = useWizard();
 
   const personalities = Object.keys(VIBE_DATA);
   const designStyles = Object.keys(STYLE_DATA);
@@ -340,14 +340,14 @@ export const Phase3 = () => {
 
       {/* Navigation */}
       <div className="flex justify-between items-center pt-20 border-t border-slate-100">
-        <button onClick={goToPrev} className="flex items-center gap-3 px-8 py-5 bg-white border-2 border-slate-100 text-slate-400 rounded-3xl font-black hover:bg-slate-50 transition-all text-xs uppercase tracking-widest">
+        <button onClick={goToPrev} className="flex items-center gap-3 px-8 py-5 bg-white border-2 border-slate-100 text-slate-400 rounded-3xl font-bold hover:bg-slate-50 transition-all text-xs uppercase tracking-widest leading-none">
           <ArrowLeft className="w-4 h-4" /> Go Back
         </button>
         <button 
           onClick={goToNext}
-          className="group flex items-center gap-6 px-12 py-6 bg-blue-600 text-white rounded-[2rem] font-black shadow-2xl shadow-blue-600/30 hover:shadow-blue-600/50 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm uppercase tracking-widest"
+          className="group flex items-center gap-6 px-12 py-6 bg-blue-600 text-white rounded-[2rem] font-bold shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-0.5 transition-all text-sm uppercase tracking-widest leading-none"
         >
-          Proceed to Technicals
+          Proceed to {getNextPhaseTitle() || 'Next Step'}
           <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
         </button>
       </div>

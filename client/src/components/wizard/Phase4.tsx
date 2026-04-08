@@ -4,7 +4,7 @@ import { useWizard } from '../../context/WizardContext';
 import { Globe, Server, Mail, Phone, MessageCircle, ArrowRight, ArrowLeft, Plus, X } from 'lucide-react';
 
 export const Phase4 = () => {
-  const { data, updateData, goToNext, goToPrev } = useWizard();
+  const { data, updateData, goToNext, goToPrev, getStepNumber } = useWizard();
 
   const BooleanToggle = ({ label, sub, value, onChange, icon }: any) => (
     <div className="flex items-center justify-between p-5 bg-white rounded-3xl border-2 border-slate-50 hover:border-slate-200 transition-all cursor-pointer shadow-sm group" onClick={() => onChange(!value)}>
@@ -43,8 +43,8 @@ export const Phase4 = () => {
       className="space-y-10 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(4)}: Your Website Name</h2>
-        <p className="text-base text-slate-500 font-medium font-sans">Do you already have a name like www.business.com?</p>
+        <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(4)}: Your Website Name</h2>
+        <p className="text-base text-slate-500 font-medium font-sans opacity-95">Do you already have a name like www.business.com?</p>
       </div>
 
       <div className="space-y-4">

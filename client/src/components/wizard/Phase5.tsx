@@ -32,12 +32,12 @@ export const Phase5 = () => {
       className="space-y-10 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight leading-none">Step {getStepNumber(5)}: What do you do?</h2>
-        <p className="text-base text-slate-500 font-medium font-sans">Please pick your industry so we can set the right vibe.</p>
+        <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight leading-none">Step {getStepNumber(5)}: What do you do?</h2>
+        <p className="text-base text-slate-500 font-medium font-sans opacity-95">Please pick your industry so we can set the right vibe.</p>
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-lg font-black text-slate-900">Which Industry do you work in?</h3>
+        <h3 className="text-lg font-bold text-slate-800">Which Industry do you work in?</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {businessCategories.map((cat) => (
             <button
@@ -49,7 +49,7 @@ export const Phase5 = () => {
                   : 'border-slate-50 bg-white hover:border-slate-200 shadow-sm'
               }`}
             >
-              <h4 className="font-black text-slate-900 text-sm mb-1">{cat.name}</h4>
+              <h4 className="font-bold text-slate-800 text-sm mb-1">{cat.name}</h4>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{cat.sub}</p>
               {data.mainCategory === cat.id && (
                 <div className="absolute top-2 right-2 w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
@@ -105,7 +105,7 @@ export const Phase5 = () => {
         <button 
           onClick={goToNext}
           disabled={!data.mainCategory}
-          className="group flex items-center gap-4 px-10 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-3xl font-black shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-1 transition-all text-sm"
+          className="group flex items-center gap-4 px-10 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-3xl font-bold shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-0.5 transition-all text-sm"
         >
           Almost Done!
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
