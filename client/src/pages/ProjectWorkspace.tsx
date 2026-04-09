@@ -5,7 +5,7 @@ import {
   ArrowLeft, ClipboardList, Clock, Globe, Link as LinkIcon, 
   Save, User, CheckCircle2, 
   ExternalLink, Plus, Shield, Hammer, RotateCcw, 
-  Copy, Check
+  Copy, Check, Zap
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
@@ -106,11 +106,16 @@ const MOCK_PROJECT = {
     ]
 };
 
+import { useSearchParams } from 'react-router-dom';
+
 export const ProjectWorkspace = () => {
     const { id } = useParams();
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const isAdmin = user?.role === 'admin';
+    const mode = searchParams.get('mode') || 'active';
+    const isPreview = mode === 'preview';
     
     const [project, setProject] = useState<any>(IS_PROTOTYPE ? MOCK_PROJECT : null);
     const [loading, setLoading] = useState(!IS_PROTOTYPE);
@@ -156,6 +161,36 @@ export const ProjectWorkspace = () => {
         } catch (err) { toast.error('Failed to update project'); }
     };
 
+    const handleClaimProject = async () => {
+        if (IS_PROTOTYPE) {
+            toast.success('Project Claimed Successfully!');
+            navigate(`/project/${id}?mode=active`);
+            return;
+        }
+        try {
+            await axios.post(`${API_BASE_URL}/developer/projects/${id}/claim`, {}, { 
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } 
+            });
+            toast.success('Project Claimed Successfully!');
+            navigate(`/project/${id}?mode=active`);
+        } catch(err) { toast.error('Failed to claim project'); }
+    };
+
+    const handleReleaseProject = async () => {
+        if (IS_PROTOTYPE) {
+            toast.success('Project returned to pool');
+            navigate('/developer?tab=pool');
+            return;
+        }
+        try {
+            await axios.post(`${API_BASE_URL}/developer/projects/${id}/unclaim`, {}, { 
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } 
+            });
+            toast.success('Project released back to pool');
+            navigate('/developer?tab=pool');
+        } catch(err) { toast.error('Failed to release'); }
+    };
+
     const handleAddUpdate = () => {
         if (!newUpdate.trim()) return;
         const up = { id: Date.now(), text: newUpdate, time: "Just now", type: 'dev' };
@@ -185,7 +220,7 @@ export const ProjectWorkspace = () => {
             <header className="h-20 bg-white border-b border-slate-200 sticky top-0 z-[100] px-4 md:px-10 flex items-center justify-between shadow-sm">
                 <div className="flex items-center gap-3 md:gap-6">
                     <button 
-                        onClick={() => navigate(isAdmin ? '/admin' : '/developer')}
+                        onClick={() => navigate(isPreview ? '/developer?tab=pool' : (isAdmin ? '/admin' : '/developer?tab=my-projects'))}
                         className="p-2 md:p-3 hover:bg-slate-100 rounded-xl transition-all group"
                     >
                         <ArrowLeft className="w-5 h-5 md:w-6 md:h-6 text-slate-400 group-hover:text-slate-900" />
@@ -201,11 +236,12 @@ export const ProjectWorkspace = () => {
 
                 <div className="flex items-center gap-2 md:gap-4">
                     <div className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border text-[10px] font-bold uppercase tracking-widest ${
-                        status === 'completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-indigo-50 text-indigo-700 border-indigo-100'
+                        isPreview ? 'bg-amber-50 text-amber-700 border-amber-100' : 
+                        (status === 'completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-indigo-50 text-indigo-700 border-indigo-100')
                     }`}>
-                        <Shield className="w-3 h-3" /> {status.replace('_', ' ')}
+                        <Shield className="w-3 h-3" /> {isPreview ? 'UNASSIGNED / IN POOL' : status.replace('_', ' ')}
                     </div>
-                    {!isAdmin && (
+                    {!isAdmin && !isPreview && (
                         <button 
                             onClick={handleSave}
                             className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-slate-900 text-white rounded-xl text-[10px] md:text-xs font-bold hover:bg-black transition-all shadow-lg active:scale-95"
@@ -221,8 +257,12 @@ export const ProjectWorkspace = () => {
                     <div className="lg:col-span-8 space-y-6 md:space-y-10">
                         <div className="bg-white p-1.5 rounded-2xl border border-slate-200 flex shadow-sm w-fit">
                             <TabTrigger label="Detailed Brief" id="brief" active={activeSection === 'brief'} onClick={setActiveSection} icon={<ClipboardList className="w-4 h-4" />} />
-                            <TabTrigger label="Execution & Links" id="execution" active={activeSection === 'execution'} onClick={setActiveSection} icon={<Hammer className="w-4 h-4" />} />
-                            <TabTrigger label="Timeline" id="timeline" active={activeSection === 'timeline'} onClick={setActiveSection} icon={<Clock className="w-4 h-4" />} />
+                            {!isPreview && (
+                                <>
+                                    <TabTrigger label="Execution & Links" id="execution" active={activeSection === 'execution'} onClick={setActiveSection} icon={<Hammer className="w-4 h-4" />} />
+                                    <TabTrigger label="Timeline" id="timeline" active={activeSection === 'timeline'} onClick={setActiveSection} icon={<Clock className="w-4 h-4" />} />
+                                </>
+                            )}
                         </div>
 
                         <AnimatePresence mode="wait">
@@ -254,7 +294,7 @@ export const ProjectWorkspace = () => {
                                 </motion.div>
                             )}
 
-                            {activeSection === 'execution' && (
+                            {activeSection === 'execution' && !isPreview && (
                                 <motion.div key="execution" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-8">
                                     <section className="bg-white p-6 md:p-10 rounded-[1.5rem] md:rounded-[2.5rem] border border-slate-200 shadow-sm">
                                         <h3 className="text-sm md:text-xl font-bold text-slate-900 mb-8 flex items-center gap-3">
@@ -281,7 +321,7 @@ export const ProjectWorkspace = () => {
                                 </motion.div>
                             )}
 
-                            {activeSection === 'timeline' && (
+                            {activeSection === 'timeline' && !isPreview && (
                                 <motion.div key="timeline" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-8">
                                     <section className="bg-white p-6 md:p-10 rounded-[1.5rem] md:rounded-[2.5rem] border border-slate-200 shadow-sm">
                                         <h3 className="text-sm md:text-xl font-bold text-slate-900 mb-8">Activity Feed</h3>
@@ -334,10 +374,24 @@ export const ProjectWorkspace = () => {
 
                         {!isAdmin && (
                             <div className="p-1 group">
-                                <button onClick={() => navigate('/developer')} className="w-full py-4 md:py-5 border-2 border-dashed border-red-200 text-red-400 rounded-3xl font-bold uppercase tracking-[0.2em] text-[10px] md:text-xs hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition-all flex items-center justify-center gap-3">
-                                    <RotateCcw className="w-4 h-4" /> Release Task
-                                </button>
-                                <p className="text-[9px] text-center text-slate-400 mt-4 px-6 md:px-10 leading-relaxed font-medium">Releasing a task will return it to the global pool.</p>
+                                {isPreview ? (
+                                    <button 
+                                        onClick={handleClaimProject} 
+                                        className="w-full py-4 md:py-5 bg-indigo-600 text-white rounded-3xl font-bold uppercase tracking-[0.2em] text-[10px] md:text-xs hover:bg-indigo-700 transition-all flex items-center justify-center gap-3 shadow-xl shadow-indigo-200 active:scale-95"
+                                    >
+                                        <Zap className="w-4 h-4" /> Claim Task
+                                    </button>
+                                ) : (
+                                    <button 
+                                        onClick={handleReleaseProject} 
+                                        className="w-full py-4 md:py-5 border-2 border-dashed border-red-200 text-red-400 rounded-3xl font-bold uppercase tracking-[0.2em] text-[10px] md:text-xs hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition-all flex items-center justify-center gap-3"
+                                    >
+                                        <RotateCcw className="w-4 h-4" /> Release Task
+                                    </button>
+                                )}
+                                <p className="text-[9px] text-center text-slate-400 mt-4 px-6 md:px-10 leading-relaxed font-medium">
+                                    {isPreview ? 'Claiming this task moves it to your active workspace.' : 'Releasing a task will return it to the global pool.'}
+                                </p>
                             </div>
                         )}
 

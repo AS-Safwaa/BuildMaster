@@ -48,7 +48,6 @@ export const DeveloperDashboard = () => {
   const [metrics, setMetrics] = useState<any>({ poolSize: 3, myProjects: 1, completedProjects: 0 });
   const [pool, setPool] = useState<any[]>(FALLBACK_POOL);
   const [myProjects, setMyProjects] = useState<any[]>(FALLBACK_MINE);
-  const [isFetching, setIsFetching] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -67,7 +66,6 @@ export const DeveloperDashboard = () => {
 
   const fetchPool = async () => {
     if (IS_PROTOTYPE) return;
-    setIsFetching(true);
     try {
       const res = await axios.get(`${API_BASE_URL}/developer/projects/pool`, { 
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } 
@@ -79,12 +77,11 @@ export const DeveloperDashboard = () => {
       if (formatted.length > 0) setPool(formatted);
     } catch(err) { 
         // keep fallback
-    } finally { setIsFetching(false); }
+    }
   };
 
   const fetchMine = async () => {
     if (IS_PROTOTYPE) return;
-    setIsFetching(true);
     try {
       const res = await axios.get(`${API_BASE_URL}/developer/projects/mine`, { 
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } 
@@ -96,8 +93,16 @@ export const DeveloperDashboard = () => {
       if (formatted.length > 0) setMyProjects(formatted);
     } catch(err) { 
         // keep fallback
-    } finally { setIsFetching(false); }
+    }
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab');
+    if (tabParam && ['overview', 'pool', 'my-projects', 'profile'].includes(tabParam)) {
+        setActiveTab(tabParam);
+    }
+  }, []);
 
   useEffect(() => {
     if (!IS_PROTOTYPE) {
@@ -112,11 +117,11 @@ export const DeveloperDashboard = () => {
       toast.success('Project Claimed Successfully!');
       const projectToClaim = pool.find(p => p.id === id);
       if (projectToClaim) {
-          setMyProjects(prev => [...prev, { ...projectToClaim, assigned_developer_id: 'DEV-001', status: 'assigned' }]);
-          setPool(prev => prev.filter(p => p.id !== id));
-          setMetrics(prev => ({ ...prev, poolSize: Math.max(0, prev.poolSize - 1), myProjects: prev.myProjects + 1 }));
+          setMyProjects((prev: any) => [...prev, { ...projectToClaim, assigned_developer_id: 'DEV-001', status: 'assigned' }]);
+          setPool((prev: any) => prev.filter((p: any) => p.id !== id));
+          setMetrics((prev: any) => ({ ...prev, poolSize: Math.max(0, prev.poolSize - 1), myProjects: prev.myProjects + 1 }));
       }
-      setActiveTab('my-projects');
+      navigate(`/project/${id}?mode=active`);
       return;
     }
 
@@ -125,10 +130,7 @@ export const DeveloperDashboard = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } 
       });
       toast.success('Project Claimed Successfully!');
-      fetchPool();
-      fetchMetrics();
-      fetchMine();
-      setActiveTab('my-projects');
+      navigate(`/project/${id}?mode=active`);
     } catch(err) { toast.error('Failed to claim project'); }
   };
 
@@ -137,9 +139,9 @@ export const DeveloperDashboard = () => {
       toast.success('Project returned to pool');
       const projectToUnclaim = myProjects.find(p => p.id === id);
       if (projectToUnclaim) {
-          setPool(prev => [...prev, { ...projectToUnclaim, assigned_developer_id: null, status: 'unassigned' }]);
-          setMyProjects(prev => prev.filter(p => p.id !== id));
-          setMetrics(prev => ({ ...prev, poolSize: prev.poolSize + 1, myProjects: Math.max(0, prev.myProjects - 1) }));
+          setPool((prev: any) => [...prev, { ...projectToUnclaim, assigned_developer_id: null, status: 'unassigned' }]);
+          setMyProjects((prev: any) => prev.filter((p: any) => p.id !== id));
+          setMetrics((prev: any) => ({ ...prev, poolSize: prev.poolSize + 1, myProjects: Math.max(0, prev.myProjects - 1) }));
       }
       return;
     }
@@ -157,11 +159,12 @@ export const DeveloperDashboard = () => {
 
   const switchTab = (tab: string) => {
       setActiveTab(tab);
+      navigate(`/developer?tab=${tab}`, { replace: true });
       setMobileMenuOpen(false);
   };
 
-  const openProject = (id: number) => {
-    navigate(`/project/${id}`);
+  const openProject = (id: number, mode: 'preview' | 'active' = 'active') => {
+    navigate(`/project/${id}?mode=${mode}`);
   };
 
   return (
@@ -318,7 +321,7 @@ export const DeveloperDashboard = () => {
                             </td>
                             <td className="px-6 md:px-10 py-4 md:py-6 font-medium text-slate-500 font-mono text-[10px] md:text-xs">{new Date(p.createdAt).toLocaleDateString()}</td>
                             <td className="px-6 md:px-10 py-4 md:py-6 text-center space-x-2 md:space-x-3 whitespace-nowrap">
-                               <button onClick={() => openProject(p.id)} className="px-3 md:px-5 py-2 md:py-2.5 border border-slate-900 text-slate-900 rounded-lg text-[8px] md:text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">
+                               <button onClick={() => openProject(p.id, 'preview')} className="px-3 md:px-5 py-2 md:py-2.5 border border-slate-900 text-slate-900 rounded-lg text-[8px] md:text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">
                                   View Brief
                                </button>
                                <button onClick={() => handleClaim(p.id)} className="px-3 md:px-5 py-2 md:py-2.5 bg-indigo-600 text-white rounded-lg text-[8px] md:text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-md active:scale-95">
@@ -358,7 +361,7 @@ export const DeveloperDashboard = () => {
                        <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-1 group-hover:text-indigo-600 transition-colors">{p.businessName}</h3>
                        <p className="text-[10px] md:text-sm font-medium text-slate-400 mb-6 md:mb-8 font-mono">{p.email || 'guest@system.node'}</p>
                        <div className="flex gap-3">
-                          <button onClick={() => openProject(p.id)} className="flex-1 py-3 md:py-4 bg-white border border-slate-900 text-slate-900 rounded-xl font-bold text-[10px] md:text-xs uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center gap-2">
+                          <button onClick={() => openProject(p.id, 'active')} className="flex-1 py-3 md:py-4 bg-white border border-slate-900 text-slate-900 rounded-xl font-bold text-[10px] md:text-xs uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center gap-2">
                              <ClipboardList className="w-4 h-4 md:w-5 h-5" /> Detailed Brief
                           </button>
                        </div>
