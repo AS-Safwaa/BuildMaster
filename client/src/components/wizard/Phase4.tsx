@@ -162,26 +162,26 @@ export const Phase4 = () => {
              </AnimatePresence>
            </div>
            
-           <div className="flex flex-col gap-3 p-5 bg-white rounded-3xl border-2 border-slate-50 hover:border-slate-200 transition-all shadow-sm h-full">
-             <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-4">
-                   <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                      <Plus className="w-5 h-5" />
+           <div className="p-5 bg-white rounded-3xl border-2 border-slate-50 hover:border-slate-200 transition-all shadow-sm group">
+             <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-50">
+                <div className="flex items-center gap-3">
+                   <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                      <Plus className="w-4 h-4" />
                    </div>
-                   <p className="font-bold text-slate-800 text-sm leading-none">Custom Feature</p>
+                   <p className="font-bold text-slate-800 text-sm tracking-tight">Add Custom Feature</p>
                 </div>
-                <button onClick={addCustomFeature} className="p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20">
+                <button onClick={addCustomFeature} className="p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all active:scale-95">
                    <Plus className="w-4 h-4" />
                 </button>
              </div>
              
              <AnimatePresence>
-               {data.customFeatures.length > 0 && (
-                 <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} className="space-y-2 overflow-hidden">
+               {data.customFeatures.length > 0 ? (
+                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="space-y-2 overflow-hidden">
                    {data.customFeatures.map((feat, idx) => (
                      <div key={idx} className="flex gap-2">
                        <input 
-                         type="text" placeholder="e.g. Online Booking, Payment, etc." value={feat}
+                         type="text" placeholder="Explain your custom feature..." value={feat}
                          onChange={(e) => updateCustomFeature(idx, e.target.value)}
                          className="flex-1 p-3 bg-slate-50 border-0 rounded-xl outline-none focus:ring-2 focus:ring-blue-100 font-bold text-xs"
                        />
@@ -191,6 +191,8 @@ export const Phase4 = () => {
                      </div>
                    ))}
                  </motion.div>
+               ) : (
+                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center py-2">No custom features added.</p>
                )}
              </AnimatePresence>
            </div>

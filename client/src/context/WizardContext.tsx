@@ -232,6 +232,7 @@ export const WizardProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const currentIndex = visiblePhases.findIndex(p => p.id === currentPhase);
     if (currentIndex < visiblePhases.length - 1) {
       setCurrentPhase(visiblePhases[currentIndex + 1].id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -239,13 +240,14 @@ export const WizardProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const currentIndex = visiblePhases.findIndex(p => p.id === currentPhase);
     if (currentIndex > 0) {
       setCurrentPhase(visiblePhases[currentIndex - 1].id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const getNextPhaseTitle = () => {
     const currentIndex = visiblePhases.findIndex(p => p.id === currentPhase);
     if (currentIndex !== -1 && currentIndex < visiblePhases.length - 1) {
-      return visiblePhases[currentIndex + 1].title;
+      return visiblePhases[currentIndex+1].title;
     }
     return null;
   };

@@ -14,87 +14,95 @@ import { IS_PROTOTYPE } from '../config/prototype';
 import API_BASE_URL from '../config/api';
 
 const PROJECT_BRIEF_SCHEMA = {
-  "Venture Basics": [
-    { key: 'businessName', label: 'Business Name' },
-    { key: 'establishmentYear', label: 'Year Established' },
-    { key: 'contactName', label: 'Contact Name' },
+  "Main Info": [
+    { key: 'businessName', label: 'Business' },
+    { key: 'contactName', label: 'Client' },
     { key: 'phone', label: 'Phone' },
     { key: 'email', label: 'Email' },
-    { key: 'city', label: 'City' },
-    { key: 'serviceAreas', label: 'Service Areas' },
+    { key: 'city', label: 'Location' },
+    { key: 'establishmentYear', label: 'Built In' },
     { key: 'mainCategory', label: 'Industry' },
-    { key: 'subCategory', label: 'Sub Category' }
+    { key: 'subCategory', label: 'Specialised In' },
+    { key: 'callNowNumber', label: 'Call Action' },
+    { key: 'whatsappNumber', label: 'WA Action' },
+    { key: 'enquiryEmail', label: 'Lead Email' }
   ],
-  "Direct Contact Setup": [
-    { key: 'callNowNumber', label: 'Call Now Number' },
-    { key: 'whatsappNumber', label: 'WhatsApp Number' },
-    { key: 'enquiryEmail', label: 'Enquiry Email' }
+  "Logo Info": [
+    { key: 'logoStatus', label: 'Status' },
+    { key: 'brandPersonality', label: 'Vibe' },
+    { key: 'designStyle', label: 'Style Preference' },
+    { key: 'logoType', label: 'Logo Type' },
+    { key: 'preferredColors', label: 'Palette' },
+    { key: 'avoidColors', label: 'Avoid Colors' },
+    { key: 'logoInspirations', label: 'References' },
+    { key: 'logoStylePreference', label: 'Improvement Goal' }
   ],
-  "Offerings & USPs": [
+  "Website Info": [
+    { key: 'websiteGoals', label: 'Primary Goals' },
+    { key: 'userAction', label: 'Main CTA' },
+    { key: 'websiteStyle', label: 'Look/Style' },
+    { key: 'competitorWebsites', label: 'Competitor URLs' },
+    { key: 'referenceLinks', label: 'Design Inspo' },
+    { key: 'hasDomain', label: 'Has Domain' },
+    { key: 'preferredDomain', label: 'Domain Name' },
+    { key: 'hasHosting', label: 'Has Hosting' },
+    { key: 'customFeatures', label: 'Special Features' }
+  ],
+  "Tagline Info": [
     { key: 'products', label: 'Products' },
     { key: 'services', label: 'Services' },
-    { key: 'usps', label: 'USPs (Unique Selling Points)' }
-  ],
-  "Logo & Brand DNA": [
-    { key: 'logoStatus', label: 'Logo Status' },
-    { key: 'brandPersonality', label: 'Brand Personality' },
-    { key: 'designStyle', label: 'Design Style' },
-    { key: 'preferredColors', label: 'Preferred Colors' },
-    { key: 'avoidColors', label: 'Avoid Colors' },
-    { key: 'logoInspirations', label: 'Logo Inspirations' }
-  ],
-  "Logo Enhanced Info": [
-    { key: 'tagline', label: 'Tagline / Slogan' },
-    { key: 'brandMission', label: 'Brand Mission' },
-    { key: 'targetMarket', label: 'Target Market' },
-    { key: 'audience', label: 'Target Audience' },
-    { key: 'b2bOrB2c', label: 'Business Model' },
-    { key: 'logoType', label: 'Logo Type Preference' },
-    { key: 'typographyPreference', label: 'Typography' },
-    { key: 'competitors', label: 'Competitors' },
-    { key: 'fileFormats', label: 'File Formats Needed' },
-    { key: 'scalabilityNeeds', label: 'Scalability Needs' }
-  ],
-  "Strategy & Look": [
-    { key: 'websiteGoals', label: 'Website Goals' },
-    { key: 'userAction', label: 'User Call-to-Action' },
-    { key: 'websiteStyle', label: 'Website Style' },
-    { key: 'preferredTone', label: 'Brand Tone' },
-    { key: 'competitorWebsites', label: 'Competitor Websites' },
-    { key: 'referenceLinks', label: 'Look Reference Links' }
-  ],
-  "Technical Details": [
-    { key: 'hasDomain', label: 'Has Domain?' },
-    { key: 'preferredDomain', label: 'Preferred Domain' },
-    { key: 'hasHosting', label: 'Has Hosting?' },
-    { key: 'driveLink', label: 'Media/Photos Link' },
-    { key: 'customFeatures', label: 'Custom Features' }
+    { key: 'usps', label: 'Unique Sell Points' },
+    { key: 'tagline', label: 'Slogan' },
+    { key: 'brandMission', label: 'Mission' },
+    { key: 'targetMarket', label: 'Market' },
+    { key: 'audience', label: 'Audience Type' }
   ]
 };
 
 const MOCK_PROJECT = {
     id: 7,
-    businessName: "Royal Mart",
-    email: "royal@mart.com",
-    status: "assigned",
+    businessName: "SR FoodKraft",
+    email: "rahul@foodkraft.com",
+    status: "in_progress",
     assigned_developer_id: 101,
-    demo_link: "https://royal-mart-demo.vercel.app",
+    demo_link: "https://foodkraft-demo.vercel.app",
     final_link: "",
     createdAt: new Date(Date.now() - 172800000).toISOString(),
     answers: {
-        businessName: "Royal Mart", projectType: "Both Logo & Site", contactName: "Aditya Shah",
-        brandPersonality: ["Elegant", "Authoritative"], preferredTone: "Bold Professional",
-        websiteGoals: ["Increase Local Sales", "Online Catalog"], 
-        preferredColors: ["#0F172A", "#F59E0B"], logoStatus: "improve",
-        establishmentYear: "2018", phone: "+91 98765 43210", email: "royal@mart.com",
-        city: "Mumbai", serviceAreas: "Maharashtra State", mainCategory: "Retail",
-        subCategory: "Grocery & Mart", websiteStyle: "Modern Minimalist",
-        hasDomain: "Yes", preferredDomain: "royalmart.com", hasHosting: "No"
+        businessName: "SR FoodKraft", 
+        projectType: "Website + Logo", 
+        contactName: "Rahul Sharma",
+        brandPersonality: ["Professional", "Simple", "Friendly"], 
+        designStyle: "Clean & Simple",
+        logoType: "Combination Mark",
+        preferredColors: ["#3B82F6", "#111827"],
+        avoidColors: ["#EF4444"],
+        establishmentYear: "2020", 
+        phone: "+91 98765 43210", 
+        email: "rahul@foodkraft.com",
+        city: "Mumbai", 
+        mainCategory: "Food",
+        subCategory: "Cloud Kitchen",
+        websiteStyle: "Simple & Clean",
+        hasDomain: true, 
+        preferredDomain: "srfoodkraft.com", 
+        hasHosting: false,
+        callNowNumber: "+91 98765 43210",
+        whatsappNumber: "+91 98765 43210",
+        enquiryEmail: "orders@foodkraft.com",
+        products: ["Ready Meals", "Spice Kits", "Bakery Goods"],
+        services: ["Home Delivery", "Subscription Box", "Event Catering"],
+        usps: ["No Preservatives", "Chef Authenticated", "30-min Delivery"],
+        tagline: "Authentic Indian, Delivered Fresh",
+        brandMission: "To bring high-quality Indian home-style food to every urban doorstep.",
+        targetMarket: "National",
+        audience: "Working professionals (25-45) and families.",
+        customFeatures: ["Subscription Management", "Loyalty Points System"]
     },
     updates: [
         { id: 1, text: "Initial brief ingested from guest wizard", time: "2 days ago", type: 'system' },
-        { id: 2, text: "Project assigned to Node-101 (Arjun Sharma)", time: "1 day ago", type: 'assignment' },
-        { id: 3, text: "Development phase initialized. Setting up repo.", time: "4 hours ago", type: 'dev' }
+        { id: 2, text: "Project assigned to NODE-101", time: "1 day ago", type: 'assignment' },
+        { id: 3, text: "Designing initial logo concepts (Scratch flow)", time: "4 hours ago", type: 'dev' }
     ]
 };
 
