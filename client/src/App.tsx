@@ -11,6 +11,7 @@ import { LoginPage } from './pages/LoginPage';
 import { GuestWizard } from './pages/GuestWizard';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { DeveloperDashboard } from './pages/DeveloperDashboard';
+import { ProjectWorkspace } from './pages/ProjectWorkspace';
 
 export default function App() {
   return (
@@ -36,6 +37,13 @@ export default function App() {
             <Route path="/developer/*" element={
               <ProtectedRoute role="developer">
                 <DeveloperDashboard />
+              </ProtectedRoute>
+            } />
+
+            {/* Shared Workspace */}
+            <Route path="/project/:id" element={
+              <ProtectedRoute>
+                <ProjectWorkspace />
               </ProtectedRoute>
             } />
 

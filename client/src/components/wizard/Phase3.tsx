@@ -1,7 +1,6 @@
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
-import { ArrowRight, ArrowLeft, Plus, X, Check } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Plus, X, Check, Target, Users, Briefcase, Layout, Palette, Type, Monitor } from 'lucide-react';
 
 // --- High-Fidelity Brand DNA Data ---
 const VIBE_DATA: Record<string, { examples: string[], desc: string }> = {
@@ -33,12 +32,15 @@ const COLOR_PSYCHOLOGY: Record<string, string> = {
   '#111827': 'Elegance & Authority'
 };
 
+const LOGO_TYPES = ['Wordmark', 'Icon', 'Mascot', 'Combination Mark', 'Minimalist'];
+const USAGE_CONTEXTS = ['Website', 'Social Media', 'Business Cards', 'Clothing', 'Shop Sign', 'Packaging'];
+const FILE_FORMATS = ['PNG', 'SVG', 'AI/EPS', 'PDF', 'JPEG'];
+
 export const Phase3 = () => {
   const { data, updateData, goToNext, goToPrev, getStepNumber, getNextPhaseTitle } = useWizard();
 
   const personalities = Object.keys(VIBE_DATA);
   const designStyles = Object.keys(STYLE_DATA);
-  const usageOptions = ['On my Website', 'Social Media', 'Business Cards', 'Clothing', 'Shop Sign', 'Packaging'];
 
   const toggleArray = (field: keyof typeof data, value: string) => {
     const current = (data[field] as string[]) || [];
@@ -82,6 +84,18 @@ export const Phase3 = () => {
      }
   };
 
+  const FieldLabel = ({ icon: Icon, label, sub }: any) => (
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+        <Icon className="w-4 h-4" />
+      </div>
+      <div>
+        <p className="text-sm font-black text-slate-800 leading-none">{label}</p>
+        {sub && <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{sub}</p>}
+      </div>
+    </div>
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -90,7 +104,7 @@ export const Phase3 = () => {
       className="space-y-12 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance">Step {getStepNumber(3)}: Logo & Brand DNA</h2>
+        <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(3)}: Logo & Brand DNA</h2>
         <p className="text-base text-slate-500 font-medium font-sans opacity-90">Defining the soul of your business and how it resonates with customers.</p>
       </div>
 
@@ -125,13 +139,13 @@ export const Phase3 = () => {
         </div>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {data.logoStatus && data.logoStatus !== 'have' && (
           <motion.div
             key="logo-details"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
             className="space-y-16 overflow-hidden pt-8 border-t border-slate-100"
           >
             {/* Personality / Vibe Selector */}
@@ -159,11 +173,9 @@ export const Phase3 = () => {
                          <span className="font-black text-lg tracking-tight leading-none">{p}</span>
                          {isSelected && <Check className="w-4 h-4 text-white" />}
                       </div>
-                      <p className={`text-[10px] font-bold uppercase tracking-widest mb-4 transition-colors ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>
-                        {vibe.desc}
-                      </p>
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {vibe.examples.map(ex => (
+                        <span className={`text-[9px] font-black uppercase tracking-widest ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>Eg: </span>
+                        {vibe.examples.map((ex) => (
                           <span key={ex} className={`text-[9px] font-black px-2 py-0.5 rounded-md transition-colors ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200'}`}>
                             {ex}
                           </span>
@@ -175,58 +187,185 @@ export const Phase3 = () => {
               </div>
             </div>
 
-            {/* Design Style & Usage */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <div className="space-y-6">
-                <h3 className="text-xl font-black text-slate-900">Which style do you like?</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {designStyles.map(s => {
-                    const style = STYLE_DATA[s];
-                    const isSelected = data.designStyle === s;
-                    return (
-                      <button
-                        key={s}
-                        onClick={() => handleDesignStyleClick(s)}
-                        className={`p-6 rounded-[1.75rem] border-2 transition-all text-left shadow-sm relative group ${
-                          isSelected ? 'border-blue-600 bg-blue-50/50 ring-4 ring-blue-50' : 'border-slate-50 bg-white hover:border-slate-200'
-                        }`}
-                      >
-                        <div className="flex justify-between items-center mb-3">
-                           <span className="font-black text-slate-900 text-base">{s}</span>
-                           <div className={`w-3 h-3 rounded-full transition-colors ${isSelected ? 'bg-blue-600' : 'bg-slate-200 group-hover:bg-slate-300'}`} />
-                        </div>
-                        <div className="flex flex-wrap gap-1">
-                          {style.examples.map(ex => (
-                            <span key={ex} className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                               {ex}{' '}
-                            </span>
-                          ))}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                <h3 className="text-xl font-black text-slate-900">Where will you put the logo?</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {usageOptions.map(u => (
+            {/* Design Style */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-black text-slate-900">Which style do you like?</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {designStyles.map(s => {
+                  const style = STYLE_DATA[s];
+                  const isSelected = data.designStyle === s;
+                  return (
                     <button
-                      key={u}
-                      onClick={() => toggleArray('logoUsage', u)}
-                      className={`p-4 rounded-2xl border-2 font-bold text-xs transition-all flex items-center gap-3 shadow-sm ${
-                        data.logoUsage.includes(u) ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-50 bg-white text-slate-600 hover:border-slate-200'
+                      key={s}
+                      onClick={() => handleDesignStyleClick(s)}
+                      className={`p-6 rounded-[1.75rem] border-2 transition-all text-left shadow-sm relative group ${
+                        isSelected ? 'border-blue-600 bg-blue-50/50 ring-4 ring-blue-50' : 'border-slate-50 bg-white hover:border-slate-200'
                       }`}
                     >
-                      <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-colors ${data.logoUsage.includes(u) ? 'border-white bg-white/20' : 'border-slate-200'}`}>
-                         {data.logoUsage.includes(u) && <Check className="w-3 h-3 text-white" />}
+                      <div className="flex justify-between items-center mb-3">
+                          <span className="font-black text-slate-900 text-base">{s}</span>
+                          <div className={`w-3 h-3 rounded-full transition-colors ${isSelected ? 'bg-blue-600' : 'bg-slate-200 group-hover:bg-slate-300'}`} />
                       </div>
-                      {u}
+                      <div className="flex flex-wrap gap-1 items-center">
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-1">Eg: </span>
+                        {style.examples.map(ex => (
+                          <span key={ex} className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                              {ex}{' '}
+                          </span>
+                        ))}
+                      </div>
                     </button>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
+            </div>
+
+            {/* Enhanced Logo Info Section */}
+            <div className="space-y-10 pt-10 border-t border-slate-100">
+               <div className="flex justify-between items-end">
+                  <div>
+                     <h3 className="text-xl font-black text-slate-900">Logo Enhanced Info</h3>
+                     <p className="text-sm text-slate-500 font-medium font-sans">More structure helps us design the perfect brand.</p>
+                  </div>
+                  <span className="text-[10px] font-black text-purple-600 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">Strategic Depth</span>
+               </div>
+
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Tagline & Mission */}
+                  <div className="space-y-6">
+                     <div className="space-y-4">
+                        <FieldLabel icon={Type} label="Tagline / Slogan" sub="Eg: Quality you can trust" />
+                        <input 
+                           type="text" placeholder="Enter tagline" value={data.tagline} 
+                           onChange={(e) => updateData({ tagline: e.target.value })}
+                           className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 font-bold text-sm shadow-sm"
+                        />
+                     </div>
+                     <div className="space-y-4">
+                        <FieldLabel icon={Target} label="Brand Mission" sub="What do you aim to achieve?" />
+                        <textarea 
+                           placeholder="Enter brand mission" rows={2} value={data.brandMission}
+                           onChange={(e) => updateData({ brandMission: e.target.value })}
+                           className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 font-bold text-sm shadow-sm resize-none"
+                        />
+                     </div>
+                  </div>
+
+                  {/* Market & Audience */}
+                  <div className="space-y-6">
+                     <div className="space-y-4">
+                        <FieldLabel icon={Monitor} label="Target Market" sub="Local, National, or Global?" />
+                        <div className="flex gap-2">
+                           {['Local', 'National', 'Global'].map(m => (
+                              <button 
+                                 key={m} onClick={() => updateData({ targetMarket: m })}
+                                 className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs transition-all ${data.targetMarket === m ? 'border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'border-slate-50 bg-white text-slate-500 hover:border-slate-200 shadow-sm'}`}
+                              >
+                                 {m}
+                              </button>
+                           ))}
+                        </div>
+                     </div>
+                     <div className="space-y-4">
+                        <FieldLabel icon={Users} label="Target Audience" sub="Age, Gender, Profession" />
+                        <input 
+                           type="text" placeholder="Eg: Young professionals, 25-40" value={data.audience} 
+                           onChange={(e) => updateData({ audience: e.target.value })}
+                           className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 font-bold text-sm shadow-sm"
+                        />
+                     </div>
+                  </div>
+
+                  {/* B2B/B2C & Logo Type */}
+                  <div className="space-y-6">
+                     <div className="space-y-4">
+                        <FieldLabel icon={Briefcase} label="Business Model" sub="B2B or B2C?" />
+                        <div className="flex gap-2">
+                           {['B2B', 'B2C', 'Both'].map(m => (
+                              <button 
+                                 key={m} onClick={() => updateData({ b2bOrB2c: m })}
+                                 className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs transition-all ${data.b2bOrB2c === m ? 'border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'border-slate-50 bg-white text-slate-500 hover:border-slate-200 shadow-sm'}`}
+                              >
+                                 {m}
+                              </button>
+                           ))}
+                        </div>
+                     </div>
+                     <div className="space-y-4">
+                        <FieldLabel icon={Layout} label="Logo Type Preference" sub="Which style fits best?" />
+                        <div className="grid grid-cols-2 gap-2">
+                           {LOGO_TYPES.map(t => (
+                              <button 
+                                 key={t} onClick={() => updateData({ logoType: t })}
+                                 className={`py-2 px-3 rounded-xl border-2 font-bold text-[10px] transition-all ${data.logoType === t ? 'border-blue-600 bg-blue-600 text-white shadow-md' : 'border-slate-50 bg-white text-slate-500 hover:border-slate-200 shadow-sm'}`}
+                              >
+                                 {t}
+                              </button>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+
+                  {/* Typography & Usage */}
+                  <div className="space-y-6">
+                     <div className="space-y-4">
+                        <FieldLabel icon={Type} label="Typography Preferences" sub="Serif, Sans-serif, Script, etc." />
+                        <input 
+                           type="text" placeholder="Eg: Modern Sans-serif" value={data.typographyPreference} 
+                           onChange={(e) => updateData({ typographyPreference: e.target.value })}
+                           className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 font-bold text-sm shadow-sm"
+                        />
+                     </div>
+                     <div className="space-y-4">
+                        <FieldLabel icon={Palette} label="Usage Context" sub="Where will you use the logo?" />
+                        <div className="grid grid-cols-3 gap-2">
+                           {USAGE_CONTEXTS.map(u => (
+                              <button 
+                                 key={u} onClick={() => toggleArray('logoUsage', u)}
+                                 className={`py-2 px-1 rounded-xl border-2 font-bold text-[9px] text-center transition-all ${data.logoUsage.includes(u) ? 'border-blue-600 bg-blue-600 text-white shadow-md' : 'border-slate-50 bg-white text-slate-500 hover:border-slate-200 shadow-sm'}`}
+                              >
+                                 {u}
+                              </button>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+
+                  {/* Competitors & Files */}
+                  <div className="space-y-6">
+                     <div className="space-y-4">
+                        <FieldLabel icon={Target} label="Main Competitors" sub="Who else is in your space?" />
+                        <input 
+                           type="text" placeholder="Eg: Competitor A, Competitor B" value={data.competitors} 
+                           onChange={(e) => updateData({ competitors: e.target.value })}
+                           className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 font-bold text-sm shadow-sm"
+                        />
+                     </div>
+                     <div className="space-y-4">
+                        <FieldLabel icon={Layout} label="File Formats Needed" sub="Select all that apply" />
+                        <div className="grid grid-cols-3 gap-2">
+                           {FILE_FORMATS.map(f => (
+                              <button 
+                                 key={f} onClick={() => toggleArray('fileFormats', f)}
+                                 className={`py-2 px-1 rounded-xl border-2 font-bold text-[9px] text-center transition-all ${data.fileFormats.includes(f) ? 'border-blue-600 bg-blue-600 text-white shadow-md' : 'border-slate-50 bg-white text-slate-500 hover:border-slate-200 shadow-sm'}`}
+                              >
+                                 {f}
+                              </button>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+
+                  {/* Scalability */}
+                  <div className="space-y-4">
+                     <FieldLabel icon={Monitor} label="Scalability & Responsiveness" sub="Any specific needs for size/detail?" />
+                     <input 
+                        type="text" placeholder="Eg: Must work as small favicon" value={data.scalabilityNeeds} 
+                        onChange={(e) => updateData({ scalabilityNeeds: e.target.value })}
+                        className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 font-bold text-sm shadow-sm"
+                     />
+                  </div>
+               </div>
             </div>
 
             {/* Inspo Links */}

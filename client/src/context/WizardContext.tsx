@@ -39,12 +39,16 @@ interface WizardData {
   contactFormToggle: boolean;
   enquiryEmail: string;
   callNowToggle: boolean;
+  callNowNumber: string;
   whatsappToggle: boolean;
+  whatsappNumber: string;
 
   // Phase 4: Business Type and Offerings
   mainCategory: string;
   subCategory: string;
   specialisation: string;
+  products: string[];
+  services: string[];
 
   // Phase 5: Goals and Brand Direction
   websiteGoals: string[];
@@ -54,6 +58,20 @@ interface WizardData {
   usps: string[];
   preferredTone: string;
   websiteStyle: string;
+  referenceLinks: string[];
+
+  // Logo Enhanced Info (Optional Enhancement)
+  tagline: string;
+  brandMission: string;
+  targetMarket: string;
+  audience: string;
+  b2bOrB2c: string;
+  logoType: string;
+  typographyPreference: string;
+  competitors: string;
+  usageContext: string;
+  fileFormats: string[];
+  scalabilityNeeds: string;
 
   // Phase 6: Content and Trust Elements
   businessPhotosStatus: boolean;
@@ -107,10 +125,14 @@ const defaultData: WizardData = {
   contactFormToggle: true,
   enquiryEmail: '',
   callNowToggle: false,
+  callNowNumber: '',
   whatsappToggle: false,
+  whatsappNumber: '',
   mainCategory: '',
   subCategory: '',
   specialisation: '',
+  products: [],
+  services: [],
   websiteGoals: [],
   userAction: '',
   taglineStatus: '',
@@ -118,6 +140,18 @@ const defaultData: WizardData = {
   usps: [],
   preferredTone: '',
   websiteStyle: 'Minimal',
+  referenceLinks: [],
+  tagline: '',
+  brandMission: '',
+  targetMarket: 'Local',
+  audience: '',
+  b2bOrB2c: 'B2C',
+  logoType: '',
+  typographyPreference: '',
+  competitors: '',
+  usageContext: '',
+  fileFormats: [],
+  scalabilityNeeds: '',
   businessPhotosStatus: false,
   driveLink: '',
   genericImagesToggle: false,
@@ -151,7 +185,6 @@ const ALL_PHASES: WizardPhase[] = [
   { id: 5, title: 'Offerings', desc: 'Categories' },
   { id: 6, title: 'Strategy', desc: 'Goals & USP' },
   { id: 7, title: 'Media & Social', desc: 'Trust elements' },
-  { id: 8, title: 'References', desc: 'Addons' },
   { id: 9, title: 'Review', desc: 'Final check' }
 ];
 

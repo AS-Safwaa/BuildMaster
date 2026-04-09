@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
 import { Globe, Server, Mail, Phone, MessageCircle, ArrowRight, ArrowLeft, Plus, X } from 'lucide-react';
@@ -118,12 +117,53 @@ export const Phase4 = () => {
         </h3>
         <p className="text-sm text-slate-500 font-medium font-sans">Which buttons should we put on your website?</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-           <BooleanToggle label="Direct Call Button" sub="Let customers call you easily" value={data.callNowToggle} onChange={(v: boolean) => updateData({ callNowToggle: v })} icon={<Phone className="w-5 h-5" />} />
-           <BooleanToggle label="WhatsApp Button" sub="Chat with customers instantly" value={data.whatsappToggle} onChange={(v: boolean) => updateData({ whatsappToggle: v })} icon={<MessageCircle className="w-5 h-5" />} />
-           <BooleanToggle label="Message Box" sub="Receive emails from website" value={data.contactFormToggle} onChange={(v: boolean) => updateData({ contactFormToggle: v })} icon={<Mail className="w-5 h-5" />} />
+           <div className="space-y-3">
+             <BooleanToggle label="Direct Call Button" sub="Let customers call you easily" value={data.callNowToggle} onChange={(v: boolean) => updateData({ callNowToggle: v })} icon={<Phone className="w-5 h-5" />} />
+             <AnimatePresence>
+               {data.callNowToggle && (
+                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                   <input 
+                     type="tel" placeholder="Enter phone number" value={data.callNowNumber}
+                     onChange={(e) => updateData({ callNowNumber: e.target.value })}
+                     className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 font-bold transition-all text-sm shadow-sm"
+                   />
+                 </motion.div>
+               )}
+             </AnimatePresence>
+           </div>
+
+           <div className="space-y-3">
+             <BooleanToggle label="WhatsApp Button" sub="Chat with customers instantly" value={data.whatsappToggle} onChange={(v: boolean) => updateData({ whatsappToggle: v })} icon={<MessageCircle className="w-5 h-5" />} />
+             <AnimatePresence>
+               {data.whatsappToggle && (
+                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                   <input 
+                     type="tel" placeholder="Enter WhatsApp number" value={data.whatsappNumber}
+                     onChange={(e) => updateData({ whatsappNumber: e.target.value })}
+                     className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 font-bold transition-all text-sm shadow-sm"
+                   />
+                 </motion.div>
+               )}
+             </AnimatePresence>
+           </div>
+
+           <div className="space-y-3">
+             <BooleanToggle label="Message Box" sub="Receive emails from website" value={data.contactFormToggle} onChange={(v: boolean) => updateData({ contactFormToggle: v })} icon={<Mail className="w-5 h-5" />} />
+             <AnimatePresence>
+               {data.contactFormToggle && (
+                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                   <input 
+                     type="email" placeholder="Enter enquiry email" value={data.enquiryEmail}
+                     onChange={(e) => updateData({ enquiryEmail: e.target.value })}
+                     className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 font-bold transition-all text-sm shadow-sm"
+                   />
+                 </motion.div>
+               )}
+             </AnimatePresence>
+           </div>
            
-           <div className="flex flex-col gap-3 p-5 bg-white rounded-3xl border-2 border-slate-50 hover:border-slate-200 transition-all shadow-sm">
-             <div className="flex items-center justify-between">
+           <div className="flex flex-col gap-3 p-5 bg-white rounded-3xl border-2 border-slate-50 hover:border-slate-200 transition-all shadow-sm h-full">
+             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-4">
                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
                       <Plus className="w-5 h-5" />

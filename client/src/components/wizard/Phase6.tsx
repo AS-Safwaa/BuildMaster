@@ -1,27 +1,21 @@
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
-import { Target, Zap, Mic, Type, Palette, ArrowRight, ArrowLeft, Plus, X } from 'lucide-react';
+import { Target, Zap, Palette, ArrowRight, ArrowLeft, Plus, X, Link } from 'lucide-react';
 
 export const Phase6 = () => {
   const { data, updateData, goToNext, goToPrev, getStepNumber } = useWizard();
 
   const goals = ['Get more calls', 'Show my work', 'Sell things online', 'Book appointments', 'Look professional'];
   const actions = ['Call Now', 'Get a Price', 'Book Now', 'Message Us', 'See Photos'];
-  const tones = ['Friendly', 'Professional', 'Modern', 'Strong', 'Fancy'];
   const styles = ['Simple & Clean', 'Bold & Dark', 'Classic/Trustworthy', 'Modern/Techy'];
 
-  const toggleArray = (field: keyof typeof data, value: string) => {
-    const current = (data[field] as string[]) || [];
-    if (current.includes(value)) {
-      updateData({ [field]: current.filter(v => v !== value) });
-    } else {
-      updateData({ [field]: [...current, value] });
-    }
-  };
-
   const handleGoalClick = (g: string) => {
-     toggleArray('websiteGoals', g);
+    const current = data.websiteGoals || [];
+    if (current.includes(g)) {
+      updateData({ websiteGoals: current.filter(v => v !== g) });
+    } else if (current.length < 3) {
+      updateData({ websiteGoals: [...current, g] });
+    }
   };
 
   const handleActionClick = (a: string) => {
@@ -40,19 +34,35 @@ export const Phase6 = () => {
     }
   };
 
-  const addUSP = () => updateData({ usps: [...data.usps, ''] });
-  const updateUSP = (idx: number, val: string) => {
-    const newUSPs = [...data.usps];
-    newUSPs[idx] = val;
-    updateData({ usps: newUSPs });
+  const addReferenceLink = () => updateData({ referenceLinks: [...data.referenceLinks, ''] });
+  const updateReferenceLink = (idx: number, val: string) => {
+    const next = [...data.referenceLinks];
+    next[idx] = val;
+    updateData({ referenceLinks: next });
   };
-  const removeUSP = (idx: number) => {
-    const newUSPs = [...data.usps];
-    newUSPs.splice(idx, 1);
-    updateData({ usps: newUSPs });
+  const removeReferenceLink = (idx: number) => {
+    const next = [...data.referenceLinks];
+    next.splice(idx, 1);
+    updateData({ referenceLinks: next });
   };
 
-  const addCustomGoal = () => updateData({ customGoals: [...data.customGoals, ''] });
+  const addCompetitor = () => updateData({ competitorWebsites: [...data.competitorWebsites, ''] });
+  const updateCompetitor = (idx: number, val: string) => {
+    const next = [...data.competitorWebsites];
+    next[idx] = val;
+    updateData({ competitorWebsites: next });
+  };
+  const removeCompetitor = (idx: number) => {
+    const next = [...data.competitorWebsites];
+    next.splice(idx, 1);
+    updateData({ competitorWebsites: next });
+  };
+
+  const addCustomGoal = () => {
+    if (data.websiteGoals.length < 3) {
+        updateData({ customGoals: [...data.customGoals, ''] });
+    }
+  };
   const updateCustomGoal = (idx: number, val: string) => {
     const next = [...data.customGoals];
     next[idx] = val;
@@ -74,22 +84,25 @@ export const Phase6 = () => {
       <div className="text-center md:text-left">
         <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(6)}: Goals & Strategy</h2>
         <p className="text-base text-slate-500 font-medium opacity-90">
-          {data.projectType === 'Logo Design' 
-            ? "Let's define your brand's mission and marketing direction."
-            : "Finalize how you want to attract and talk to customers online."}
+           Finalize how you want to attract and talk to customers online.
         </p>
       </div>
 
+      {/* Goals Section */}
       <div className="space-y-5">
-        <h3 className="text-lg font-bold text-slate-800 flex items-center gap-3">
-           <Target className="w-5 h-5 text-blue-600" /> {data.projectType === 'Logo Design' ? 'What are your brand goals?' : 'What do you want your website to do?'}
-        </h3>
+        <div className="flex justify-between items-center">
+            <h3 className="text-lg font-bold text-slate-800 flex items-center gap-3">
+               <Target className="w-5 h-5 text-blue-600" /> What do you want your website to do?
+            </h3>
+            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Select up to 3</span>
+        </div>
         <div className="flex flex-wrap gap-2">
           {goals.map(g => (
             <button
               key={g} onClick={() => handleGoalClick(g)}
+              disabled={!data.websiteGoals.includes(g) && data.websiteGoals.length >= 3}
               className={`px-6 py-3 rounded-2xl border-2 font-bold text-sm transition-all shadow-sm ${
-                data.websiteGoals.includes(g) ? 'border-blue-600 bg-blue-600 text-white shadow-lg' : 'border-slate-50 bg-white text-slate-500 hover:border-slate-200'
+                data.websiteGoals.includes(g) ? 'border-blue-600 bg-blue-600 text-white shadow-lg' : 'border-slate-50 bg-white text-slate-500 hover:border-slate-200 disabled:opacity-30 disabled:cursor-not-allowed'
               }`}
             >
               {g}
@@ -97,7 +110,8 @@ export const Phase6 = () => {
           ))}
           <button 
              onClick={addCustomGoal}
-             className="px-6 py-3 rounded-2xl border-2 border-dashed border-slate-200 text-slate-500 font-bold text-sm hover:border-blue-300 hover:bg-blue-50 transition-all flex items-center gap-2"
+             disabled={data.websiteGoals.length >= 3}
+             className="px-6 py-3 rounded-2xl border-2 border-dashed border-slate-200 text-slate-500 font-bold text-sm hover:border-blue-300 hover:bg-blue-50 transition-all flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
           >
              <Plus className="w-4 h-4" /> Add Custom Goal
           </button>
@@ -121,10 +135,14 @@ export const Phase6 = () => {
         </AnimatePresence>
       </div>
 
+      {/* Action Section */}
       <div className="space-y-5">
-        <h3 className="text-lg font-black text-slate-900 flex items-center gap-3">
-           <Zap className="w-5 h-5 text-yellow-500" /> What should customers do first?
-        </h3>
+        <div className="flex justify-between items-center">
+            <h3 className="text-lg font-black text-slate-900 flex items-center gap-3">
+               <Zap className="w-5 h-5 text-yellow-500" /> What should customers do first?
+            </h3>
+            <span className="text-[10px] font-black text-yellow-600 uppercase tracking-widest bg-yellow-50 px-3 py-1 rounded-full">Select 1</span>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {actions.map(a => (
             <button
@@ -159,107 +177,75 @@ export const Phase6 = () => {
         </AnimatePresence>
       </div>
 
-      <div className="space-y-5 bg-white p-8 rounded-[2rem] border-2 border-slate-50 shadow-sm relative overflow-hidden">
-        <h3 className="text-lg font-black text-slate-900 flex items-center gap-3">
-           <Type className="w-5 h-5 text-purple-600" /> Got a catchy slogan?
-        </h3>
-        <p className="text-sm text-slate-500 font-medium font-sans">A short sentence that describes your business.</p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-           {[ 
-             { id: 'yes', label: 'Yes, I have one', sub: 'Input it here' },
-             { id: 'no', label: 'Not really', sub: 'Skip it for now' },
-             { id: 'help', label: 'Help me write one', sub: 'We will suggest' }
-           ].map(opt => (
-             <button
-                key={opt.id} onClick={() => handleToggleSingle('taglineStatus', opt.id)}
-                className={`p-4 rounded-2xl border-2 transition-all text-left shadow-sm ${
-                  data.taglineStatus === opt.id ? 'border-purple-600 bg-purple-50 ring-4 ring-purple-100/50' : 'border-slate-50 bg-white hover:border-slate-200'
-                }`}
-             >
-                <p className="font-bold text-slate-800 text-sm mb-1 leading-none">{opt.label}</p>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{opt.sub}</p>
-             </button>
-           ))}
-        </div>
-        
-        <AnimatePresence>
-          {data.taglineStatus === 'yes' && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="pt-2 overflow-hidden">
-               <input 
-                 type="text" placeholder="e.g. Quality Food, Delivered Fast!"
-                 value={data.taglineCustom} onChange={(e) => updateData({ taglineCustom: e.target.value })}
-                 className="w-full p-4 bg-slate-50 border-0 rounded-2xl outline-none focus:ring-2 focus:ring-purple-100 font-bold text-sm shadow-inner" 
-               />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
+      {/* Competitors Section (Moved from Step 8) */}
       <div className="space-y-5">
         <h3 className="text-lg font-black text-slate-900 flex items-center gap-3">
-           <Mic className="w-5 h-5 text-indigo-500" /> What makes your business special?
+           <Link className="w-5 h-5 text-blue-600" /> Any websites like yours?
         </h3>
-        <p className="text-sm text-slate-500 font-medium font-sans">Why should people pick you? (e.g. Low price, 24/7 service)</p>
-        <div className="space-y-2">
-          {data.usps.map((u, idx) => (
-            <div key={idx} className="flex gap-2">
+        <p className="text-sm text-slate-500 font-medium font-sans">Add links to your competitors or similar businesses.</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {data.competitorWebsites.map((url, idx) => (
+            <div key={idx} className="flex gap-3">
               <input 
-                type="text" placeholder="e.g. Free Home Delivery" value={u}
-                onChange={(e) => updateUSP(idx, e.target.value)}
-                className="flex-1 p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-indigo-500 font-bold transition-all text-sm shadow-sm"
+                type="text" placeholder="Eg: https://competitor.com" value={url} 
+                onChange={(e) => updateCompetitor(idx, e.target.value)}
+                className="flex-1 p-5 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 font-bold transition-all text-sm shadow-sm"
               />
-              <button onClick={() => removeUSP(idx)} className="p-4 bg-rose-50 text-rose-500 rounded-2xl hover:bg-rose-100 transition-colors shadow-sm"><X className="w-4 h-4" /></button>
+              <button onClick={() => removeCompetitor(idx)} className="p-5 bg-white border-2 border-slate-50 text-rose-500 rounded-2xl hover:bg-rose-50 hover:border-rose-100 transition-all">
+                <X className="w-5 h-5" />
+              </button>
             </div>
           ))}
-          <button onClick={addUSP} className="flex items-center gap-2 px-6 py-3 bg-slate-50 text-slate-500 rounded-2xl font-bold hover:bg-slate-100 transition-colors text-xs shadow-sm">
-             <Plus className="w-3 h-3" /> Add a point
+          <button onClick={addCompetitor} className="flex items-center justify-center gap-3 p-5 border-2 border-dashed border-slate-200 text-slate-400 rounded-2xl font-black hover:bg-slate-50 transition-all text-xs uppercase tracking-widest">
+            <Plus className="w-5 h-5" /> Add Website
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-6 border-t border-slate-100">
-         {data.projectType !== 'Logo Design' && (
-           <div className="space-y-5">
-             <h3 className="text-lg font-bold text-slate-800 flex items-center gap-3">
-                <Palette className="w-5 h-5 text-pink-600" /> Website Look
-             </h3>
-             <div className="grid grid-cols-1 gap-2">
-               {styles.map(s => (
-                 <button
-                    key={s} onClick={() => handleToggleSingle('websiteStyle', s)}
-                    className={`p-4 rounded-xl border-2 transition-all text-left flex items-center justify-between shadow-sm ${
-                      data.websiteStyle === s ? 'border-pink-600 bg-pink-50 ring-2 ring-pink-50' : 'border-slate-50 bg-white hover:border-slate-200'
-                    }`}
-                 >
-                    <span className="font-bold text-slate-800 text-sm font-sans">{s}</span>
-                    {data.websiteStyle === s && <div className="w-2 h-2 bg-pink-600 rounded-full" />}
-                 </button>
-               ))}
-             </div>
-           </div>
-         )}
-
-         <div className={`space-y-5 ${data.projectType === 'Logo Design' ? 'md:col-span-2' : ''}`}>
+      {/* Website Look Section */}
+      <div className="space-y-6 pt-6 border-t border-slate-100">
+         <div className="space-y-5">
            <h3 className="text-lg font-bold text-slate-800 flex items-center gap-3">
-              <Mic className="w-5 h-5 text-emerald-600" /> {data.projectType === 'Logo Design' ? "Your Brand's Personality" : "Your Brand's Voice"}
+              <Palette className="w-5 h-5 text-pink-600" /> Website Look
            </h3>
-           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans ml-8">How should we talk to your customers?</p>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-             {tones.map(t => (
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+             {styles.map(s => (
                <button
-                  key={t} onClick={() => handleToggleSingle('preferredTone', t)}
+                  key={s} onClick={() => handleToggleSingle('websiteStyle', s)}
                   className={`p-4 rounded-xl border-2 transition-all text-left flex items-center justify-between shadow-sm ${
-                    data.preferredTone === t ? 'border-emerald-600 bg-emerald-50 ring-2 ring-emerald-50' : 'border-slate-50 bg-white hover:border-slate-200'
+                    data.websiteStyle === s ? 'border-pink-600 bg-pink-50 ring-2 ring-pink-50' : 'border-slate-50 bg-white hover:border-slate-200'
                   }`}
                >
-                  <span className="font-bold text-slate-800 text-sm font-sans">{t}</span>
-                  {data.preferredTone === t && <div className="w-2 h-2 bg-emerald-600 rounded-full" />}
+                  <span className="font-bold text-slate-800 text-sm font-sans">{s}</span>
+                  {data.websiteStyle === s && <div className="w-2 h-2 bg-pink-600 rounded-full" />}
                </button>
              ))}
            </div>
          </div>
+
+          <div className="space-y-5">
+            <p className="text-sm text-slate-500 font-medium font-sans">Any reference links for the look?</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {data.referenceLinks.map((url, idx) => (
+                <div key={idx} className="flex gap-3">
+                  <input 
+                    type="text" placeholder="Eg: https://example.com" value={url} 
+                    onChange={(e) => updateReferenceLink(idx, e.target.value)}
+                    className="flex-1 p-5 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-pink-500 font-bold transition-all text-sm shadow-sm"
+                  />
+                  <button onClick={() => removeReferenceLink(idx)} className="p-5 bg-white border-2 border-slate-50 text-rose-500 rounded-2xl hover:bg-rose-50 hover:border-rose-100 transition-all">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              ))}
+              <button onClick={addReferenceLink} className="flex items-center justify-center gap-3 p-5 border-2 border-dashed border-slate-200 text-slate-400 rounded-2xl font-black hover:bg-slate-50 transition-all text-xs uppercase tracking-widest">
+                <Plus className="w-5 h-5" /> Add Reference
+              </button>
+            </div>
+          </div>
       </div>
 
+      {/* Navigation */}
       <div className="flex justify-between items-center pt-10">
         <button onClick={goToPrev} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm shadow-sm font-sans">
           <ArrowLeft className="w-4 h-4" /> Go Back
