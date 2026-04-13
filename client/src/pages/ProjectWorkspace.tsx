@@ -59,52 +59,7 @@ const PROJECT_BRIEF_SCHEMA = {
   ]
 };
 
-const MOCK_PROJECT = {
-    id: 7,
-    businessName: "SR FoodKraft",
-    email: "rahul@foodkraft.com",
-    status: "in_progress",
-    assigned_developer_id: 101,
-    demo_link: "https://foodkraft-demo.vercel.app",
-    final_link: "",
-    createdAt: new Date(Date.now() - 172800000).toISOString(),
-    answers: {
-        businessName: "SR FoodKraft", 
-        projectType: "Website + Logo", 
-        contactName: "Rahul Sharma",
-        brandPersonality: ["Professional", "Simple", "Friendly"], 
-        designStyle: "Clean & Simple",
-        logoType: "Combination Mark",
-        preferredColors: ["#3B82F6", "#111827"],
-        avoidColors: ["#EF4444"],
-        establishmentYear: "2020", 
-        phone: "+91 98765 43210", 
-        email: "rahul@foodkraft.com",
-        city: "Mumbai", 
-        mainCategory: "Food",
-        subCategory: "Cloud Kitchen",
-        websiteStyle: "Simple & Clean",
-        hasDomain: true, 
-        preferredDomain: "srfoodkraft.com", 
-        hasHosting: false,
-        callNowNumber: "+91 98765 43210",
-        whatsappNumber: "+91 98765 43210",
-        enquiryEmail: "orders@foodkraft.com",
-        products: ["Ready Meals", "Spice Kits", "Bakery Goods"],
-        services: ["Home Delivery", "Subscription Box", "Event Catering"],
-        usps: ["No Preservatives", "Chef Authenticated", "30-min Delivery"],
-        tagline: "Authentic Indian, Delivered Fresh",
-        brandMission: "To bring high-quality Indian home-style food to every urban doorstep.",
-        targetMarket: "National",
-        audience: "Working professionals (25-45) and families.",
-        customFeatures: ["Subscription Management", "Loyalty Points System"]
-    },
-    updates: [
-        { id: 1, text: "Initial brief ingested from guest wizard", time: "2 days ago", type: 'system' },
-        { id: 2, text: "Project assigned to NODE-101", time: "1 day ago", type: 'assignment' },
-        { id: 3, text: "Designing initial logo concepts (Scratch flow)", time: "4 hours ago", type: 'dev' }
-    ]
-};
+import { getProjectById } from '../data/mockProjects';
 
 import { useSearchParams } from 'react-router-dom';
 
@@ -117,21 +72,36 @@ export const ProjectWorkspace = () => {
     const mode = searchParams.get('mode') || 'active';
     const isPreview = mode === 'preview';
     
-    const [project, setProject] = useState<any>(IS_PROTOTYPE ? MOCK_PROJECT : null);
-    const [loading, setLoading] = useState(!IS_PROTOTYPE);
+    const [project, setProject] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
     const [activeSection, setActiveSection] = useState('brief');
     const [copyStatus, setCopyStatus] = useState<string | null>(null);
 
-    const [status, setStatus] = useState(project?.status || 'assigned');
-    const [demoLink, setDemoLink] = useState(project?.demo_link || '');
-    const [finalLink, setFinalLink] = useState(project?.final_link || '');
+    const [status, setStatus] = useState('assigned');
+    const [demoLink, setDemoLink] = useState('');
+    const [finalLink, setFinalLink] = useState('');
     const [newUpdate, setNewUpdate] = useState('');
 
     useEffect(() => {
-        if (!IS_PROTOTYPE) fetchProject();
+        fetchProject();
     }, [id]);
 
     const fetchProject = async () => {
+        setLoading(true);
+        if (IS_PROTOTYPE) {
+            const p = getProjectById(id || '');
+            if (p) {
+                setProject(p);
+                setStatus(p.status);
+                setDemoLink(p.demo_link || '');
+                setFinalLink(p.final_link || '');
+            } else {
+                toast.error('Project not found in prototype data');
+            }
+            setLoading(false);
+            return;
+        }
+
         try {
             const res = await axios.get(`${API_BASE_URL}/${isAdmin ? 'admin/dashboard/view-project' : 'developer/projects'}/${id}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -143,8 +113,7 @@ export const ProjectWorkspace = () => {
             setDemoLink(data.demo_link || '');
             setFinalLink(data.final_link || '');
         } catch (err) { 
-            if (IS_PROTOTYPE) setProject(MOCK_PROJECT);
-            else toast.error('Failed to load workspace payload'); 
+            toast.error('Failed to load workspace payload'); 
         } finally { setLoading(false); }
     };
 

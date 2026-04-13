@@ -1,0 +1,217 @@
+
+export const MOCK_PROJECTS = [
+  { 
+    id: 101, 
+    businessName: "Skyline Realty Group", 
+    email: "michael@skylinerealty.com",
+    createdAt: new Date(Date.now() - 86400000).toISOString(), 
+    status: "unassigned", 
+    demo_link: "",
+    final_link: "",
+    answers: {
+      businessName: "Skyline Realty Group", 
+      projectType: "Both Logo & Site", 
+      contactName: "Michael West",
+      phone: "+1 555-0123",
+      email: "michael@skylinerealty.com",
+      city: "New York",
+      mainCategory: "Real Estate",
+      subCategory: "Luxury Apartments",
+      brandPersonality: ["Minimalist", "Modern", "Sophisticated"], 
+      preferredTone: "Professional",
+      websiteGoals: ["Showcase Properties", "Direct Booking"],
+      preferredColors: ["#1E293B", "#64748B"], 
+      logoStatus: "improve",
+      designStyle: "Corporate & Minimalist",
+      logoType: "Wordmark",
+      websiteStyle: "Clean & Luxury",
+      hasDomain: true,
+      preferredDomain: "skylinerealty.com",
+      hasHosting: true,
+      callNowNumber: "+1 555-0123",
+      whatsappNumber: "+1 555-0123",
+      enquiryEmail: "sales@skylinerealty.com"
+    }
+  },
+  { 
+    id: 102, 
+    businessName: "Organic Perk Coffee", 
+    email: "sarah@organicperk.com",
+    createdAt: new Date(Date.now() - 172800000).toISOString(), 
+    status: "unassigned", 
+    demo_link: "",
+    final_link: "",
+    answers: { 
+      businessName: "Organic Perk Coffee", 
+      projectType: "Logo Design",
+      contactName: "Sarah Jenkins",
+      phone: "+44 20 7946 0958",
+      email: "sarah@organicperk.com",
+      city: "London",
+      mainCategory: "Food & Beverage",
+      subCategory: "Artesian Coffee Shop",
+      brandPersonality: ["Friendly", "Earthy", "Authentic"],
+      preferredColors: ["#4B2C20", "#2D5A27"],
+      logoStatus: "scratch",
+      designStyle: "Vintage & Organic",
+      logoType: "Emblem",
+      tagline: "Pure Bean, Pure Joy",
+      targetMarket: "Local",
+      audience: "Health-conscious urbanites"
+    } 
+  },
+  { 
+    id: 103, 
+    businessName: "Nexus Logistics", 
+    email: "ops@nexuslogistics.io",
+    createdAt: new Date(Date.now() - 259200000).toISOString(), 
+    status: "unassigned", 
+    demo_link: "",
+    final_link: "",
+    answers: { 
+      businessName: "Nexus Logistics", 
+      projectType: "Website",
+      contactName: "David Chen",
+      phone: "+65 6789 0123",
+      email: "ops@nexuslogistics.io",
+      city: "Singapore",
+      mainCategory: "Logistics",
+      subCategory: "Global Freight",
+      websiteGoals: ["Track Shipments", "Get Quotes"],
+      websiteStyle: "High-Tech & Reliable",
+      customFeatures: ["Real-time Tracking API", "Quote Calculator"],
+      hasDomain: false,
+      preferredDomain: "nexuslogistics.io"
+    } 
+  },
+  { 
+    id: 104, 
+    businessName: "GreenLeaf Interiors", 
+    email: "design@greenleaf.com",
+    createdAt: new Date(Date.now() - 50000000).toISOString(), 
+    status: "unassigned", 
+    demo_link: "",
+    final_link: "",
+    answers: { 
+      businessName: "GreenLeaf Interiors", 
+      projectType: "Both Logo & Site",
+      contactName: "Elena Rodriguez",
+      phone: "+34 912 345 678",
+      city: "Madrid",
+      mainCategory: "Interior Design",
+      subCategory: "Eco-friendly Spaces",
+      brandPersonality: ["Natural", "Calm", "Elegant"],
+      preferredColors: ["#E2E8F0", "#059669"],
+      websiteStyle: "Editorial / Portfolio",
+      products: ["Sustainable Furniture", "Recycled Decor"],
+      services: ["Home Staging", "Remote Consultation"]
+    } 
+  },
+  { 
+    id: 105, 
+    businessName: "ByteWave Technologies", 
+    email: "hello@bytewave.tech",
+    createdAt: new Date(Date.now() - 300000000).toISOString(), 
+    status: "unassigned", 
+    demo_link: "",
+    final_link: "",
+    answers: { 
+      businessName: "ByteWave Technologies", 
+      projectType: "Website",
+      contactName: "Alex Rivera",
+      phone: "+1 415-555-0199",
+      city: "San Francisco",
+      mainCategory: "Technology",
+      subCategory: "SaaS Platform",
+      websiteGoals: ["Lead Generation", "Product Demo"],
+      websiteStyle: "SaaS / Modern UI",
+      usps: ["No-code Integration", "AI-Powered Analytics"],
+      customFeatures: ["Interactive Analytics Dashboard", "Multi-language Support"]
+    } 
+  },
+  { 
+    id: 106, 
+    businessName: "UrbanFit Gym", 
+    email: "join@urbanfit.gym",
+    createdAt: new Date(Date.now() - 400000000).toISOString(), 
+    status: "unassigned", 
+    demo_link: "",
+    final_link: "",
+    answers: { 
+      businessName: "UrbanFit Gym", 
+      projectType: "Both Logo & Site",
+      contactName: "Marcus Thorne",
+      phone: "+61 2 9876 5432",
+      city: "Sydney",
+      mainCategory: "Fitness",
+      subCategory: "Boutique Training",
+      brandPersonality: ["High-Energy", "Bold", "Motivating"],
+      preferredColors: ["#F97316", "#18181B"],
+      logoType: "Abstract Mark",
+      websiteStyle: "Action-Oriented",
+      userAction: "Sign up for Trial",
+      tagline: "Your City, Your Fit"
+    } 
+  },
+  { 
+    id: 107, 
+    businessName: "FreshBasket Grocers", 
+    email: "fresh@basket.co",
+    createdAt: new Date(Date.now() - 450000000).toISOString(), 
+    status: "unassigned", 
+    demo_link: "",
+    final_link: "",
+    answers: { 
+      businessName: "FreshBasket Grocers", 
+      projectType: "Website",
+      contactName: "Priya Das",
+      phone: "+91 80 1234 5678",
+      city: "Bangalore",
+      mainCategory: "Retail",
+      subCategory: "Farm-to-Table",
+      websiteGoals: ["Online Ordering", "Local Delivery Tracking"],
+      websiteStyle: "Simple & Friendly",
+      products: ["Organic Veggies", "Colony Staples"],
+      hasDomain: true,
+      preferredDomain: "freshbasket.in"
+    } 
+  },
+  { 
+    id: 1011, 
+    businessName: "Royal Mart", 
+    email: "aditya@royalmart.in", 
+    status: "assigned", 
+    assigned_developer_id: 101, 
+    demo_link: "https://royalmart-preview.io",
+    final_link: "",
+    createdAt: new Date(Date.now() - 600000000).toISOString(),
+    answers: {
+      businessName: "Royal Mart", 
+      projectType: "Both Logo & Site", 
+      contactName: "Aditya Shah",
+      phone: "+91 22 1234 5678",
+      email: "aditya@royalmart.in",
+      city: "Mumbai",
+      mainCategory: "Retail",
+      subCategory: "Supermarket Chain",
+      brandPersonality: ["Elegant", "Authoritative", "Stable"], 
+      preferredTone: "Bold Professional",
+      websiteGoals: ["Increase Local Sales", "Online Catalog"], 
+      preferredColors: ["#0F172A", "#F59E0B"], 
+      logoStatus: "improve",
+      designStyle: "Legacy & Modern Mix",
+      logoType: "Combination Mark",
+      websiteStyle: "Corporate Retail",
+      hasDomain: true,
+      preferredDomain: "royalmart.in"
+    },
+    updates: [
+        { id: 1, text: "Project assigned to NODE-101", time: "3 days ago", type: 'assignment' },
+        { id: 2, text: "Initial site structure approved", time: "1 day ago", type: 'dev' }
+    ]
+  }
+];
+
+export const getProjectById = (id: number | string) => {
+  return MOCK_PROJECTS.find(p => p.id === Number(id));
+};

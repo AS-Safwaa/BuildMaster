@@ -1,8 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
-import { Target, Zap, Palette, ArrowRight, ArrowLeft, Plus, X, Link as LinkIcon, ExternalLink, Check } from 'lucide-react';
+import { Palette, ArrowRight, ArrowLeft, Link as LinkIcon, ExternalLink, Check } from 'lucide-react';
 
-// --- Mock Admin-Controlled Master Data ---
+// --- Static Style References ---
 const STYLE_REFERENCES: Record<string, string[]> = {
   'Simple & Clean': ['https://apple.com', 'https://stripe.com'],
   'Bold & Dark': ['https://linear.app', 'https://vercel.com'],
@@ -12,47 +12,26 @@ const STYLE_REFERENCES: Record<string, string[]> = {
 
 export const Phase6 = () => {
   const { data, updateData, goToNext, goToPrev, getStepNumber } = useWizard();
-
-  const goals = ['Get more calls', 'Show my work', 'Sell things online', 'Book appointments', 'Look professional'];
-  const actions = ['Call Now', 'Get a Price', 'Book Now', 'Message Us', 'See Photos'];
   const styles = ['Simple & Clean', 'Bold & Dark', 'Classic/Trustworthy', 'Modern/Techy'];
 
-  const handleGoalClick = (g: string) => {
-    const current = data.websiteGoals || [];
-    if (current.includes(g)) {
-      updateData({ websiteGoals: current.filter(v => v !== g) });
-    } else if (current.length < 3) {
-      updateData({ websiteGoals: [...current, g] });
-    }
-  };
-
-  const handleActionClick = (a: string) => {
-    updateData({ userAction: data.userAction === a ? '' : a });
-  };
-
-  const addReferenceLink = () => updateData({ referenceLinks: [...data.referenceLinks, ''] });
-  const updateReferenceLink = (idx: number, val: string) => {
-    const next = [...data.referenceLinks];
-    next[idx] = val;
-    updateData({ referenceLinks: next });
-  };
-  const removeReferenceLink = (idx: number) => {
-    const next = [...data.referenceLinks];
-    next.splice(idx, 1);
-    updateData({ referenceLinks: next });
-  };
-
-  const addCompetitor = () => updateData({ competitorWebsites: [...data.competitorWebsites, ''] });
-  const updateCompetitor = (idx: number, val: string) => {
-    const next = [...data.competitorWebsites];
-    next[idx] = val;
-    updateData({ competitorWebsites: next });
-  };
-  const removeCompetitor = (idx: number) => {
-    const next = [...data.competitorWebsites];
-    next.splice(idx, 1);
-    updateData({ competitorWebsites: next });
-  };
+  const UrlInput = ({ label, sub, value, onChange, icon }: any) => (
+    <div className="space-y-1">
+      <div className="flex items-center gap-2 mb-1 px-1">
+        <div className="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+           {icon}
+        </div>
+        <div className="flex-1">
+          <p className="text-[10px] font-black text-slate-800 uppercase tracking-widest leading-none">{label}</p>
+          <p className="text-[9px] font-bold text-slate-400 mt-0.5">{sub}</p>
+        </div>
+      </div>
+      <input 
+        type="text" placeholder="https://..." value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full p-4 bg-slate-50 border-0 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-100 font-bold text-sm transition-all"
+      />
+    </div>
+  );
 
   return (
     <motion.div
@@ -62,83 +41,44 @@ export const Phase6 = () => {
       className="space-y-12 pb-20 px-4"
     >
       <div className="text-center md:text-left">
-        <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(6)}: Goals & Strategy</h2>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight leading-none text-balance font-sans">Step {getStepNumber(6)}: Benchmarks & Vibes</h2>
         <p className="text-base text-slate-500 font-medium opacity-90 leading-relaxed">
-           Finalize how you want to attract and talk to customers online.
+           Analyze competitors and define the aesthetic anchor for your digital presence.
         </p>
       </div>
 
-      {/* Goals Section */}
-      <div className="space-y-6">
-        <div className="flex justify-between items-center bg-slate-50/50 p-4 rounded-2xl border border-slate-100/50">
-            <h3 className="text-lg font-bold text-slate-800 flex items-center gap-3">
-               <Target className="w-5 h-5 text-blue-600" /> Website Goals
-            </h3>
-            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Select up to 3</span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {goals.map(g => (
-            <button
-              key={g} onClick={() => handleGoalClick(g)}
-              disabled={!data.websiteGoals.includes(g) && data.websiteGoals.length >= 3}
-              className={`px-6 py-3 rounded-2xl border-2 font-bold text-sm transition-all shadow-sm ${
-                data.websiteGoals.includes(g) ? 'border-blue-600 bg-blue-600 text-white shadow-lg' : 'border-slate-50 bg-white text-slate-500 hover:border-slate-200 disabled:opacity-30 disabled:cursor-not-allowed'
-              }`}
-            >
-              {g}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Action Section */}
-      <div className="space-y-6">
-        <div className="flex justify-between items-center bg-slate-50/50 p-4 rounded-2xl border border-slate-100/50">
-            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-3">
-               <Zap className="w-5 h-5 text-yellow-500" /> Customer Call-to-Action
-            </h3>
-            <span className="text-[10px] font-black text-yellow-600 uppercase tracking-widest bg-yellow-50 px-3 py-1 rounded-full">Pick one</span>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-          {actions.map(a => (
-            <button
-              key={a} onClick={() => handleActionClick(a)}
-              className={`p-4 rounded-xl border-2 text-[10px] font-black uppercase tracking-widest transition-all text-center shadow-sm ${
-                data.userAction === a ? 'border-yellow-500 bg-yellow-50 shadow-md ring-4 ring-yellow-50/30' : 'border-slate-50 bg-white hover:border-slate-200'
-              }`}
-            >
-              {a}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Competitors Section */}
-      <div className="space-y-6">
-        <div className="flex justify-between items-center bg-slate-50/50 p-4 rounded-2xl border border-slate-100/50">
-            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-3">
-               <LinkIcon className="w-5 h-5 text-blue-600" /> Any websites like yours?
-            </h3>
-            <button onClick={addCompetitor} className="p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all active:scale-95">
-                <Plus className="w-4 h-4" />
-            </button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {data.competitorWebsites.map((url, idx) => (
-            <div key={idx} className="flex gap-3">
-              <input 
-                type="text" placeholder="https://competitor.com" value={url} 
-                onChange={(e) => updateCompetitor(idx, e.target.value)}
-                className="flex-1 p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 font-bold transition-all text-sm shadow-sm"
-              />
-              <button onClick={() => removeCompetitor(idx)} className="p-4 bg-rose-50 text-rose-500 rounded-2xl hover:bg-rose-100 transition-all">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          ))}
-          {data.competitorWebsites.length === 0 && (
-             <p className="text-xs text-slate-400 font-medium italic text-center py-4 border-2 border-dashed border-slate-50 rounded-2xl">No competitor websites added yet.</p>
-          )}
+      {/* Website References Section */}
+      <div className="space-y-10">
+        <div className="space-y-6 p-8 bg-white border border-slate-200 rounded-[2.5rem] shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <LinkIcon className="w-6 h-6 text-indigo-600" />
+            <h3 className="text-xl font-bold text-slate-900">Digital Benchmarks</h3>
+          </div>
+          <p className="text-sm text-slate-500 font-medium mb-8">Share examples of websites that match your vision or belong to your competitors.</p>
+          
+          <div className="space-y-6">
+            <UrlInput 
+              label="Preferred Website Layout" 
+              sub="A site that feels exactly like you want yours to be"
+              value={data.preferredWebsite || ''} 
+              onChange={(v: string) => updateData({ preferredWebsite: v })} 
+              icon={<ExternalLink className="w-4 h-4" />}
+            />
+            <UrlInput 
+              label="Competitor Reference" 
+              sub="A direct player in your market we should analyze"
+              value={data.competitorWebsite || ''} 
+              onChange={(v: string) => updateData({ competitorWebsite: v })} 
+              icon={<LinkIcon className="w-4 h-4" />}
+            />
+            <UrlInput 
+              label="Style Inspiration" 
+              sub="Any site with a vibe, colors, or motion you love"
+              value={data.inspiredWebsite || ''} 
+              onChange={(v: string) => updateData({ inspiredWebsite: v })} 
+              icon={<Palette className="w-4 h-4" />}
+            />
+          </div>
         </div>
       </div>
 
@@ -147,7 +87,7 @@ export const Phase6 = () => {
          <div className="space-y-6">
             <div className="flex justify-between items-center bg-slate-50/50 p-4 rounded-2xl border border-slate-100/50">
                 <h3 className="text-lg font-bold text-slate-800 flex items-center gap-3">
-                    <Palette className="w-5 h-5 text-pink-600" /> Website Style
+                    <Palette className="w-5 h-5 text-pink-600" /> Standard Theme Presets
                 </h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -182,29 +122,6 @@ export const Phase6 = () => {
                </motion.div>
             )}
          </AnimatePresence>
-
-         <div className="space-y-6">
-            <div className="flex justify-between items-center bg-slate-50/50 p-4 rounded-2xl border border-slate-100/50">
-                <h3 className="text-lg font-bold text-slate-900 tracking-tight">Your Reference Links</h3>
-                <button onClick={addReferenceLink} className="p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all active:scale-95">
-                    <Plus className="w-4 h-4" />
-                </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {data.referenceLinks.map((url, idx) => (
-                <div key={idx} className="flex gap-3">
-                  <input 
-                    type="text" placeholder="https://awwwards.com/..." value={url} 
-                    onChange={(e) => updateReferenceLink(idx, e.target.value)}
-                    className="flex-1 p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-pink-500 font-bold transition-all text-sm shadow-sm"
-                  />
-                  <button onClick={() => removeReferenceLink(idx)} className="p-4 bg-rose-50 text-rose-500 rounded-2xl hover:bg-rose-100 transition-all">
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-              ))}
-            </div>
-         </div>
       </div>
 
       {/* Navigation */}
@@ -214,9 +131,9 @@ export const Phase6 = () => {
         </button>
         <button 
           onClick={goToNext}
-          className="group flex items-center gap-6 px-12 py-6 bg-blue-600 text-white rounded-[2rem] font-bold shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-0.5 transition-all text-sm uppercase tracking-widest leading-none"
+          className="group flex items-center gap-6 px-12 py-6 bg-indigo-600 text-white rounded-[2rem] font-bold shadow-xl shadow-indigo-600/20 hover:shadow-indigo-600/40 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all text-sm uppercase tracking-widest leading-none"
         >
-          Almost There!
+          Final Integration!
           <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
         </button>
       </div>

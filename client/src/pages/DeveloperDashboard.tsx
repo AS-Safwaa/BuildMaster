@@ -4,40 +4,18 @@ import { useAuth } from '../context/AuthContext';
 import { 
   Briefcase, LayoutDashboard, LogOut, Activity, 
   UserCircle, CheckCircle2, Globe, X, ClipboardList, Zap, ArrowUpRight, Menu,
-  RotateCcw
+  RotateCcw, Clock, Shield, Phone
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { IS_PROTOTYPE } from '../config/prototype';
 import API_BASE_URL from '../config/api';
+import { MOCK_PROJECTS } from '../data/mockProjects';
 
 // --- Prototype Fallback Data ---
-const FALLBACK_POOL = [
-  { 
-    id: 101, businessName: "Skyline Realty Group", createdAt: new Date().toISOString(), status: "unassigned", 
-    answers: {
-      businessName: "Skyline Realty Group", projectType: "Both Logo & Site", contactName: "Michael West",
-      brandPersonality: ["Minimalist", "Modern"], preferredTone: "Professional",
-      websiteGoals: ["Showcase Properties", "Direct Booking"],
-      preferredColors: ["#1E293B", "#64748B"], logoStatus: "improve"
-    }
-  },
-  { id: 102, businessName: "Organic Perk Coffee", createdAt: new Date().toISOString(), status: "unassigned", answers: { businessName: "Organic Perk Coffee", projectType: "Logo Design" } },
-  { id: 103, businessName: "Nexus Logistics", createdAt: new Date().toISOString(), status: "unassigned", answers: { businessName: "Nexus Logistics", projectType: "Website" } }
-];
-
-const FALLBACK_MINE = [
-  { 
-    id: 7, businessName: "Royal Mart", email: "royal@mart.com", status: "assigned", 
-    answers: {
-      businessName: "Royal Mart", projectType: "Both Logo & Site", contactName: "Aditya Shah",
-      brandPersonality: ["Elegant", "Authoritative"], preferredTone: "Bold Professional",
-      websiteGoals: ["Increase Local Sales", "Online Catalog"], 
-      preferredColors: ["#0F172A", "#F59E0B"], logoStatus: "improve"
-    }
-  }
-];
+const FALLBACK_POOL = MOCK_PROJECTS.filter(p => p.status === 'unassigned');
+const FALLBACK_MINE = MOCK_PROJECTS.filter(p => p.status === 'assigned');
 
 export const DeveloperDashboard = () => {
   const { user, logout } = useAuth();
@@ -45,7 +23,14 @@ export const DeveloperDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const [metrics, setMetrics] = useState<any>({ poolSize: 3, myProjects: 1, completedProjects: 0 });
+  const [metrics, setMetrics] = useState<any>({ 
+    poolSize: FALLBACK_POOL.length, 
+    myProjects: FALLBACK_MINE.length, 
+    completedProjects: 2,
+    pendingTasks: 4,
+    avgCompletionTime: '4.2 days',
+    productivityScore: 94
+  });
   const [pool, setPool] = useState<any[]>(FALLBACK_POOL);
   const [myProjects, setMyProjects] = useState<any[]>(FALLBACK_MINE);
 
@@ -119,7 +104,12 @@ export const DeveloperDashboard = () => {
       if (projectToClaim) {
           setMyProjects((prev: any) => [...prev, { ...projectToClaim, assigned_developer_id: 'DEV-001', status: 'assigned' }]);
           setPool((prev: any) => prev.filter((p: any) => p.id !== id));
-          setMetrics((prev: any) => ({ ...prev, poolSize: Math.max(0, prev.poolSize - 1), myProjects: prev.myProjects + 1 }));
+          setMetrics((prev: any) => ({ 
+            ...prev, 
+            poolSize: Math.max(0, prev.poolSize - 1), 
+            myProjects: prev.myProjects + 1,
+            pendingTasks: prev.pendingTasks + 1
+          }));
       }
       navigate(`/project/${id}?mode=active`);
       return;
@@ -141,7 +131,12 @@ export const DeveloperDashboard = () => {
       if (projectToUnclaim) {
           setPool((prev: any) => [...prev, { ...projectToUnclaim, assigned_developer_id: null, status: 'unassigned' }]);
           setMyProjects((prev: any) => prev.filter((p: any) => p.id !== id));
-          setMetrics((prev: any) => ({ ...prev, poolSize: prev.poolSize + 1, myProjects: Math.max(0, prev.myProjects - 1) }));
+          setMetrics((prev: any) => ({ 
+            ...prev, 
+            poolSize: prev.poolSize + 1, 
+            myProjects: Math.max(0, prev.myProjects - 1),
+            pendingTasks: Math.max(0, prev.pendingTasks - 1)
+          }));
       }
       return;
     }
@@ -269,39 +264,97 @@ export const DeveloperDashboard = () => {
           <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-7xl mx-auto h-full">
             {activeTab === 'overview' && (
               <div className="space-y-6 md:space-y-12">
-                <header>
-                  <h1 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight mb-2">Execution Analytics</h1>
-                  <p className="text-slate-500 font-medium text-xs md:text-base leading-relaxed">System-wide overview of project ingestion and current throughput.</p>
+                <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h1 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight mb-2">Execution Analytics</h1>
+                    <p className="text-slate-500 font-medium text-xs md:text-base leading-relaxed">Personal performance tracking and pipeline metrics.</p>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm self-start">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold">
+                       {metrics.productivityScore}%
+                    </div>
+                    <div>
+                      <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Productivity</p>
+                      <p className="text-xs font-bold text-slate-900">High Efficiency</p>
+                    </div>
+                  </div>
                 </header>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-12">
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                   <KPICard 
                     label="Unassigned Pool" 
-                    value={metrics?.poolSize || 0} 
+                    value={metrics.poolSize} 
+                    unit="Projects"
                     color="indigo" 
+                    icon={<Activity />}
                     onClick={() => setActiveTab('pool')}
                   />
                   <KPICard 
                     label="Active Workspace" 
-                    value={metrics?.myProjects || 0} 
+                    value={metrics.myProjects} 
+                    unit="Active"
                     color="blue" 
+                    icon={<Briefcase />}
                     onClick={() => setActiveTab('my-projects')}
                   />
                   <KPICard 
                     label="Archived Ops" 
-                    value={metrics?.completedProjects || 0} 
+                    value={metrics.completedProjects} 
+                    unit="Done"
                     color="emerald" 
+                    icon={<CheckCircle2 />}
                   />
+                  <KPICard 
+                    label="Pending Tasks" 
+                    value={metrics.pendingTasks} 
+                    unit="Tasks"
+                    color="amber" 
+                    icon={<ClipboardList />}
+                  />
+                  <KPICard 
+                    label="Avg Completion" 
+                    value="4.2" 
+                    unit="Days"
+                    color="purple" 
+                    icon={<Clock />}
+                  />
+                  <KPICard 
+                    label="Total Processed" 
+                    value={metrics.poolSize + metrics.myProjects + metrics.completedProjects} 
+                    unit="Total"
+                    color="slate" 
+                    icon={<Globe />}
+                  />
+                </div>
+
+                <div className="bg-white rounded-3xl p-6 md:p-10 border border-slate-200 shadow-sm overflow-hidden relative group transition-all hover:shadow-xl">
+                   <div className="absolute top-0 right-0 p-10 opacity-[0.03] scale-[3] pointer-events-none group-hover:scale-[3.5] group-hover:rotate-6 transition-all">
+                      <Zap className="w-20 h-20 text-indigo-600" />
+                   </div>
+                   <div className="relative z-10">
+                     <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <Activity className="w-5 h-5 text-indigo-600" /> Throughput Summary
+                     </h3>
+                     <div className="space-y-6">
+                        <ProgressBar label="Pipeline Stability" progress={88} color="indigo" />
+                        <ProgressBar label="Quality Index" progress={92} color="emerald" />
+                        <ProgressBar label="Uptime Consistency" progress={99} color="blue" />
+                     </div>
+                   </div>
                 </div>
               </div>
             )}
 
             {activeTab === 'pool' && (
               <div className="space-y-6 md:space-y-8">
-                <h1 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight mb-2">Global Project Pool</h1>
+                <header>
+                  <h1 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight mb-2">Global Project Pool</h1>
+                  <p className="text-slate-500 font-medium text-xs md:text-base leading-relaxed">Claim unassigned tasks to begin execution.</p>
+                </header>
                 <div className="bg-white rounded-2xl md:rounded-[1.5rem] shadow-sm border border-slate-200 overflow-hidden">
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs md:text-sm text-slate-600 min-w-[600px]">
-                      <thead className="bg-slate-50 border-b border-slate-200">
+                      <thead className="bg-slate-50/50 border-b border-slate-200">
                         <tr>
                           <th className="px-6 md:px-10 py-4 md:py-6 text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Project Identity</th>
                           <th className="px-6 md:px-10 py-4 md:py-6 text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ingestion Date</th>
@@ -314,14 +367,18 @@ export const DeveloperDashboard = () => {
                                <td colSpan={3} className="px-10 py-20 text-center text-slate-400 font-medium italic uppercase tracking-widest">No Projects in Pool</td>
                            </tr>
                         ) : pool.map((p: any) => (
-                          <tr key={p.id} className="hover:bg-slate-50/50 transition-colors group">
+                          <tr key={p.id} className="hover:bg-slate-50/80 transition-all group cursor-default">
                             <td className="px-6 md:px-10 py-4 md:py-6">
                                <p className="font-semibold text-slate-900 text-sm md:text-base group-hover:text-indigo-600 transition-colors">{p.businessName}</p>
-                               <p className="text-[8px] md:text-xs text-slate-400 font-medium tracking-tight uppercase">Ref-{p.id}</p>
+                               <div className="flex items-center gap-2 mt-0.5">
+                                  <p className="text-[8px] md:text-[10px] text-slate-400 font-bold tracking-tight uppercase">Ref-{p.id}</p>
+                                  <span className="w-1 h-1 rounded-full bg-slate-300" />
+                                  <p className="text-[8px] md:text-[10px] text-slate-400 font-bold tracking-tight uppercase">{p.answers?.mainCategory || 'Generic'}</p>
+                               </div>
                             </td>
                             <td className="px-6 md:px-10 py-4 md:py-6 font-medium text-slate-500 font-mono text-[10px] md:text-xs">{new Date(p.createdAt).toLocaleDateString()}</td>
                             <td className="px-6 md:px-10 py-4 md:py-6 text-center space-x-2 md:space-x-3 whitespace-nowrap">
-                               <button onClick={() => openProject(p.id, 'preview')} className="px-3 md:px-5 py-2 md:py-2.5 border border-slate-900 text-slate-900 rounded-lg text-[8px] md:text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">
+                               <button onClick={() => openProject(p.id, 'preview')} className="px-3 md:px-5 py-2 md:py-2.5 border border-slate-200 text-slate-900 rounded-lg text-[8px] md:text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all">
                                   View Brief
                                </button>
                                <button onClick={() => handleClaim(p.id)} className="px-3 md:px-5 py-2 md:py-2.5 bg-indigo-600 text-white rounded-lg text-[8px] md:text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-md active:scale-95">
@@ -339,30 +396,48 @@ export const DeveloperDashboard = () => {
 
             {activeTab === 'my-projects' && (
               <div className="space-y-6 md:space-y-8">
-                <h1 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight mb-2">My Active Workspace</h1>
+                <header>
+                  <h1 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight mb-2">My Active Workspace</h1>
+                  <p className="text-slate-500 font-medium text-xs md:text-base leading-relaxed">Ongoing executions assigned to your node.</p>
+                </header>
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
                   {myProjects.length === 0 ? (
                     <div className="col-span-full py-12 md:py-20 text-center bg-white rounded-2xl md:rounded-[1.5rem] border-2 border-dashed border-slate-200">
                        <p className="text-slate-400 font-bold text-sm md:text-base uppercase tracking-widest italic">No Active Projects Found</p>
                     </div>
                   ) : myProjects.map((p: any) => (
-                    <div key={p.id} className="bg-white border border-slate-200 rounded-2xl md:rounded-[1.5rem] p-6 md:p-8 shadow-sm flex flex-col group hover:shadow-md hover:border-indigo-100 transition-all relative overflow-hidden">
+                    <div key={p.id} className="bg-white border border-slate-200 rounded-2xl md:rounded-[1.5rem] p-6 md:p-8 shadow-sm flex flex-col group hover:shadow-xl hover:border-indigo-200 transition-all relative overflow-hidden">
                        <div className="flex justify-between items-start mb-4 md:mb-6 border-b border-slate-50 pb-4 md:pb-6">
-                          <span className="px-3 py-1 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-widest bg-indigo-50 text-indigo-700 border border-indigo-100">
-                            {p.status.replace('_', ' ')}
+                          <span className="px-3 py-1 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-widest bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center gap-1.5">
+                            <Activity className="w-3 h-3" /> {p.status.replace('_', ' ')}
                           </span>
                           <button 
-                            onClick={() => handleUnclaim(p.id)} 
-                            className="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-red-500 transition-colors flex items-center gap-1.5"
+                            onClick={(e) => { e.stopPropagation(); handleUnclaim(p.id); }} 
+                            className="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-red-500 transition-colors flex items-center gap-1.5 p-1"
                           >
                              <RotateCcw className="w-3 h-3" /> Release
                           </button>
                        </div>
-                       <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-1 group-hover:text-indigo-600 transition-colors">{p.businessName}</h3>
-                       <p className="text-[10px] md:text-sm font-medium text-slate-400 mb-6 md:mb-8 font-mono">{p.email || 'guest@system.node'}</p>
+                       <div className="mb-6 md:mb-8">
+                         <div className="flex justify-between items-start mb-2">
+                            <h3 className="text-lg md:text-2xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors uppercase">{p.businessName}</h3>
+                            <div className="text-right">
+                               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">ID: {p.id}</p>
+                            </div>
+                         </div>
+                         <div className="flex flex-wrap gap-2 mt-2">
+                            <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-bold border border-slate-200 uppercase">{p.answers?.projectType || 'Standard Execution'}</span>
+                            <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold border border-blue-100 flex items-center gap-1">
+                               <Phone className="w-3 h-3" /> {p.answers?.phone || 'Not Shared'}
+                            </span>
+                         </div>
+                       </div>
                        <div className="flex gap-3">
-                          <button onClick={() => openProject(p.id, 'active')} className="flex-1 py-3 md:py-4 bg-white border border-slate-900 text-slate-900 rounded-xl font-bold text-[10px] md:text-xs uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center gap-2">
-                             <ClipboardList className="w-4 h-4 md:w-5 h-5" /> Detailed Brief
+                          <button onClick={() => openProject(p.id, 'active')} className="flex-1 py-3 md:py-4 bg-white border border-slate-900 text-slate-900 rounded-xl font-bold text-[10px] md:text-xs uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center gap-2 shadow-sm">
+                             <ClipboardList className="w-4 h-4 md:w-5 h-5" /> Detailed Workspace
+                          </button>
+                          <button onClick={() => openProject(p.id, 'active')} className="w-12 md:w-16 h-12 md:h-14 bg-slate-900 text-white rounded-xl flex items-center justify-center hover:bg-indigo-600 transition-all shadow-md group-hover:scale-105 active:scale-95">
+                             <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6" />
                           </button>
                        </div>
                     </div>
@@ -373,13 +448,17 @@ export const DeveloperDashboard = () => {
 
             {activeTab === 'profile' && (
               <div className="max-w-2xl mx-auto py-6 md:py-10 text-center">
-                 <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-900 rounded-xl md:rounded-2xl text-white flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-2xl">
+                 <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-900 rounded-xl md:rounded-2xl text-white flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-2xl relative">
                     <UserCircle className="w-10 h-10 md:w-10 md:h-10" />
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full border-4 border-white flex items-center justify-center">
+                       <Shield className="w-3 h-3 text-white" />
+                    </div>
                  </div>
                  <h1 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight mb-4 md:mb-8">Node Identity</h1>
                  <div className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[1.5rem] border border-slate-200 shadow-sm space-y-6 md:space-y-8 text-left">
-                    <InputPiece label="System Name" value={user?.name} icon={<CheckCircle2 />} />
+                    <InputPiece label="System Node" value={user?.name} icon={<CheckCircle2 />} />
                     <InputPiece label="Global Email" value={user?.email} icon={<Globe />} />
+                    <InputPiece label="Assigned Role" value={user?.role} icon={<Zap />} />
                  </div>
               </div>
             )}
@@ -399,21 +478,43 @@ const TabNavItem = ({ icon, label, active, onClick }: any) => (
   </button>
 );
 
-const KPICard = ({ label, value, color, onClick }: any) => (
+const KPICard = ({ label, value, color, unit, icon, onClick }: any) => (
   <motion.div 
     whileHover={{ y: -5, scale: 1.02 }}
     onClick={onClick}
-    className={`bg-white border border-slate-200 rounded-2xl md:rounded-[1.5rem] p-5 md:p-8 shadow-sm hover:shadow-xl transition-all ${onClick ? 'cursor-pointer border-opacity-50 hover:border-' + color + '-400' : ''}`}
+    className={`bg-white border border-slate-200 rounded-3xl p-5 md:p-8 shadow-sm hover:shadow-xl transition-all h-full flex flex-col justify-between ${onClick ? 'cursor-pointer border-opacity-50 hover:border-' + color + '-400' : ''}`}
   >
-    <div className="flex justify-between items-start mb-2 md:mb-4">
-        <p className="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">{label}</p>
-        {onClick && <ArrowUpRight className={`w-3 h-3 text-${color === 'blue' ? 'blue' : color === 'indigo' ? 'indigo' : 'emerald'}-400`} />}
+    <div>
+        <div className="flex justify-between items-start mb-4 md:mb-6">
+            <div className={`w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-${color === 'blue' ? 'blue' : color === 'indigo' ? 'indigo' : color === 'emerald' ? 'emerald' : color === 'amber' ? 'amber' : color === 'purple' ? 'purple' : 'slate'}-50 flex items-center justify-center text-${color === 'blue' ? 'blue' : color === 'indigo' ? 'indigo' : color === 'emerald' ? 'emerald' : color === 'amber' ? 'amber' : color === 'purple' ? 'purple' : 'slate'}-600 border border-${color === 'blue' ? 'blue' : color === 'indigo' ? 'indigo' : color === 'emerald' ? 'emerald' : color === 'amber' ? 'amber' : color === 'purple' ? 'purple' : 'slate'}-100`}>
+               {React.cloneElement(icon, { className: 'w-5 h-5 md:w-7 md:h-7' })}
+            </div>
+            {onClick && <ArrowUpRight className="w-5 h-5 text-slate-300" />}
+        </div>
+        <div className="flex items-baseline gap-1.5 overflow-hidden">
+            <p className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight truncate">{value}</p>
+            {unit && <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{unit}</p>}
+        </div>
     </div>
-    <div className="flex items-baseline gap-2">
-        <p className={`text-3xl md:text-5xl font-bold text-${color === 'blue' ? 'blue' : color === 'indigo' ? 'indigo' : 'emerald'}-600 tracking-tight`}>{value}</p>
-        <p className="text-[10px] text-slate-400 font-medium lowercase tracking-tight">records</p>
-    </div>
+    <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mt-4 block">{label}</p>
   </motion.div>
+);
+
+const ProgressBar = ({ label, progress, color }: any) => (
+  <div className="space-y-2">
+    <div className="flex justify-between items-center text-[10px] md:text-xs font-bold uppercase tracking-widest">
+       <span className="text-slate-500">{label}</span>
+       <span className={`text-${color}-600`}>{progress}%</span>
+    </div>
+    <div className="w-full h-2 md:h-3 bg-slate-100 rounded-full overflow-hidden">
+       <motion.div 
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className={`h-full bg-${color}-600 rounded-full`}
+       />
+    </div>
+  </div>
 );
 
 const InputPiece = ({ label, value, icon }: any) => (

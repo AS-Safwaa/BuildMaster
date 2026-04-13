@@ -48,10 +48,14 @@ interface WizardData {
   subCategory: string;
   specialisation: string;
   products: string[];
+  highImpactProducts: string[];
   services: string[];
 
   // Phase 5: Goals and Brand Direction
   websiteGoals: string[];
+  preferredWebsite: string;
+  competitorWebsite: string;
+  inspiredWebsite: string;
   userAction: string;
   taglineStatus: 'yes' | 'no' | 'help' | '';
   taglineCustom: string;
@@ -79,8 +83,14 @@ interface WizardData {
   genericImagesToggle: boolean;
   productPhotosDelivery: string;
   teamMembersToggle: boolean;
+  teamMembersData: Array<{ name: string, role: string }>; 
   testimonialsToggle: boolean;
+  includeReviews: boolean;
+  reviewsCount: string;
+  reviewsSource: string;
+  testimonials: string[];
   socialMediaToggle: boolean;
+  socialAccounts: Array<{ platform: string, url: string }>;
   socialLinks: Record<string, string>;
   heroImagePreference: string;
 
@@ -132,8 +142,12 @@ const defaultData: WizardData = {
   subCategory: '',
   specialisation: '',
   products: [],
+  highImpactProducts: [],
   services: [],
   websiteGoals: [],
+  preferredWebsite: '',
+  competitorWebsite: '',
+  inspiredWebsite: '',
   userAction: '',
   taglineStatus: '',
   taglineCustom: '',
@@ -157,8 +171,14 @@ const defaultData: WizardData = {
   genericImagesToggle: false,
   productPhotosDelivery: '',
   teamMembersToggle: false,
+  teamMembersData: [],
   testimonialsToggle: false,
+  includeReviews: false,
+  reviewsCount: '',
+  reviewsSource: '',
+  testimonials: [],
   socialMediaToggle: false,
+  socialAccounts: [],
   socialLinks: {},
   heroImagePreference: '',
   competitorWebsites: [],
