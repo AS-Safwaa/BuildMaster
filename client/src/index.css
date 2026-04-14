@@ -56,6 +56,82 @@ select:focus {
   overflow: hidden;
 }
 
+/* ── Design System Extensions ── */
+
+:root {
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(16px);
+  --accent-primary: #6366f1; /* Indigo */
+  --accent-secondary: #8b5cf6; /* Violet */
+  --radius-premium: 2.5rem;
+}
+
+/* Responsive Wizard Grid & Layouts */
+.wizard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.wizard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .wizard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Glassmorphism Components */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-panel:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card {
+  @apply bg-slate-900/50 backdrop-blur-md border border-white/5 rounded-3xl p-6;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+}
+
+/* Custom Interactive Elements */
+.category-pill {
+  @apply px-4 py-2 rounded-full border border-slate-700 bg-slate-800/50 
+         transition-all cursor-pointer hover:border-indigo-500/50 hover:bg-indigo-500/10;
+}
+
+.category-pill.active {
+  @apply border-indigo-500 bg-indigo-500/20 text-indigo-300 shadow-lg shadow-indigo-500/10;
+}
+
+.input-glow {
+  @apply transition-all duration-300 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: slideUp 0.4s ease forwards;
+}
+
 /* Gradient text utility */
 .text-gradient {
   background-clip: text;

@@ -8,8 +8,11 @@ router.use(authMiddleware);
 router.get('/dashboard/overview', developerController.getOverviewMetrics);
 router.get('/projects/pool', developerController.getPoolProjects);
 router.get('/projects/mine', developerController.getMyProjects);
+router.get('/projects/:id', developerController.getProjectDetails);
 router.post('/projects/:id/claim', developerController.claimProject);
 router.post('/projects/:id/unclaim', developerController.unclaimProject);
 router.post('/projects/:id/status', developerController.updateStatus);
+router.post('/projects/:id/toggle-checklist', developerController.toggleChecklistItem);
+router.post('/projects/:id/toggle-selection', developerController.toggleSelectionItem);
 
 module.exports = router;

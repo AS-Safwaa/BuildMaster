@@ -5,7 +5,7 @@ import {
   ArrowLeft, ClipboardList, Clock, Globe, Link as LinkIcon, 
   Save, User, CheckCircle2, 
   ExternalLink, Plus, Shield, Hammer, RotateCcw, 
-  Copy, Check, Zap
+  Copy, Check, Zap, ClipboardCheck
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
@@ -82,6 +82,8 @@ export const ProjectWorkspace = () => {
     const [finalLink, setFinalLink] = useState('');
     const [newUpdate, setNewUpdate] = useState('');
 
+    const [details, setDetails] = useState<any>(null);
+
     useEffect(() => {
         fetchProject();
     }, [id]);
@@ -89,12 +91,13 @@ export const ProjectWorkspace = () => {
     const fetchProject = async () => {
         setLoading(true);
         if (IS_PROTOTYPE) {
-            const p = getProjectById(id || '');
+            const p = getProjectById(id || '') as any;
             if (p) {
                 setProject(p);
-                setStatus(p.status);
+                setStatus(p.status || 'assigned');
                 setDemoLink(p.demo_link || '');
                 setFinalLink(p.final_link || '');
+                setDetails(p.details || {});
             } else {
                 toast.error('Project not found in prototype data');
             }
@@ -107,8 +110,14 @@ export const ProjectWorkspace = () => {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             const data = res.data;
-            if (data.answers && typeof data.answers === 'string') data.answers = JSON.parse(data.answers);
-            setProject(data);
+            const wizardState = data.details?.wizardState || {};
+            const answers = typeof wizardState === 'string' ? JSON.parse(wizardState) : wizardState;
+
+            setProject({
+                ...data,
+                answers: { ...answers, ...data.answers } // Merge server side answers if any
+            });
+            setDetails(data.details || {});
             setStatus(data.status);
             setDemoLink(data.demo_link || '');
             setFinalLink(data.final_link || '');
@@ -168,6 +177,38 @@ export const ProjectWorkspace = () => {
         toast.success('Update Logged');
     };
 
+    const handleToggleChecklist = async (checklistId: number) => {
+        if (IS_PROTOTYPE) {
+            setDetails((prev: any) => ({
+                ...prev,
+                checklist: prev.checklist.map((c: any) => c.id === checklistId ? { ...c, is_completed: !c.is_completed } : c)
+            }));
+            return;
+        }
+        try {
+            await axios.post(`${API_BASE_URL}/developer/projects/${id}/toggle-checklist`, { checklist_id: checklistId }, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            });
+            fetchProject();
+        } catch (err) { toast.error('Failed to toggle checklist'); }
+    };
+
+    const handleToggleSelection = async (selectionId: number) => {
+        if (IS_PROTOTYPE) {
+            setDetails((prev: any) => ({
+                ...prev,
+                selections: prev.selections.map((s: any) => s.id === selectionId ? { ...s, is_completed: !s.is_completed } : s)
+            }));
+            return;
+        }
+        try {
+            await axios.post(`${API_BASE_URL}/developer/projects/${id}/toggle-selection`, { selection_id: selectionId }, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            });
+            fetchProject();
+        } catch (err) { toast.error('Failed to toggle item'); }
+    };
+
     const handleCopy = (text: string, section: string) => {
         navigator.clipboard.writeText(text);
         setCopyStatus(section);
@@ -224,11 +265,12 @@ export const ProjectWorkspace = () => {
             <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-10 py-6 md:py-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10">
                     <div className="lg:col-span-8 space-y-6 md:space-y-10">
-                        <div className="bg-white p-1.5 rounded-2xl border border-slate-200 flex shadow-sm w-fit">
-                            <TabTrigger label="Detailed Brief" id="brief" active={activeSection === 'brief'} onClick={setActiveSection} icon={<ClipboardList className="w-4 h-4" />} />
+                        <div className="bg-white p-1.5 rounded-2xl border border-slate-200 flex shadow-sm w-fit overflow-x-auto hide-scrollbar">
+                            <TabTrigger label="Client Brief" id="brief" active={activeSection === 'brief'} onClick={setActiveSection} icon={<ClipboardList className="w-4 h-4" />} />
+                            <TabTrigger label="Requirements" id="requirements" active={activeSection === 'requirements'} onClick={setActiveSection} icon={<Shield className="w-4 h-4" />} />
                             {!isPreview && (
                                 <>
-                                    <TabTrigger label="Execution & Links" id="execution" active={activeSection === 'execution'} onClick={setActiveSection} icon={<Hammer className="w-4 h-4" />} />
+                                    <TabTrigger label="Execution" id="execution" active={activeSection === 'execution'} onClick={setActiveSection} icon={<Hammer className="w-4 h-4" />} />
                                     <TabTrigger label="Timeline" id="timeline" active={activeSection === 'timeline'} onClick={setActiveSection} icon={<Clock className="w-4 h-4" />} />
                                 </>
                             )}
@@ -260,6 +302,110 @@ export const ProjectWorkspace = () => {
                                             </div>
                                         </section>
                                     ))}
+                                </motion.div>
+                            )}
+
+                            {activeSection === 'requirements' && (
+                                <motion.div key="requirements" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-8">
+                                    <section className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
+                                        <div className="bg-indigo-50/50 px-10 py-6 border-b border-indigo-100 flex justify-between items-center">
+                                            <h3 className="text-xs font-black text-indigo-600 uppercase tracking-[0.2em]">Requirement Fulfilment Checklist</h3>
+                                            <span className="bg-indigo-600 text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase">Relational Sync</span>
+                                        </div>
+                                        <div className="p-10 space-y-10">
+                                            {/* Products Checklist */}
+                                            <div>
+                                                <h4 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                                    <CheckCircle2 className="w-4 h-4 text-indigo-600"/> Production Targets 
+                                                    <span className="text-[10px] text-slate-400 font-normal ml-2">(High Impact targets marked ⭐)</span>
+                                                </h4>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    {details?.selections?.filter((s:any) => s.selection_type === 'product' || s.selection_type === 'product_service').map((s:any, idx:number) => (
+                                                        <label key={idx} className={`flex items-center gap-4 p-4 border rounded-2xl cursor-pointer transition-all ${s.is_completed ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200 hover:bg-white hover:border-indigo-300'}`}>
+                                                            <input 
+                                                                type="checkbox" 
+                                                                checked={!!s.is_completed}
+                                                                onChange={() => handleToggleSelection(s.id)}
+                                                                className="w-5 h-5 rounded-lg border-slate-300 text-indigo-600 focus:ring-indigo-500" 
+                                                            />
+                                                            <div className="flex-1">
+                                                                <p className={`text-sm font-bold ${s.is_completed ? 'text-emerald-900 line-through opacity-60' : 'text-slate-800'}`}>{s.item_value || s.value}</p>
+                                                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{s.is_high_impact ? 'CRITICAL PATH' : 'STANDARD'}</p>
+                                                            </div>
+                                                            {s.is_high_impact && <Zap className={`w-4 h-4 ${s.is_completed ? 'text-emerald-400' : 'text-amber-500'} fill-current`}/>}
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            {/* USPs Checklist */}
+                                            <div>
+                                                <h4 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2"><Plus className="w-4 h-4 text-emerald-600"/> Value Proposition Verification</h4>
+                                                <div className="space-y-3">
+                                                    {details?.selections?.filter((s:any) => s.selection_type === 'usp').map((s:any, idx:number) => (
+                                                        <div 
+                                                            key={idx} 
+                                                            onClick={() => handleToggleSelection(s.id)}
+                                                            className={`flex items-center gap-4 p-4 border rounded-2xl cursor-pointer transition-all ${s.is_completed ? 'border-emerald-200 bg-emerald-50' : 'border-slate-100 bg-slate-50/50 hover:bg-white hover:border-indigo-200'}`}
+                                                        >
+                                                            <CheckCircle2 className={`w-5 h-5 ${s.is_completed ? 'text-emerald-600' : 'text-slate-300'}`}/>
+                                                            <p className={`text-sm font-semibold ${s.is_completed ? 'text-emerald-900 line-through opacity-50' : 'text-slate-700'}`}>{s.item_value || s.value}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            {/* Admin/Internal Checklist */}
+                                            {details?.checklist?.length > 0 && (
+                                                <div>
+                                                    <h4 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2"><ClipboardCheck className="w-4 h-4 text-slate-400"/> Operational Tasks</h4>
+                                                    <div className="space-y-2">
+                                                        {details.checklist.map((c:any) => (
+                                                            <div key={c.id} onClick={() => handleToggleChecklist(c.id)} className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${c.is_completed ? 'bg-slate-50 border-slate-200' : 'bg-white border-slate-100 hover:border-indigo-200'}`}>
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${c.is_completed ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-300 text-transparent'}`}><Check className="w-3 h-3"/></div>
+                                                                    <span className={`text-xs font-bold ${c.is_completed ? 'text-slate-400 line-through' : 'text-slate-700'}`}>{c.label}</span>
+                                                                </div>
+                                                                <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest">{c.category}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </section>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <section className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
+                                            <div className="bg-slate-50/50 px-8 py-4 border-b border-slate-100"><h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Market Benchmarks</h3></div>
+                                            <div className="p-8 space-y-4">
+                                                {details?.benchmarks?.map((b:any, idx:number) => (
+                                                    <div key={idx} className="flex justify-between items-center p-3 hover:bg-slate-50 rounded-xl transition-all border border-transparent hover:border-slate-100">
+                                                        <p className="text-sm font-bold text-slate-800">{b.competitor_name || 'Generic Benchmark'}</p>
+                                                        {b.competitor_url && (
+                                                            <a href={b.competitor_url} target="_blank" rel="noreferrer" className="p-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all"><ExternalLink className="w-4 h-4"/></a>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </section>
+
+                                        <section className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
+                                            <div className="bg-slate-50/50 px-8 py-4 border-b border-slate-100"><h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Social Links</h3></div>
+                                            <div className="p-8 space-y-3">
+                                                {details?.socials?.map((s:any, idx:number) => (
+                                                    <div key={idx} className="flex items-center gap-4 p-4 bg-slate-50 border border-slate-100 rounded-2xl group/social transition-all hover:bg-white hover:border-indigo-300">
+                                                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-slate-400 group-hover/social:text-indigo-600 shadow-sm"><Globe className="w-5 h-5"/></div>
+                                                        <div className="flex-1 overflow-hidden">
+                                                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{s.platform_name}</p>
+                                                            <p className="text-xs font-bold text-slate-900 truncate">{s.profile_url}</p>
+                                                        </div>
+                                                        <a href={s.profile_url} target="_blank" rel="noreferrer" className="p-2 text-slate-300 hover:text-indigo-600 transition-colors"><LinkIcon className="w-4 h-4"/></a>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </section>
+                                    </div>
                                 </motion.div>
                             )}
 

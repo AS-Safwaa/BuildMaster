@@ -9,44 +9,6 @@ const BUSINESS_HIERARCHY: any = {
     subCategories: [
       {
         name: 'Residential Sales',
-        products: [
-          { name: 'Luxury Villas', highImpact: true },
-          { name: 'Affordable Apartments', highImpact: false },
-          { name: 'Gated Plots', highImpact: true },
-          { name: 'Ready-to-Move Flats', highImpact: false }
-        ],
-        usps: ['Possession in 12 Months', 'RERA Approved', 'Prime Locations']
-      },
-      {
-        name: 'Commercial Leasing',
-        products: [
-          { name: 'Office Spaces', highImpact: true },
-          { name: 'Retail Outlets', highImpact: true },
-          { name: 'Warehouse Units', highImpact: false }
-        ],
-        usps: ['Zero Maintenance', 'Prime Strategic Hubs', 'High ROI Plans']
-      }
-    ]
-  },
-  'Food & Beverage': {
-    subCategories: [
-      {
-        name: 'Fine Dining',
-        products: [
-          { name: 'Gourmet Platters', highImpact: true },
-          { name: 'Wine Tasting', highImpact: true },
-          { name: 'Signature Deserts', highImpact: false }
-        ],
-        usps: ['Chef Authenticated', 'Organic Sourcing', 'Ambient Decor']
-      },
-      {
-        name: 'Cloud Kitchen',
-        products: [
-          { name: 'Ready Meals', highImpact: false },
-          { name: 'Family Combo Kits', highImpact: true },
-          { name: 'Late Night Bundles', highImpact: false }
-        ],
-        usps: ['30-min Delivery', 'Hygienic Prep', 'Sustainable Packing']
       }
     ]
   },

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
 import { 
-  CheckCircle2, Rocket, ArrowLeft, Loader2, Edit2, 
-  ShieldCheck as Shield, Briefcase as Case, Palette as Paint, 
+  Rocket, ArrowLeft, Loader2, Edit2, 
+  ShieldCheck as Shield, Briefcase as Case, 
   Globe as Web, Zap as Fast, Camera as Photo, Check, ClipboardCheck, X, Heart
 } from 'lucide-react';
 import axios from 'axios';
@@ -18,38 +18,44 @@ export const Phase9 = () => {
   const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
 
-  const handleFinalSubmit = async () => {
-    setIsSubmitting(true);
-    
-    // Prototype Mode Simulation
-    const { IS_PROTOTYPE } = await import('../../config/prototype');
+    const handleFinalSubmit = async () => {
+        setIsSubmitting(true);
+        const { IS_PROTOTYPE } = await import('../../config/prototype');
 
-    if (IS_PROTOTYPE) {
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setSubmitted(true);
-        toast.success("Design Vision Locked! 🔐");
-        setIsSubmitting(false);
-        return;
-    }
+        if (IS_PROTOTYPE) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            setSubmitted(true);
+            toast.success("Design Vision Locked! 🔐");
+            setIsSubmitting(false);
+            return;
+        }
 
-    try {
-      const sessionId = `guest_${Date.now()}`;
-      await axios.post(`${API_BASE_URL}/guest/submissions`, {
-        session_id: sessionId,
-        business_name: data.businessName,
-        contact_phone: data.phone,
-        answers: data
-      });
+        try {
+            // 1. Initialize Submission Session
+            const startRes = await axios.post(`${API_BASE_URL}/guest/submissions`);
+            const { session_id } = startRes.data;
 
-      setSubmitted(true);
-      toast.success("Success! We have the details, we'll start working!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Oops! Something went wrong while sending.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+            // 2. Persist Large Data Blob (Relational Harvesting Source)
+            await axios.put(`${API_BASE_URL}/guest/submissions/${session_id}/answers`, {
+                answers: [{ question_id: 999, answer_value: data }]
+            });
+
+            // 3. Complete and Trigger Realtime Harvesting
+            await axios.post(`${API_BASE_URL}/guest/submissions/${session_id}/complete`, {
+                business_name: data.businessName,
+                contact_email: data.email,
+                contact_phone: data.phone
+            });
+
+            setSubmitted(true);
+            toast.success("Success! We have the details, we'll start working!");
+        } catch (error) {
+            console.error("Submission Sequence Error:", error);
+            toast.error("Oops! Something went wrong while sending.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
   if (submitted) {
     return (

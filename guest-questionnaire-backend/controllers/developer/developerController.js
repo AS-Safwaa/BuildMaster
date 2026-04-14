@@ -21,12 +21,11 @@ exports.getOverviewMetrics = async (req, res) => {
 exports.getPoolProjects = async (req, res) => {
     try {
         const [projects] = await db.execute(`
-            SELECT id, business_name as businessName, started_at as createdAt, status 
+            SELECT id, business_name as businessName, started_at as createdAt, status, contact_phone as phone
             FROM guest_submissions 
             WHERE assigned_developer_id IS NULL AND status IN ("completed", "unassigned")
             ORDER BY started_at ASC
         `);
-        console.log(`Pool Fetch: Found ${projects.length} unassigned projects`);
         res.status(200).json(projects);
     } catch (err) { 
         console.error('Pool Fetch Error:', err);
@@ -37,20 +36,53 @@ exports.getPoolProjects = async (req, res) => {
 exports.getMyProjects = async (req, res) => {
     try {
         const developerId = req.user.id;
-        console.log(`Fetching assignments for developer ID: ${developerId}`);
         const [projects] = await db.execute(`
-            SELECT gs.id, gs.contact_email as email, gs.business_name as businessName, gs.started_at as createdAt, gs.status, ga.answer_value as answers 
-            FROM guest_submissions gs
-            LEFT JOIN guest_answers ga ON gs.id = ga.submission_id AND ga.question_id = 999
-            WHERE gs.assigned_developer_id = ? 
-            ORDER BY gs.started_at DESC
+            SELECT id, business_name as businessName, started_at as createdAt, status, contact_phone as phone
+            FROM guest_submissions 
+            WHERE assigned_developer_id = ? 
+            ORDER BY started_at DESC
         `, [developerId]);
-
-        console.log(`Assignments Fetch: Found ${projects.length} projects for dev ${developerId}`);
         res.status(200).json(projects);
     } catch (err) { 
-        console.error('Assignments Fetch Error:', err);
+        console.error('MyProjects Fetch Error:', err);
         res.status(500).json({ message: 'Error fetching my projects' }); 
+    }
+};
+
+exports.getProjectDetails = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // 1. Core Info
+        const [core] = await db.execute('SELECT * FROM guest_submissions WHERE id = ?', [id]);
+        if (core.length === 0) return res.status(404).json({ message: 'Project not found' });
+        
+        // 2. Specialized relational details
+        const [selections] = await db.execute('SELECT * FROM project_selections WHERE submission_id = ?', [id]);
+        const [benchmarks] = await db.execute('SELECT * FROM project_benchmarks WHERE submission_id = ?', [id]);
+        const [socials] = await db.execute('SELECT * FROM project_social_links WHERE submission_id = ?', [id]);
+        const [checklist] = await db.execute('SELECT * FROM developer_checklists WHERE submission_id = ?', [id]);
+        const [team] = await db.execute('SELECT * FROM project_team_members WHERE submission_id = ?', [id]);
+        const [reviews] = await db.execute('SELECT * FROM project_reviews WHERE submission_id = ?', [id]);
+
+        // 3. Raw Wizard State (for fallback)
+        const [answers] = await db.execute('SELECT answer_value FROM guest_answers WHERE submission_id = ? AND question_id = 999', [id]);
+
+        res.status(200).json({
+            ...core[0],
+            details: {
+                selections,
+                benchmarks,
+                socials,
+                checklist,
+                team,
+                reviews: reviews[0] || null,
+                wizardState: answers[0]?.answer_value || {}
+            }
+        });
+    } catch (error) {
+        console.error('ProjectDetails Error:', error);
+        res.status(500).json({ message: 'Error fetching project details' });
     }
 };
 
@@ -58,11 +90,9 @@ exports.claimProject = async (req, res) => {
     try {
         const { id } = req.params;
         const developerId = req.user.id;
-
         await db.execute('UPDATE guest_submissions SET assigned_developer_id = ?, status = "assigned" WHERE id = ?', [developerId, id]);
-        res.status(200).json({ message: 'Project claimed successfully' });
+        res.status(200).json({ message: 'Project claimed' });
     } catch (err) {
-        console.error(err);
         res.status(500).json({ message: 'Error claiming project' });
     }
 };
@@ -71,28 +101,54 @@ exports.unclaimProject = async (req, res) => {
     try {
         const { id } = req.params;
         const developerId = req.user.id;
-
-        // Ensure the developer actually owns the project before unclaiming
-        const [rows] = await db.execute('SELECT id FROM guest_submissions WHERE id = ? AND assigned_developer_id = ?', [id, developerId]);
-        
-        if (rows.length === 0) {
-            return res.status(403).json({ message: 'You can only unclaim your own projects' });
-        }
-
-        await db.execute('UPDATE guest_submissions SET assigned_developer_id = NULL, status = "completed" WHERE id = ?', [id]);
-        res.status(200).json({ message: 'Project returned to pool' });
+        await db.execute('UPDATE guest_submissions SET assigned_developer_id = NULL, status = "unassigned" WHERE id = ? AND assigned_developer_id = ?', [id, developerId]);
+        res.status(200).json({ message: 'Project released' });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Error unclaiming project' });
+        res.status(500).json({ message: 'Error releasing project' });
     }
 };
 
 exports.updateStatus = async (req, res) => {
     try {
-        const developerId = req.user.id;
         const { id } = req.params;
         const { status } = req.body;
+        const developerId = req.user.id;
         await db.execute('UPDATE guest_submissions SET status = ? WHERE id = ? AND assigned_developer_id = ?', [status, id, developerId]);
         res.status(200).json({ message: 'Status updated' });
-    } catch (err) { res.status(500).json({ message: 'Error updating status' }); }
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating status' });
+    }
+};
+
+exports.toggleChecklistItem = async (req, res) => {
+    try {
+        const { id } = req.params; // submission_id
+        const { checklist_id } = req.body;
+        const developerId = req.user.id;
+
+        // Verify ownership
+        const [sub] = await db.execute('SELECT id FROM guest_submissions WHERE id = ? AND assigned_developer_id = ?', [id, developerId]);
+        if (sub.length === 0) return res.status(403).json({ message: 'Forbidden' });
+
+        await db.execute('UPDATE developer_checklists SET is_completed = NOT is_completed WHERE id = ? AND submission_id = ?', [checklist_id, id]);
+        res.status(200).json({ message: 'Toggled' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error toggling' });
+    }
+};
+
+exports.toggleSelectionItem = async (req, res) => {
+    try {
+        const { id } = req.params; // submission_id
+        const { selection_id } = req.body;
+        const developerId = req.user.id;
+
+        const [sub] = await db.execute('SELECT id FROM guest_submissions WHERE id = ? AND assigned_developer_id = ?', [id, developerId]);
+        if (sub.length === 0) return res.status(403).json({ message: 'Forbidden' });
+
+        await db.execute('UPDATE project_selections SET is_completed = NOT is_completed WHERE id = ? AND submission_id = ?', [selection_id, id]);
+        res.status(200).json({ message: 'Toggled Selection' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error toggling selection' });
+    }
 };

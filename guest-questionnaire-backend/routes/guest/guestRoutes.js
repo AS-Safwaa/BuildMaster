@@ -8,6 +8,7 @@ const masterController = require('../../controllers/admin/masterController');
 router.get('/form-definition', guestController.getFormDefinition);
 router.get('/masters/types', masterController.getAllMasterTypes);
 router.get('/masters/values', masterController.getMasterValues);
+router.get('/hierarchy', guestController.getHierarchy);
 router.post('/submissions', guestController.startSubmission);
 router.put('/submissions/:session_id/answers', guestController.saveAnswers);
 router.post('/submissions/:session_id/complete', guestController.completeSubmission);

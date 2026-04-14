@@ -351,45 +351,58 @@ export const DeveloperDashboard = () => {
                   <h1 className="text-xl md:text-3xl font-bold text-slate-900 tracking-tight mb-2">Global Project Pool</h1>
                   <p className="text-slate-500 font-medium text-xs md:text-base leading-relaxed">Claim unassigned tasks to begin execution.</p>
                 </header>
-                <div className="bg-white rounded-2xl md:rounded-[1.5rem] shadow-sm border border-slate-200 overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs md:text-sm text-slate-600 min-w-[600px]">
-                      <thead className="bg-slate-50/50 border-b border-slate-200">
-                        <tr>
-                          <th className="px-6 md:px-10 py-4 md:py-6 text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Project Identity</th>
-                          <th className="px-6 md:px-10 py-4 md:py-6 text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ingestion Date</th>
-                          <th className="px-6 md:px-10 py-4 md:py-6 text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Execution</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {pool.length === 0 ? (
-                           <tr>
-                               <td colSpan={3} className="px-10 py-20 text-center text-slate-400 font-medium italic uppercase tracking-widest">No Projects in Pool</td>
-                           </tr>
-                        ) : pool.map((p: any) => (
-                          <tr key={p.id} className="hover:bg-slate-50/80 transition-all group cursor-default">
-                            <td className="px-6 md:px-10 py-4 md:py-6">
-                               <p className="font-semibold text-slate-900 text-sm md:text-base group-hover:text-indigo-600 transition-colors">{p.businessName}</p>
-                               <div className="flex items-center gap-2 mt-0.5">
-                                  <p className="text-[8px] md:text-[10px] text-slate-400 font-bold tracking-tight uppercase">Ref-{p.id}</p>
-                                  <span className="w-1 h-1 rounded-full bg-slate-300" />
-                                  <p className="text-[8px] md:text-[10px] text-slate-400 font-bold tracking-tight uppercase">{p.answers?.mainCategory || 'Generic'}</p>
-                               </div>
-                            </td>
-                            <td className="px-6 md:px-10 py-4 md:py-6 font-medium text-slate-500 font-mono text-[10px] md:text-xs">{new Date(p.createdAt).toLocaleDateString()}</td>
-                            <td className="px-6 md:px-10 py-4 md:py-6 text-center space-x-2 md:space-x-3 whitespace-nowrap">
-                               <button onClick={() => openProject(p.id, 'preview')} className="px-3 md:px-5 py-2 md:py-2.5 border border-slate-200 text-slate-900 rounded-lg text-[8px] md:text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all">
-                                  View Brief
-                               </button>
-                               <button onClick={() => handleClaim(p.id)} className="px-3 md:px-5 py-2 md:py-2.5 bg-indigo-600 text-white rounded-lg text-[8px] md:text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-md active:scale-95">
-                                  Claim Task
-                               </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
+                  {pool.length === 0 ? (
+                    <div className="col-span-full py-20 text-center bg-white rounded-[2.5rem] border border-slate-200">
+                      <p className="text-slate-400 font-bold uppercase tracking-widest italic">No Projects in Pool</p>
+                    </div>
+                  ) : pool.map((project: any) => (
+                    <div key={project.id} className="group relative bg-white border border-slate-200 rounded-[2.5rem] p-8 transition-all hover:bg-slate-50/50 hover:border-indigo-500/50 hover:shadow-xl">
+                      <div className="flex flex-col gap-6">
+                        <div className="flex justify-between items-start">
+                          <div className="space-y-1">
+                            <h3 className="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors uppercase tracking-tight">
+                              {project.businessName || 'Unnamed Business'}
+                            </h3>
+                            <div className="flex items-center gap-2 text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+                              <span className="bg-slate-100 px-2 py-0.5 rounded text-slate-500">{project.mainCategory || 'New Intake'}</span>
+                              <span>•</span>
+                              <span>Ref #{project.id}</span>
+                            </div>
+                          </div>
+                          <div className="bg-emerald-500/10 text-emerald-600 px-4 py-1.5 rounded-full text-[10px] font-black border border-emerald-500/20 uppercase">
+                            Available
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Contact Access</p>
+                            <p className="text-slate-700 text-sm font-bold truncate">{project.contact_phone || project.contact_email || 'Verified'}</p>
+                          </div>
+                          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Ingestion</p>
+                            <p className="text-slate-700 text-sm font-bold">{project.createdAt ? new Date(project.createdAt).toLocaleDateString() : 'Active'}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-3 pt-2">
+                          <button 
+                            onClick={() => openProject(project.id, 'preview')}
+                            className="flex-1 px-6 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all hover:bg-slate-900 hover:text-white hover:border-slate-900 active:scale-95 shadow-sm"
+                          >
+                            View Brief
+                          </button>
+                          <button 
+                            onClick={() => handleClaim(project.id)}
+                            className="flex-1 px-6 py-4 bg-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/25 active:scale-95 flex items-center justify-center gap-2"
+                          >
+                            Claim Task
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
