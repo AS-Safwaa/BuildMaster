@@ -1,115 +1,108 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
-import { MapPin, ArrowRight, ArrowLeft } from 'lucide-react';
+import { MapPin, ArrowRight, ArrowLeft, Contact } from 'lucide-react';
 
 export const Phase2 = () => {
-  const { data, updateData, goToNext, goToPrev, getStepNumber } = useWizard();
+  const { data, updateData, goToNext, goToPrev } = useWizard();
+
+  const isFormValid = data.businessName && data.contactName && data.phone;
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="space-y-10 pb-20 px-4"
+      initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+      className="space-y-16 pb-20 px-4"
     >
-      <div className="text-center md:text-left">
-        <h2 className="text-2xl font-bold text-slate-800 mb-2 tracking-tight">Step {getStepNumber(2)}: About Your Business</h2>
-        <p className="text-base text-slate-500 font-medium">Please tell us the basic details so we can set up your profile.</p>
+      <div className="text-center">
+        <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">The Essentials</h2>
+        <p className="text-lg text-slate-500 font-medium font-sans mx-auto max-w-md">Just the basics to get your project anchored in reality.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-2">
-            Business Name <span className="text-rose-400">*</span>
-          </label>
-          <input 
-            type="text" placeholder="e.g. SR FoodKraft"
-            value={data.businessName} onChange={(e) => updateData({ businessName: e.target.value })}
-            className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 focus:bg-white font-bold transition-all text-sm md:text-base" 
-          />
-        </div>
+      <div className="space-y-12">
+        {/* Core Identity Section */}
+        <section className="space-y-8">
+            <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center"><Contact className="w-4 h-4" /></div>
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Contact & Identity</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+                <ZenInput 
+                    label="What is your business called?" 
+                    placeholder="e.g. Skyline Realty" 
+                    value={data.businessName} 
+                    onChange={(v:string) => updateData({ businessName: v })} 
+                    required 
+                />
+                <ZenInput 
+                    label="Who should we address?" 
+                    placeholder="Your Full Name" 
+                    value={data.contactName} 
+                    onChange={(v:string) => updateData({ contactName: v })} 
+                    required 
+                />
+                <ZenInput 
+                    label="A mobile number for WA?" 
+                    placeholder="10-digit number" 
+                    value={data.phone} 
+                    onChange={(v:string) => updateData({ phone: v })} 
+                    required 
+                    type="tel"
+                />
+                <ZenInput 
+                    label="When did the journey start?" 
+                    placeholder="Year (e.g. 2022)" 
+                    value={data.establishmentYear} 
+                    onChange={(v:string) => updateData({ establishmentYear: v })} 
+                />
+            </div>
+        </section>
 
-        <div className="space-y-2">
-          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-2">
-            When did you start?
-          </label>
-          <input 
-            type="text" placeholder="Year (e.g. 2015)"
-            value={data.establishmentYear} onChange={(e) => updateData({ establishmentYear: e.target.value })}
-            className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 focus:bg-white font-bold transition-all text-sm md:text-base" 
-          />
-        </div>
+        {/* Presence Section */}
+        <section className="space-y-8 border-t border-slate-100 pt-12">
+            <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center"><MapPin className="w-4 h-4" /></div>
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Presence & Location</h3>
+            </div>
 
-        <div className="space-y-2">
-          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-2">
-            Owner / Manager Name <span className="text-rose-400">*</span>
-          </label>
-          <input 
-            type="text" placeholder="Your full name"
-            value={data.contactName} onChange={(e) => updateData({ contactName: e.target.value })}
-            className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 focus:bg-white font-bold transition-all text-sm md:text-base" 
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-2">
-            Mobile Number <span className="text-rose-400">*</span>
-          </label>
-          <input 
-            type="tel" placeholder="10-digit number"
-            value={data.phone} onChange={(e) => updateData({ phone: e.target.value })}
-            className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 focus:bg-white font-bold transition-all text-sm md:text-base" 
-          />
-        </div>
-
-        <div className="md:col-span-2 space-y-2">
-          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-2">
-            Where do you work? (Area / City)
-          </label>
-          <input 
-            type="text" placeholder="e.g. Mumbai, Navi Mumbai, etc."
-            value={data.serviceAreas} onChange={(e) => updateData({ serviceAreas: e.target.value })}
-            className="w-full p-4 bg-white border-2 border-slate-50 rounded-2xl outline-none focus:border-blue-500 focus:bg-white font-bold transition-all text-sm md:text-base" 
-          />
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="md:col-span-3">
+                   <ZenInput label="Where is your shop or office located?" placeholder="Street address, building, etc." value={data.addressLine1} onChange={(v:string) => updateData({ addressLine1: v })} />
+                </div>
+                <ZenInput label="City" placeholder="Mumbai" value={data.city} onChange={(v:string) => updateData({ city: v })} />
+                <ZenInput label="State" placeholder="Maharashtra" value={data.state} onChange={(v:string) => updateData({ state: v })} />
+                <ZenInput label="Pincode" placeholder="400XXX" value={data.pincode} onChange={(v:string) => updateData({ pincode: v })} />
+            </div>
+        </section>
       </div>
 
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-50 bg-slate-50/30 flex items-center gap-4">
-          <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
-            <MapPin className="w-5 h-5" />
-          </div>
-          <div>
-            <p className="font-black text-slate-900 text-sm tracking-tight leading-none mb-1">Your Full Address</p>
-            <p className="font-bold text-slate-800 text-sm tracking-tight leading-none mb-1">Your Full Address</p>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Help people find your shop/office</p>
-          </div>
-        </div>
-
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
-          <input type="text" placeholder="Building / Shop No." value={data.addressLine1} onChange={(e) => updateData({ addressLine1: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
-          <input type="text" placeholder="Street / Road Name" value={data.addressLine2} onChange={(e) => updateData({ addressLine2: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
-          <input type="text" placeholder="Area / Colony" value={data.area} onChange={(e) => updateData({ area: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
-          <input type="text" placeholder="City" value={data.city} onChange={(e) => updateData({ city: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
-          <input type="text" placeholder="State" value={data.state} onChange={(e) => updateData({ state: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
-          <input type="text" placeholder="Pincode" value={data.pincode} onChange={(e) => updateData({ pincode: e.target.value })} className="w-full p-4 bg-slate-50 border-0 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all text-sm font-semibold" />
-        </div>
-      </div>
-
-      <div className="flex justify-between items-center pt-10">
-        <button onClick={goToPrev} className="flex items-center gap-2 px-6 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-sm">
+      <div className="flex justify-between items-center pt-10 border-t border-slate-100">
+        <button onClick={goToPrev} className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Go Back
         </button>
         <button 
           onClick={goToNext}
-          disabled={!data.businessName || !data.contactName || !data.phone}
-          className="group flex items-center gap-4 px-10 py-5 bg-blue-600 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-3xl font-bold shadow-xl shadow-blue-600/20 hover:shadow-blue-600/40 hover:bg-blue-700 hover:-translate-y-0.5 transition-all text-sm"
+          disabled={!isFormValid}
+          className={`group flex items-center gap-6 px-10 py-5 rounded-[2rem] font-black text-sm uppercase tracking-widest transition-all ${
+            isFormValid ? 'bg-slate-900 text-white shadow-2xl hover:bg-indigo-600 hover:-translate-y-1' : 'bg-slate-100 text-slate-300 pointer-events-none'
+          }`}
         >
-          Next Step
+          Sounds Perfect
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
     </motion.div>
   );
 };
+
+const ZenInput = ({ label, placeholder, value, onChange, required, type = "text" }: any) => (
+    <div className="space-y-3 group">
+        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1 block transition-colors group-focus-within:text-indigo-600">
+            {label} {required && <span className="text-indigo-400">*</span>}
+        </label>
+        <input 
+            type={type} placeholder={placeholder}
+            value={value} onChange={(e) => onChange(e.target.value)}
+            className="w-full px-6 py-5 bg-white border-4 border-slate-50/50 rounded-[2rem] outline-none focus:border-indigo-500 focus:bg-white text-slate-900 font-bold transition-all text-sm md:text-base hover:border-slate-100 shadow-sm focus:shadow-xl focus:shadow-indigo-500/10" 
+        />
+    </div>
+);

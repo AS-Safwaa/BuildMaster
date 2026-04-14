@@ -1,18 +1,36 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWizard } from '../../context/WizardContext';
-import { ArrowRight, ArrowLeft, Plus, X, Star, Briefcase, Layers } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Star, Layers, Zap, Heart } from 'lucide-react';
 import { useState } from 'react';
 
-// --- Hierarchical Master Data ---
 const BUSINESS_HIERARCHY: any = {
   'Real Estate': {
+    icon: <Layers className="w-10 h-10" />,
+    color: 'bg-blue-500',
     subCategories: [
       {
         name: 'Residential Sales',
+        products: [
+            { name: 'Luxury Villas', highImpact: true },
+            { name: 'Studio Apartments', highImpact: false },
+            { name: 'Gated Communities', highImpact: true }
+        ],
+        usps: ['24/7 Concierge', 'Prime Locations', 'Eco-Friendly Design']
+      },
+      {
+        name: 'Commercial Leasing',
+        products: [
+            { name: 'Tech Parks', highImpact: true },
+            { name: 'Retail Spaces', highImpact: true },
+            { name: 'Co-working Hubs', highImpact: false }
+        ],
+        usps: ['High Footfall', 'Central Business District', 'Modern Amenities']
       }
     ]
   },
   'Technology': {
+    icon: <Zap className="w-10 h-10" />,
+    color: 'bg-indigo-500',
     subCategories: [
       {
         name: 'SaaS Platform',
@@ -24,13 +42,28 @@ const BUSINESS_HIERARCHY: any = {
         usps: ['99.9% Uptime', 'AI-Powered Extraction', 'Zero-Code Setup']
       }
     ]
+  },
+  'Food & Beverages': {
+    icon: <Heart className="w-10 h-10" />,
+    color: 'bg-rose-500',
+    subCategories: [
+      {
+        name: 'Cloud Kitchen',
+        products: [
+            { name: 'Meal Subscriptions', highImpact: true },
+            { name: 'Boutique Bakery', highImpact: false },
+            { name: 'Gourmet Packs', highImpact: true }
+        ],
+        usps: ['Farm-to-Fork', 'Hygiene First', 'Flash Delivery']
+      }
+    ]
   }
 };
 
 export const Phase5 = () => {
-  const { data, updateData, goToNext, goToPrev, getStepNumber } = useWizard();
-  const [customInputType, setCustomInputType] = useState<'products' | 'services' | 'usps' | null>(null);
-  const [tempCustom, setTempCustom] = useState('');
+  const { data, updateData, goToNext, goToPrev } = useWizard();
+  const [customItem, setCustomItem] = useState('');
+  const [showCustom, setShowCustom] = useState(false);
 
   const currentCategory = BUSINESS_HIERARCHY[data.mainCategory] || null;
   const subCategories = currentCategory?.subCategories || [];
@@ -45,197 +78,151 @@ export const Phase5 = () => {
     }
   };
 
-  const toggleHighImpact = (product: string) => {
-    const current = [...(data.highImpactProducts || [])];
-    if (current.includes(product)) {
-      updateData({ highImpactProducts: current.filter((p: string) => p !== product) });
-    } else {
-      updateData({ highImpactProducts: [...current, product] });
-    }
-  };
-
-  const addCustomItem = (field: 'products' | 'services' | 'usps') => {
-    if (!tempCustom.trim()) return;
-    updateData({ [field]: [...(data[field] || []), tempCustom.trim()] });
-    setTempCustom('');
-    setCustomInputType(null);
-  };
-
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="space-y-12 pb-20 px-4"
+      initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}
+      className="space-y-20 pb-20"
     >
-      <div className="text-center md:text-left">
-        <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight flex items-center gap-3">
-          <Briefcase className="w-7 h-7 text-indigo-600" /> Step {getStepNumber(5)}: Business Mapping
-        </h2>
-        <p className="text-slate-500 font-medium">Classify your offerings for hyper-targeted design and branding.</p>
-      </div>
-
-      {/* Main & Sub Category Dropdowns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-8 bg-white border border-slate-200 rounded-[2.5rem] shadow-sm">
-        <div className="space-y-2">
-          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Main Category</label>
-          <select 
-            value={data.mainCategory}
-            onChange={(e) => updateData({ mainCategory: e.target.value, subCategory: '', products: [], usps: [], highImpactProducts: [] })}
-            className="w-full p-4 bg-slate-50 border-0 rounded-2xl font-bold text-slate-800 focus:ring-4 focus:ring-indigo-100 transition-all appearance-none cursor-pointer"
-          >
-            <option value="">Select Category</option>
-            {Object.keys(BUSINESS_HIERARCHY).map(cat => <option key={cat} value={cat}>{cat}</option>)}
-          </select>
+      {/* 1. Main Category Selection */}
+      <section className="space-y-12">
+        <div className="text-center">
+            <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">Focus & Sector</h2>
+            <p className="text-lg text-slate-500 font-medium font-sans mx-auto max-w-md">What's the playground for your brand today?</p>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Sub Category</label>
-          <select 
-            disabled={!data.mainCategory}
-            value={data.subCategory}
-            onChange={(e) => updateData({ subCategory: e.target.value, products: [], usps: [], highImpactProducts: [] })}
-            className="w-full p-4 bg-slate-50 disabled:opacity-50 border-0 rounded-2xl font-bold text-slate-800 focus:ring-4 focus:ring-indigo-100 transition-all appearance-none cursor-pointer"
-          >
-            <option value="">Select Sub-Category</option>
-            {subCategories.map((sub: any) => <option key={sub.name} value={sub.name}>{sub.name}</option>)}
-          </select>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {Object.entries(BUSINESS_HIERARCHY).map(([name, meta]: any) => (
+                <button
+                    key={name}
+                    onClick={() => updateData({ mainCategory: name, subCategory: '', products: [], usps: [], highImpactProducts: [] })}
+                    className={`p-10 rounded-[3rem] border-4 transition-all duration-500 text-center relative overflow-hidden group ${
+                        data.mainCategory === name 
+                            ? 'border-indigo-600 bg-white shadow-2xl scale-105' 
+                            : 'border-white bg-white hover:border-slate-100 shadow-xl'
+                    }`}
+                >
+                    <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center mx-auto mb-6 transition-all duration-500 ${
+                        data.mainCategory === name ? meta.color + ' text-white scale-110 shadow-xl' : 'bg-slate-50 text-slate-300'
+                    }`}>
+                        {meta.icon}
+                    </div>
+                    <span className="text-xl font-black text-slate-900">{name}</span>
+                </button>
+            ))}
         </div>
-      </div>
+      </section>
 
+      {/* 2. Sub-Category Visual Cards */}
       <AnimatePresence mode="wait">
-        {data.subCategory && activeSub && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-10">
-            
-            {/* Products Selection */}
-            <div className="space-y-6 p-8 bg-white border border-slate-200 rounded-[2.5rem] shadow-sm relative overflow-hidden">
-              <div className="flex justify-between items-center bg-indigo-50/50 -m-8 mb-8 p-8 border-b border-indigo-100">
-                <div className="flex items-center gap-3">
-                   <Layers className="w-5 h-5 text-indigo-600" />
-                   <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Main Products & Services</h3>
+        {data.mainCategory && (
+            <motion.section initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-12 pt-12 border-t border-slate-100">
+                <div className="text-center">
+                    <h3 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">The Specifics</h3>
+                    <p className="text-slate-500 font-medium">Narrow down your niche for precision.</p>
                 </div>
-                {!customInputType && (
-                  <button onClick={() => setCustomInputType('products')} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg active:scale-95">
-                    <Plus className="w-3 h-3" /> Add Custom
-                  </button>
-                )}
-              </div>
+                <div className="flex flex-wrap justify-center gap-4">
+                    {subCategories.map((sub: any) => (
+                        <button
+                            key={sub.name}
+                            onClick={() => updateData({ subCategory: sub.name, products: [], usps: [], highImpactProducts: [] })}
+                            className={`px-10 py-5 rounded-[2rem] border-4 font-black text-sm uppercase tracking-widest transition-all ${
+                                data.subCategory === sub.name 
+                                    ? 'bg-slate-900 border-slate-900 text-white shadow-2xl scale-110' 
+                                    : 'bg-white border-white text-slate-400 hover:border-slate-100 shadow-xl'
+                            }`}
+                        >
+                            {sub.name}
+                        </button>
+                    ))}
+                </div>
+            </motion.section>
+        )}
+      </AnimatePresence>
 
-              <div className="flex flex-wrap gap-4">
-                {activeSub.products.map((p: any) => {
-                  const isSelected = data.products.includes(p.name);
-                  const isHighImpact = data.highImpactProducts.includes(p.name);
-                  return (
-                    <div key={p.name} className="flex items-center gap-1 group">
-                      <button 
-                        onClick={() => toggleItem('products', p.name)}
-                        className={`px-5 py-3 rounded-2xl border-2 font-bold text-sm transition-all flex items-center gap-3 ${isSelected ? 'border-indigo-600 bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'border-slate-100 bg-slate-50 text-slate-500 hover:border-indigo-200'}`}
-                      >
-                        {p.name}
-                        {p.highImpact && !isSelected && <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" />}
-                      </button>
-                      <AnimatePresence>
-                        {isSelected && (
-                          <motion.button 
-                            initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0, opacity: 0 }}
-                            onClick={() => toggleHighImpact(p.name)}
-                            className={`p-3 rounded-2xl border-2 transition-all ${isHighImpact ? 'border-amber-400 bg-amber-50 text-amber-500 shadow-md' : 'border-slate-100 bg-white text-slate-300 hover:text-amber-400'}`}
-                            title="Highlight as High-Impact Offering"
-                          >
-                            <Star className={`w-5 h-5 ${isHighImpact ? 'fill-current' : ''}`} />
-                          </motion.button>
-                        )}
-                      </AnimatePresence>
+      {/* 3. Product & USP Matrix */}
+      <AnimatePresence>
+        {data.subCategory && activeSub && (
+            <motion.section initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="space-y-16 pt-16 border-t border-slate-100">
+                <div className="bg-white p-12 rounded-[4rem] border-4 border-slate-50 shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-8">
+                        <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center">
+                            <Zap className="w-8 h-8"/>
+                        </div>
                     </div>
-                  );
-                })}
-                {/* Render Custom Entries */}
-                {data.products.filter((p: string) => !activeSub.products.find((ap: any) => ap.name === p)).map((cp: string) => (
-                   <div key={cp} className="flex items-center gap-2">
-                     <div className="px-5 py-3 rounded-2xl bg-indigo-600 text-white text-sm font-bold flex items-center gap-3">
-                        {cp}
-                        <button onClick={() => toggleItem('products', cp)} className="hover:text-rose-200 transition-colors"><X className="w-4 h-4" /></button>
-                     </div>
-                   </div>
-                ))}
-              </div>
+                    <h3 className="text-3xl font-black text-slate-900 mb-2">Offerings Matrix</h3>
+                    <p className="text-slate-500 font-medium mb-12">Select what we'll be showcasing on your new site.</p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                        {/* Column 1: Core Offerings */}
+                        <div className="space-y-6">
+                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Core Products / Services</h4>
+                            <div className="space-y-4">
+                                {activeSub.products.map((p: any) => {
+                                    const selected = data.products.includes(p.name);
+                                    return (
+                                        <button 
+                                            key={p.name} onClick={() => toggleItem('products', p.name)}
+                                            className={`w-full p-6 rounded-[2rem] border-4 text-left flex justify-between items-center transition-all ${
+                                                selected ? 'bg-indigo-600 border-indigo-600 text-white shadow-xl translate-x-3' : 'bg-slate-50 border-slate-50 text-slate-600 hover:border-slate-100'
+                                            }`}
+                                        >
+                                            <span className="font-black text-sm tracking-tight">{p.name}</span>
+                                            {p.highImpact && <Star className={`w-5 h-5 ${selected ? 'fill-white' : 'text-indigo-200'}`} />}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
 
-              <AnimatePresence>
-                {customInputType === 'products' && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="pt-8 overflow-hidden">
-                    <div className="flex gap-4">
-                      <input 
-                        autoFocus
-                        type="text" value={tempCustom} onChange={(e) => setTempCustom(e.target.value)}
-                        placeholder="Type custom product/service..."
-                        className="flex-1 p-4 bg-indigo-50 border-2 border-indigo-100 rounded-2xl font-bold text-indigo-900 outline-none focus:border-indigo-500 placeholder:text-indigo-300 transition-all"
-                      />
-                      <button onClick={() => addCustomItem('products')} className="px-6 bg-indigo-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-700 transition-all">Apply</button>
-                      <button onClick={() => { setCustomInputType(null); setTempCustom(''); }} className="p-4 bg-rose-50 text-rose-500 rounded-2xl hover:bg-rose-100"><X className="w-5 h-5" /></button>
+                        {/* Column 2: Value Props */}
+                        <div className="space-y-6">
+                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Differentiators (USPs)</h4>
+                            <div className="grid grid-cols-1 gap-4">
+                                {activeSub.usps.map((u: string) => {
+                                    const selected = data.usps.includes(u);
+                                    return (
+                                        <button 
+                                            key={u} onClick={() => toggleItem('usps', u)}
+                                            className={`p-6 rounded-[2rem] border-4 text-center transition-all ${
+                                                selected ? 'bg-purple-600 border-purple-600 text-white shadow-xl scale-105' : 'bg-slate-50 border-slate-50 text-slate-500'
+                                            }`}
+                                        >
+                                            <span className="font-bold text-xs uppercase tracking-widest">{u}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            
+                            {/* Custom Injection */}
+                            <div className="pt-6">
+                                {!showCustom ? (
+                                    <button onClick={() => setShowCustom(true)} className="w-full py-5 border-4 border-dashed border-slate-100 text-slate-300 rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:border-indigo-200 hover:text-indigo-400 transition-all">+ Add Something Custom</button>
+                                ) : (
+                                    <div className="flex gap-3">
+                                        <input autoFocus placeholder="e.g. 100% Organic" value={customItem} onChange={e => setCustomItem(e.target.value)} className="flex-1 px-8 py-4 bg-indigo-50 border-4 border-indigo-100 rounded-[2rem] text-sm font-bold text-indigo-900 outline-none focus:border-indigo-500" />
+                                        <button onClick={() => { if(customItem) { toggleItem('usps', customItem); setCustomItem(''); setShowCustom(false); } }} className="px-8 bg-indigo-600 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest">Add</button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* USPs Selection */}
-            <div className="space-y-6 p-8 bg-white border border-slate-200 rounded-[2.5rem] shadow-sm border-dashed">
-               <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Unique Selling Points (USPs)</h3>
-                  {!customInputType && (
-                    <button onClick={() => setCustomInputType('usps')} className="text-[10px] font-black text-indigo-600 uppercase tracking-widest border-b-2 border-indigo-100 hover:border-indigo-600 transition-all">
-                      + Add Custom USP
-                    </button>
-                  )}
-               </div>
-               <div className="flex flex-wrap gap-2 pt-2">
-                  {activeSub.usps.map((usp: string) => (
-                    <button
-                      key={usp} onClick={() => toggleItem('usps', usp)}
-                      className={`px-4 py-2 rounded-xl border text-xs font-bold transition-all ${data.usps.includes(usp) ? 'border-indigo-600 bg-indigo-50 text-indigo-700' : 'border-slate-100 bg-white text-slate-400 hover:border-slate-300'}`}
-                    >
-                      {usp}
-                    </button>
-                  ))}
-                  {data.usps.filter((u: string) => !activeSub.usps.includes(u)).map((cu: string) => (
-                    <button key={cu} onClick={() => toggleItem('usps', cu)} className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold flex items-center gap-2">
-                      {cu} <X className="w-3 h-3 opacity-60" />
-                    </button>
-                  ))}
-               </div>
-               
-               <AnimatePresence>
-                {customInputType === 'usps' && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="pt-4 overflow-hidden">
-                    <div className="flex gap-3">
-                      <input 
-                        autoFocus
-                        type="text" value={tempCustom} onChange={(e) => setTempCustom(e.target.value)}
-                        placeholder="Enter custom USP detail..."
-                        className="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 text-xs outline-none focus:border-indigo-500"
-                      />
-                      <button onClick={() => addCustomItem('usps')} className="px-4 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Add</button>
-                      <button onClick={() => { setCustomInputType(null); setTempCustom(''); }} className="p-3 bg-slate-100 text-slate-400 rounded-xl"><X className="w-4 h-4" /></button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-          </motion.div>
+                </div>
+            </motion.section>
         )}
       </AnimatePresence>
 
       <div className="flex justify-between items-center pt-10 border-t border-slate-100">
-        <button onClick={goToPrev} className="flex items-center gap-2 px-8 py-4 bg-white border-2 border-slate-50 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-colors text-xs uppercase tracking-widest">
+        <button onClick={goToPrev} className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Go Back
         </button>
         <button 
           onClick={goToNext}
           disabled={!data.subCategory}
-          className="group flex items-center gap-4 px-12 py-5 bg-indigo-600 disabled:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-3xl font-bold shadow-xl shadow-indigo-600/20 hover:shadow-indigo-600/40 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all text-sm uppercase tracking-widest"
+          className={`group flex items-center gap-6 px-10 py-5 rounded-[2rem] font-black text-sm uppercase tracking-widest transition-all ${
+            data.subCategory ? 'bg-slate-900 text-white shadow-2xl hover:bg-emerald-600 hover:-translate-y-1' : 'bg-slate-100 text-slate-300 pointer-events-none'
+          }`}
         >
-          Check Strategy
+          Capture Strategy
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>

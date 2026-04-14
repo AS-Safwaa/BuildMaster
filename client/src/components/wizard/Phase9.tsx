@@ -4,7 +4,7 @@ import { useWizard } from '../../context/WizardContext';
 import { 
   Rocket, ArrowLeft, Loader2, Edit2, 
   ShieldCheck as Shield, Briefcase as Case, 
-  Globe as Web, Zap as Fast, Camera as Photo, Check, ClipboardCheck, X, Heart
+  Globe as Web, Camera as Photo, Check, ClipboardCheck, X, Star
 } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -59,55 +59,58 @@ export const Phase9 = () => {
 
   if (submitted) {
     return (
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-20 max-w-xl mx-auto px-4">
-        <div className="w-24 h-24 bg-indigo-100 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 shadow-xl shadow-indigo-500/10">
-          <Rocket className="w-12 h-12 text-indigo-600" />
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-24 max-w-2xl mx-auto px-4">
+        <div className="w-32 h-32 bg-indigo-600 rounded-[3rem] flex items-center justify-center mx-auto mb-10 shadow-[0_20px_50px_rgba(79,70,229,0.3)] animate-bounce">
+          <Rocket className="w-16 h-16 text-white" />
         </div>
-        <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Vison Captured! 🚀</h2>
-        <p className="text-lg text-slate-600 mb-12 font-medium font-sans leading-relaxed">
-          Your project blueprint has been securely transmitted. Our design engineers are already analyzing your requirements!
+        <h2 className="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">Mission Launched!</h2>
+        <p className="text-xl text-slate-500 mb-12 font-medium font-sans leading-relaxed max-w-lg mx-auto">
+          Your brand vision is now circulating through our creative engine. We've archived every detail to build your perfect digital presence.
         </p>
-        <button onClick={() => navigate('/')} className="px-12 py-5 bg-indigo-600 text-white font-black rounded-[2rem] shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">
-          Return to Dashboard
-        </button>
+        <div className="flex flex-col items-center gap-6">
+            <button onClick={() => navigate('/')} className="px-16 py-6 bg-slate-900 text-white font-black rounded-[2.5rem] shadow-2xl hover:bg-indigo-600 hover:-translate-y-1 transition-all uppercase tracking-widest text-sm">
+                Take me to Dashboard
+            </button>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Estimated Review: 24-48 Hours</p>
+        </div>
       </motion.div>
     );
   }
 
-  const Section = ({ title, icon, phase, children }: any) => (
-    <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden mb-8 group hover:border-indigo-200 transition-all">
-      <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/30">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-indigo-600 shadow-sm">
+  const Section = ({ title, icon, phase, color, children }: any) => (
+    <div className="bg-white rounded-[3rem] border-4 border-slate-50 shadow-xl overflow-hidden mb-10 group hover:border-indigo-100 transition-all">
+      <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/20">
+        <div className="flex items-center gap-4">
+          <div className={`w-14 h-14 rounded-2xl ${color} text-white flex items-center justify-center shadow-lg`}>
             {icon}
           </div>
-          <h3 className="text-lg font-black text-slate-900 tracking-tight">{title}</h3>
+          <h3 className="text-2xl font-black text-slate-900 tracking-tight">{title}</h3>
         </div>
-        <button onClick={() => setPhase(phase)} className="p-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-indigo-600 transition-all active:scale-95 shadow-sm">
-          <Edit2 className="w-4 h-4" />
+        <button onClick={() => setPhase(phase)} className="w-12 h-12 bg-white border-2 border-slate-100 rounded-2xl hover:border-indigo-500 text-slate-400 hover:text-indigo-600 transition-all active:scale-95 flex items-center justify-center">
+          <Edit2 className="w-5 h-5" />
         </button>
       </div>
-      <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-12">
+      <div className="p-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-12">
         {children}
       </div>
     </div>
   );
 
   const Entry = ({ label, value, highlight }: any) => (
-    <div className="space-y-1">
+    <div className="space-y-2">
        <div className="flex items-center gap-2">
-         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{label}</p>
-         {highlight && <div className="p-1 bg-amber-50 text-amber-500 rounded-md"><Fast className="w-2.5 h-2.5" /></div>}
+         <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{label}</p>
+         {highlight && <Star className="w-3 h-3 text-amber-500 fill-current" />}
        </div>
-       <div className="font-bold text-slate-700 text-sm leading-snug">
+       <div className="font-bold text-slate-900 text-base leading-snug">
          {Array.isArray(value) ? (
-           <div className="flex flex-wrap gap-1.5 mt-1">
+           <div className="flex flex-wrap gap-2 mt-2">
              {value.length > 0 ? value.map((v, i) => (
-               <span key={i} className="px-2 py-1 bg-slate-100 rounded-md text-[10px] text-slate-600 border border-slate-200">{v}</span>
-             )) : <span className="text-slate-300 italic">None</span>}
+               <span key={i} className="px-3 py-1.5 bg-indigo-50 rounded-xl text-[10px] font-black text-indigo-600 uppercase tracking-widest border border-indigo-100">{v}</span>
+             )) : <span className="text-slate-200 italic font-medium">None</span>}
            </div>
          ) : (
-          value || <span className="text-slate-300 italic">Not Added</span>
+          value || <span className="text-slate-200 italic font-medium">Not Provided</span>
          )}
        </div>
     </div>
@@ -115,106 +118,84 @@ export const Phase9 = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-      className="pb-20 px-4"
+      initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}
+      className="pb-20"
     >
-      <div className="text-center md:text-left mb-10">
-        <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">The Big Reveal</h2>
-        <p className="text-slate-500 font-medium font-sans">Verify your brand blueprint before it starts moving into production.</p>
+      <div className="text-center mb-16">
+        <h2 className="text-5xl font-black text-slate-900 mb-4 tracking-tight">The Big Reveal</h2>
+        <p className="text-lg text-slate-500 font-medium font-sans mx-auto max-w-md">Every detail is captured. Confirm your blueprint and let's bring it to life.</p>
       </div>
 
-      <Section title="Brand Identity" icon={<Shield className="w-5 h-5"/>} phase={1}>
-        <Entry label="Business Name" value={data.businessName} />
-        <Entry label="Contact Phone" value={data.phone} />
-        <Entry label="Contact Email" value={data.email} />
-        <Entry label="City/Region" value={data.city} />
+      <Section title="Foundation" icon={<Shield className="w-6 h-6"/>} phase={1} color="bg-blue-600">
+        <Entry label="Venture Name" value={data.businessName} />
+        <Entry label="Primary Mobile" value={data.phone} />
+        <Entry label="Digital Mail" value={data.email} />
+        <Entry label="Operation Hub" value={data.city} />
       </Section>
 
-      <Section title="Product Ecosystem" icon={<Case className="w-5 h-5"/>} phase={5}>
-        <Entry label="Classification" value={`${data.mainCategory} > ${data.subCategory}`} />
-        <Entry label="Core Offerings" value={data.products} />
-        <Entry label="High-Impact" value={data.highImpactProducts} highlight />
-        <Entry label="Core USPs" value={data.usps} />
+      <Section title="The Engine" icon={<Case className="w-6 h-6"/>} phase={5} color="bg-indigo-600">
+        <Entry label="Sector" value={data.mainCategory} />
+        <Entry label="Solutions" value={data.products} />
+        <Entry label="High Magnitude" value={data.highImpactProducts} highlight />
+        <Entry label="Differentiators" value={data.usps} />
       </Section>
 
-      <Section title="Digital Strategy" icon={<Web className="w-5 h-5"/>} phase={6}>
-        <Entry label="Visual Theme" value={data.websiteStyle} />
-        <Entry label="Preferred Example" value={data.preferredWebsite} />
-        <Entry label="Competitor Benchmark" value={data.competitorWebsite} />
-        <Entry label="Style Inspiration" value={data.inspiredWebsite} />
+      <Section title="Visual DNA" icon={<Web className="w-6 h-6"/>} phase={6} color="bg-emerald-600">
+        <Entry label="Signature Style" value={data.websiteStyle} />
+        <Entry label="Benchmarked Sites" value={[data.preferredWebsite, data.competitorWebsite].filter(Boolean)} />
+        <Entry label="Visual Heritage" value={data.inspiredWebsite} />
       </Section>
 
-      <Section title="Trust Elements" icon={<Photo className="w-5 h-5"/>} phase={7}>
-        <Entry label="Team Data" value={data.teamMembersData.map(m => `${m.name} (${m.role})`)} />
-        <Entry label="Review Source" value={data.includeReviews ? `${data.reviewsSource} (${data.reviewsCount})` : 'Skipped'} />
-        <Entry label="Social Synergy" value={data.socialAccounts.map(a => a.platform)} />
+      <Section title="Social Synergy" icon={<Photo className="w-6 h-6"/>} phase={7} color="bg-rose-500">
+        <Entry label="The Team" value={data.teamMembersData.map(m => m.name)} />
+        <Entry label="Social Footprint" value={data.socialAccounts.map(a => a.platform)} />
+        <Entry label="Public Proof" value={data.includeReviews ? `${data.reviewsCount} Reviews` : 'No'} />
       </Section>
 
       <div className="flex justify-between items-center pt-10 border-t border-slate-100">
-        <button onClick={goToPrev} className="flex items-center gap-2 px-8 py-4 bg-white border-2 border-slate-200 text-slate-400 rounded-2xl font-bold hover:bg-slate-50 transition-all text-xs uppercase tracking-widest shadow-sm">
-          <ArrowLeft className="w-4 h-4" /> Go Back
+        <button onClick={goToPrev} className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors">
+          <ArrowLeft className="w-4 h-4" /> Wait, one tweak
         </button>
         <button 
           onClick={() => setShowChecklist(true)} 
-          className="group flex items-center gap-6 px-12 py-6 bg-slate-900 text-white rounded-[2.5rem] font-black shadow-2xl hover:shadow-indigo-500/20 hover:bg-indigo-600 hover:-translate-y-1 transition-all text-sm uppercase tracking-widest"
+          className="group flex items-center gap-8 px-12 py-7 bg-slate-900 text-white rounded-[3rem] font-black shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] hover:shadow-indigo-500/30 hover:bg-indigo-600 hover:-translate-y-2 transition-all text-sm uppercase tracking-[0.2em]"
         >
-          Check and Submit!
-          <Rocket className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+          Sounds Perfect, Launch!
+          <Rocket className="w-7 h-7 group-hover:rotate-12 transition-transform" />
         </button>
       </div>
 
-      {/* Submission Checklist Modal */}
+      {/* Final Safety Handshake */}
       <AnimatePresence>
         {showChecklist && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md"
           >
             <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-white w-full max-w-lg rounded-[3rem] shadow-2xl overflow-hidden"
+              initial={{ scale: 0.9, opacity: 0, y: 30 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 30 }}
+              className="bg-white w-full max-w-xl rounded-[4rem] shadow-2xl overflow-hidden p-12 text-center relative"
             >
-              <div className="p-10 text-center relative">
-                 <button onClick={() => setShowChecklist(false)} className="absolute top-8 right-8 text-slate-400 hover:text-slate-900 transition-colors"><X className="w-6 h-6" /></button>
-                 <div className="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner">
-                    <ClipboardCheck className="w-10 h-10" />
-                 </div>
-                 <h3 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">One Final Check</h3>
-                 <p className="text-slate-500 font-medium mb-10 leading-relaxed px-4">Before we lock in your design vision, let's verify these critical links exist.</p>
-                 
-                 <div className="space-y-4 mb-10 text-left max-w-sm mx-auto">
-                    <div className="flex items-center gap-4 p-5 bg-slate-50 rounded-3xl border border-slate-100 ring-4 ring-slate-50/50">
-                       <div className="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/20"><Check className="w-5 h-5" /></div>
-                       <div>
-                          <p className="font-bold text-slate-800 text-sm">Logo Identity</p>
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{data.businessName} Assets Linked</p>
-                       </div>
-                    </div>
-                    <div className="flex items-center gap-4 p-5 bg-slate-50 rounded-3xl border border-slate-100 ring-4 ring-slate-50/50">
-                       <div className="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/20"><Check className="w-5 h-5" /></div>
-                       <div>
-                          <p className="font-bold text-slate-800 text-sm">Website Reference</p>
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{data.preferredWebsite ? 'Benchmarked' : 'Stylized'}</p>
-                       </div>
-                    </div>
-                    <div className="flex items-center gap-4 p-5 bg-slate-50 rounded-3xl border border-slate-100 ring-4 ring-slate-50/50">
-                       <div className="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center animate-bounce shadow-lg shadow-indigo-500/20"><Heart className="w-5 h-5" /></div>
-                       <div>
-                          <p className="font-bold text-slate-800 text-sm">Ready to build?</p>
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Everything looks perfect</p>
-                       </div>
-                    </div>
-                 </div>
+                <button onClick={() => setShowChecklist(false)} className="absolute top-10 right-10 text-slate-300 hover:text-slate-900 transition-colors"><X className="w-8 h-8" /></button>
+                <div className="w-24 h-24 bg-indigo-50 text-indigo-600 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 shadow-inner">
+                    <ClipboardCheck className="w-12 h-12" />
+                </div>
+                <h3 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">Final Handshake</h3>
+                <p className="text-slate-500 font-medium mb-12 leading-relaxed px-6">We've triple-checked the technical specs. You're one tap away from initiating production.</p>
+                
+                <div className="space-y-4 mb-12">
+                    <CheckRow label="Infrastructure Ready" sub="Cloud endpoints synthesized" />
+                    <CheckRow label="Brand Heritage Locked" sub="DNA mapping complete" />
+                </div>
 
-                 <button 
-                  onClick={handleFinalSubmit}
-                  disabled={isSubmitting}
-                  className="w-full py-6 bg-indigo-600 disabled:bg-slate-300 text-white rounded-[2rem] font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-indigo-600/40 transition-all flex items-center justify-center gap-4"
-                 >
-                    {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Rocket className="w-5 h-5" />}
-                    {isSubmitting ? 'Igniting Engines...' : 'Lauch My Project'}
-                 </button>
-              </div>
+                <button 
+                onClick={handleFinalSubmit}
+                disabled={isSubmitting}
+                className="w-full py-7 bg-indigo-600 disabled:bg-slate-200 text-white rounded-[2.5rem] font-black text-base uppercase tracking-[0.2em] shadow-xl shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-indigo-600/40 transition-all flex items-center justify-center gap-6"
+                >
+                    {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <Rocket className="w-6 h-6" />}
+                    {isSubmitting ? 'ENGAGING ENGINES...' : 'INITIATE LAUNCH'}
+                </button>
             </motion.div>
           </motion.div>
         )}
@@ -222,3 +203,15 @@ export const Phase9 = () => {
     </motion.div>
   );
 };
+
+const CheckRow = ({ label, sub }: any) => (
+    <div className="flex items-center gap-5 p-6 bg-slate-50/50 rounded-[2.5rem] border-2 border-slate-50 text-left">
+        <div className="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/20">
+            <Check className="w-6 h-6" />
+        </div>
+        <div>
+            <p className="font-black text-slate-900 text-sm">{label}</p>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{sub}</p>
+        </div>
+    </div>
+);
